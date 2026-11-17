@@ -13,6 +13,7 @@ import {
 import { Type } from "typebox";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { estimateTokens } from "../../src/core/compaction/index.ts";
+import { standInToolsExtension } from "../fixtures/stand-in-tools.ts";
 import { createHarness, getUserTexts, type Harness } from "./harness.ts";
 
 type SessionWithCompactionInternals = {
@@ -187,7 +188,7 @@ describe("AgentSession compaction characterization", () => {
 	});
 
 	it("checkpoints the replayed system state and folds summarized and retained system patches into it", async () => {
-		const harness = await createHarness();
+		const harness = await createHarness({ extensionFactories: [standInToolsExtension] });
 		harnesses.push(harness);
 		harness.setResponses([fauxAssistantMessage("declared")]);
 		await harness.session.prompt("declare the prompt");

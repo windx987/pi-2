@@ -1,6 +1,7 @@
 import { Type } from "typebox";
 import { describe, expect, it } from "vitest";
 import type { ExtensionFactory } from "../../../src/index.ts";
+import { standInToolsExtension } from "../../fixtures/stand-in-tools.ts";
 import { createHarness } from "../harness.ts";
 
 function toolNames(tools: Array<{ name: string }>): string[] {
@@ -9,6 +10,7 @@ function toolNames(tools: Array<{ name: string }>): string[] {
 
 describe("regression #5109: exclude tools", () => {
 	const extensionFactories: ExtensionFactory[] = [
+		standInToolsExtension,
 		(pi) => {
 			pi.on("session_start", () => {
 				pi.registerTool({

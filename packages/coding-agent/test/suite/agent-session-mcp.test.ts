@@ -12,6 +12,7 @@ import type { McpExposure, McpServerEntry } from "../../src/extensions/mcp/confi
 import { createMcpExtension, MCP_SERVERS_SECTION } from "../../src/extensions/mcp/index.ts";
 import { createToolSearchExtension } from "../../src/extensions/tool-search/index.ts";
 import { TOOL_SEARCH_DESCRIPTION } from "../../src/extensions/tool-search/tool.ts";
+import { standInToolsExtension } from "../fixtures/stand-in-tools.ts";
 import { createTestExtensionsResult, createTestResourceLoader } from "../utilities.ts";
 import {
 	createHarness,
@@ -232,6 +233,7 @@ describe("AgentSession MCP integration", () => {
 			const { harness } = await setup(exposure, undefined, {
 				allowedToolNames: ["read", "codemode"],
 				resources: true,
+				extensionFactories: [standInToolsExtension],
 			});
 			expect(harness.session.getActiveToolNames()).toEqual(["read", "codemode"]);
 			expect(nestedToolNames(harness)).toEqual(

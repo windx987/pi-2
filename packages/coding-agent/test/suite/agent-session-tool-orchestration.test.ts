@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { ExtensionAPI } from "../../src/core/extensions/types.ts";
 import { createCodemodeExtension } from "../../src/extensions/codemode/index.ts";
 import { createToolSearchExtension } from "../../src/extensions/tool-search/index.ts";
+import { standInToolsExtension } from "../fixtures/stand-in-tools.ts";
 import { createHarness, type Harness } from "./harness.ts";
 
 /**
@@ -113,7 +114,7 @@ describe("AgentSession tool orchestration", () => {
 	});
 
 	it("registers codemode and tool_search inactive until they are named", async () => {
-		const extensionFactories = [createCodemodeExtension(), createToolSearchExtension()];
+		const extensionFactories = [standInToolsExtension, createCodemodeExtension(), createToolSearchExtension()];
 		const plain = await createHarness({ extensionFactories });
 		harnesses.push(plain);
 		expect(plain.session.getAllTools().map((tool) => tool.name)).toEqual(

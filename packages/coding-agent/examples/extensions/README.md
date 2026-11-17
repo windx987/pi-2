@@ -23,7 +23,6 @@ cp permission-gate.ts ~/.pi/agent/extensions/
 | `protected-paths.ts` | Blocks writes to protected paths (.env, .git/, node_modules/) |
 | `confirm-destructive.ts` | Confirms before destructive session actions (clear, switch, fork) |
 | `dirty-repo-guard.ts` | Prevents session changes with uncommitted git changes |
-| `gondolin/` | Route built-in tools and `!` commands into a Gondolin micro-VM |
 
 For isolation setup and limitations, see [Run Pi in an isolated environment](../../docs/containerization.md).
 
@@ -38,10 +37,7 @@ For isolation setup and limitations, see [Run Pi in an isolated environment](../
 | `tool-override.ts` | Override built-in tools (e.g., add logging/access control to `read`) |
 | `dynamic-tools.ts` | Register tools after startup (`session_start`) and at runtime via command, with prompt snippets and tool-specific prompt guidelines |
 | `structured-output.ts` | Final structured-output tool that returns `terminate: true` so the agent can end on the tool call |
-| `built-in-tool-renderer.ts` | Custom compact rendering for built-in tools (read, bash, edit, write) while keeping original behavior |
-| `minimal-mode.ts` | Override built-in tool rendering for minimal display (only tool calls, no output in collapsed mode) |
 | `truncated-tool.ts` | Wraps ripgrep with proper output truncation (50KB/2000 lines) |
-| `ssh.ts` | Delegate all tools to a remote machine via SSH using pluggable operations |
 | `subagent/` | Delegate tasks to specialized subagents with isolated context windows |
 
 ### Commands & UI

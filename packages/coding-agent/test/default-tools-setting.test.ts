@@ -9,6 +9,7 @@ import { DefaultResourceLoader } from "../src/core/resource-loader.ts";
 import { type CreateAgentSessionOptions, createAgentSession, type InlineExtension } from "../src/core/sdk.ts";
 import { SessionManager } from "../src/core/session-manager.ts";
 import { SettingsManager } from "../src/core/settings-manager.ts";
+import { standInToolsExtension } from "./fixtures/stand-in-tools.ts";
 
 type ToolOptions = Pick<CreateAgentSessionOptions, "tools" | "excludeTools" | "noTools" | "customTools">;
 
@@ -38,7 +39,7 @@ describe("defaultTools setting", () => {
 			cwd: tempDir,
 			agentDir,
 			settingsManager,
-			extensionFactories,
+			extensionFactories: [standInToolsExtension, ...extensionFactories],
 		});
 		await resourceLoader.reload();
 
@@ -221,7 +222,7 @@ describe("defaultTools setting", () => {
 				cwd: tempDir,
 				agentDir,
 				settingsManager,
-				extensionFactories: [inactiveTool],
+				extensionFactories: [standInToolsExtension, inactiveTool],
 			});
 			await resourceLoader.reload();
 			return (
@@ -343,7 +344,7 @@ describe("defaultTools setting", () => {
 				cwd: tempDir,
 				agentDir,
 				settingsManager,
-				extensionFactories: [extensionTools],
+				extensionFactories: [standInToolsExtension, extensionTools],
 			});
 			await resourceLoader.reload();
 			return (
@@ -457,7 +458,12 @@ describe("defaultTools setting", () => {
 
 	it("applies through service-based session creation", async () => {
 		const settingsManager = SettingsManager.inMemory({ defaultTools: ["ls"] });
-		const services = await createAgentSessionServices({ cwd: tempDir, agentDir, settingsManager });
+		const services = await createAgentSessionServices({
+			cwd: tempDir,
+			agentDir,
+			settingsManager,
+			resourceLoaderOptions: { extensionFactories: [standInToolsExtension] },
+		});
 		const { session } = await createAgentSessionFromServices({
 			services,
 			sessionManager: SessionManager.inMemory(tempDir),

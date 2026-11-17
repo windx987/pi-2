@@ -25,19 +25,7 @@ import {
 	SettingsManager,
 } from "./settings-manager.ts";
 import { time } from "./timings.ts";
-import {
-	createBashTool,
-	createCodingTools,
-	createEditTool,
-	createFindTool,
-	createGrepTool,
-	createLsTool,
-	createPowerShellTool,
-	createReadOnlyTools,
-	createReadTool,
-	createWriteTool,
-	withFileMutationQueue,
-} from "./tools/index.ts";
+import { withFileMutationQueue } from "./tools/index.ts";
 import { getBranchSelection } from "./virtual-models.ts";
 
 // Preserve the pre-0.81 fallback for extensions that construct Agent instances
@@ -132,20 +120,7 @@ export type { PromptTemplate } from "./prompt-templates.ts";
 export type { Skill } from "./skills.ts";
 export type { Tool } from "./tools/index.ts";
 
-export {
-	withFileMutationQueue,
-	// Tool factories (for custom cwd)
-	createCodingTools,
-	createReadOnlyTools,
-	createReadTool,
-	createBashTool,
-	createEditTool,
-	createWriteTool,
-	createGrepTool,
-	createFindTool,
-	createLsTool,
-	createPowerShellTool,
-};
+export { withFileMutationQueue };
 
 // Helper Functions
 

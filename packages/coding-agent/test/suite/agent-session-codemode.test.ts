@@ -1,5 +1,4 @@
-import { readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, rmSync } from "node:fs";
 import type { AgentTool } from "@earendil-works/pi-agent-core";
 import {
 	type AssistantImages,
@@ -30,6 +29,7 @@ import {
 	type CodemodeToolDetails,
 	createCodemodeTool,
 } from "../../src/extensions/codemode/tool.ts";
+import { standInToolsExtension } from "../fixtures/stand-in-tools.ts";
 import { createHarness, getToolResult, type Harness, type HarnessOptions } from "./harness.ts";
 
 const TINY_PNG_BASE64 =
@@ -142,7 +142,7 @@ describe("AgentSession codemode tool", () => {
 	}
 
 	it("presents callable tools per codemode.mode", async () => {
-		const harness = await setup();
+		const harness = await setup([standInToolsExtension]);
 		const description = (name: string) =>
 			harness.session.agent.state.tools.find((tool) => tool.name === name)?.description ?? "";
 		const requestTools: string[][] = [];
@@ -276,7 +276,7 @@ describe("AgentSession codemode tool", () => {
 
 	// #10343
 	it("shows the guidelines of tools that do not fit the inline budget through describeTool()", async () => {
-		const harness = await setup();
+		const harness = await setup([standInToolsExtension]);
 		harness.settingsManager.applyOverrides({ codemode: { mode: "only", inlineBudget: 0 } });
 		harness.session.setActiveToolsByName(["read", "codemode"]);
 		const codemode = harness.session.agent.state.tools.find((tool) => tool.name === "codemode");
@@ -651,40 +651,6 @@ describe("codemode options and store", () => {
 		expect(result.isError).toBe(false);
 		expect(resultText(result)).toContain("==> text 100000/100000 <==");
 		expect(elapsed).toBeLessThan(5000);
-	});
-
-	it("resolves bash calls to structured results, also for non-zero exit codes", async () => {
-		const harness = await createHarness({
-			initialActiveToolNames: ["codemode", "bash"],
-			extensionFactories: [createCodemodeExtension()],
-		});
-		harnesses.push(harness);
-		const result = await run(
-			harness,
-			'const r = await tools.bash({ command: "echo out; exit 3" });\ntext(JSON.stringify([r.output, r.exit_code, typeof r.wall_time_seconds]));',
-		);
-		expect(result.isError).toBe(false);
-		expect(resultText(result)).toBe('["out\\n",3,"number"]');
-	});
-
-	// https://github.com/earendil-works/pi/issues/10251
-	it("resolves read calls to text for text files and to image blocks that image() shows", async () => {
-		const harness = await createHarness({
-			initialActiveToolNames: ["codemode", "read"],
-			extensionFactories: [createCodemodeExtension()],
-		});
-		harnesses.push(harness);
-		writeFileSync(join(harness.tempDir, "notes.txt"), "hello");
-		writeFileSync(join(harness.tempDir, "pixel.png"), Buffer.from(TINY_PNG_BASE64, "base64"));
-		const result = await run(
-			harness,
-			'text(await tools.read({ path: "notes.txt" }));\nconst shot = await tools.read({ path: "pixel.png" });\ntext(shot.note);\nimage(shot);',
-		);
-		expect(result.isError).toBe(false);
-		expect(checkSavedImages(resultText(result))).toBe(
-			"==> text 1/2 <==\nhello\n==> text 2/2 <==\nRead image file [image/png]\n<saved>\n<image>",
-		);
-		expect(result.content.at(-1)).toEqual({ type: "image", data: TINY_PNG_BASE64, mimeType: "image/png" });
 	});
 
 	it("persists store() writes as custom entries for later calls", async () => {

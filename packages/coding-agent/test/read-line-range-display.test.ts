@@ -12,8 +12,8 @@ import {
 	SessionManager,
 	type SessionMessageEntry,
 } from "../src/core/session-manager.ts";
-import { createReadToolDefinition } from "../src/core/tools/read.ts";
 import { formatReadLineRange } from "../src/core/tools/render-utils.ts";
+import { readRenderers } from "../src/core/tools/renderers/read.ts";
 import { ToolExecutionComponent } from "../src/modes/interactive/components/tool-execution.ts";
 import { TreeSelectorComponent } from "../src/modes/interactive/components/tree-selector.ts";
 import { initTheme } from "../src/modes/interactive/theme/theme.ts";
@@ -127,7 +127,7 @@ describe("read line range display", () => {
 			"call",
 			args,
 			{},
-			createReadToolDefinition(tempDir),
+			readRenderers,
 			// SAFETY: ToolExecutionComponent only calls ui.requestRender(), which this stub implements.
 			{ requestRender() {} } as TUI,
 			tempDir,

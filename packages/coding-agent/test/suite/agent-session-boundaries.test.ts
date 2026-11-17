@@ -130,7 +130,8 @@ describe("AgentSession actionable boundaries", () => {
 		const requests: string[] = [];
 		const instruction = "EXACT-REPLACEMENT-INSTRUCTION ".repeat(100);
 		const harness = await createHarness({
-			models: [{ id: "faux-1", contextWindow: 2_000, maxTokens: 100 }],
+			// Small enough that the replacement alone crosses the threshold: no built-in tool declarations add to it.
+			models: [{ id: "faux-1", contextWindow: 800, maxTokens: 100 }],
 			settings: { compaction: { enabled: true, keepRecentTokens: 1, reserveTokens: 0 } },
 			extensionFactories: [
 				(pi) => {

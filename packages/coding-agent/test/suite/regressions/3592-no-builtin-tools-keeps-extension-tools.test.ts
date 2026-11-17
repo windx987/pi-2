@@ -12,6 +12,7 @@ import { DefaultResourceLoader } from "../../../src/core/resource-loader.ts";
 import { createAgentSession } from "../../../src/core/sdk.ts";
 import { SessionManager } from "../../../src/core/session-manager.ts";
 import { SettingsManager } from "../../../src/core/settings-manager.ts";
+import { standInToolsExtension } from "../../fixtures/stand-in-tools.ts";
 
 describe("regression #3592: no-builtin-tools keeps extension tools enabled", () => {
 	let tempDir: string;
@@ -37,6 +38,7 @@ describe("regression #3592: no-builtin-tools keeps extension tools enabled", () 
 			agentDir,
 			settingsManager,
 			extensionFactories: [
+				standInToolsExtension,
 				(pi) => {
 					pi.on("session_start", () => {
 						pi.registerTool({

@@ -8,6 +8,7 @@ import { DefaultResourceLoader } from "../../../src/core/resource-loader.ts";
 import { createAgentSession } from "../../../src/core/sdk.ts";
 import { SessionManager } from "../../../src/core/session-manager.ts";
 import { SettingsManager } from "../../../src/core/settings-manager.ts";
+import { standInToolsExtension } from "../../fixtures/stand-in-tools.ts";
 
 describe("regression #2835: tool allowlists filter extension tools", () => {
 	let tempDir: string;
@@ -33,6 +34,7 @@ describe("regression #2835: tool allowlists filter extension tools", () => {
 			agentDir,
 			settingsManager,
 			extensionFactories: [
+				standInToolsExtension,
 				(pi) => {
 					pi.on("session_start", () => {
 						pi.registerTool({

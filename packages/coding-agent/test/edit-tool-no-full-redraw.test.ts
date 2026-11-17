@@ -3,8 +3,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Container, type Terminal, Text, type TUI, TuiMainScreen } from "@earendil-works/pi-tui";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
-import { createEditToolDefinition } from "../src/core/tools/edit.ts";
 import { computeEditsDiff, type Edit } from "../src/core/tools/edit-diff.ts";
+import { editRenderers } from "../src/core/tools/renderers/edit.ts";
 import { ToolExecutionComponent } from "../src/modes/interactive/components/tool-execution.ts";
 import { initTheme } from "../src/modes/interactive/theme/theme.ts";
 
@@ -106,7 +106,7 @@ describe("edit tool TUI rendering", () => {
 			"tool-call-1",
 			{ path: filePath, edits },
 			{},
-			createEditToolDefinition(process.cwd()),
+			{ ...editRenderers, renderShell: "self" },
 			tui,
 			process.cwd(),
 		);
@@ -175,7 +175,7 @@ describe("edit tool TUI rendering", () => {
 			"tool-call-replay",
 			{ path: filePath, edits },
 			{},
-			createEditToolDefinition(process.cwd()),
+			{ ...editRenderers, renderShell: "self" },
 			tui,
 			process.cwd(),
 		);
@@ -212,7 +212,7 @@ describe("edit tool TUI rendering", () => {
 			"tool-call-2",
 			{ path: filePath, edits: [{ oldText: "does not exist", newText: "replacement" }] },
 			{},
-			createEditToolDefinition(process.cwd()),
+			{ ...editRenderers, renderShell: "self" },
 			tui,
 			process.cwd(),
 		);

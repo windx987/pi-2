@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { win32 } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createLocalPowerShellOperations, createPowerShellTool } from "../src/core/tools/powershell.ts";
+import { createLocalPowerShellOperations } from "../src/core/tools/powershell.ts";
 import type * as Shell from "../src/utils/shell.ts";
 import { getPowerShellConfig, POWERSHELL_ARGS } from "../src/utils/shell.ts";
 
@@ -18,13 +18,6 @@ vi.mock("../src/utils/shell.ts", async (importOriginal) => {
 	};
 });
 
-function getTextOutput(result: { content: Array<{ type: string; text?: string }> }): string {
-	return result.content
-		.filter((content) => content.type === "text")
-		.map((content) => content.text ?? "")
-		.join("\n");
-}
-
 function findPowerShell(fileName: "powershell.exe" | "pwsh.exe"): string | undefined {
 	if (process.platform !== "win32") return undefined;
 	const candidates =
@@ -40,7 +33,7 @@ afterEach(() => {
 	shellOverride.path = undefined;
 });
 
-describe("powershell tool", () => {
+describe("powershell operations", () => {
 	it("uses process-local execution policy bypass", () => {
 		expect(POWERSHELL_ARGS).toEqual(["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command"]);
 	});
@@ -49,11 +42,13 @@ describe("powershell tool", () => {
 		const config = getPowerShellConfig();
 		expect(config.args).toEqual(POWERSHELL_ARGS);
 
-		const tool = createPowerShellTool(process.cwd());
-		const result = await tool.execute("powershell-test", {
-			command: "Write-Output 'héllo €'; Get-ExecutionPolicy -Scope Process",
-		});
-		const output = getTextOutput(result);
+		const chunks: Buffer[] = [];
+		await createLocalPowerShellOperations().exec(
+			"Write-Output 'héllo €'; Get-ExecutionPolicy -Scope Process",
+			process.cwd(),
+			{ onData: (data) => chunks.push(data) },
+		);
+		const output = Buffer.concat(chunks).toString("utf-8");
 
 		expect(output).toContain("héllo €");
 		expect(output).toContain("Bypass");

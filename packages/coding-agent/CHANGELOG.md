@@ -4,6 +4,7 @@
 
 ### Breaking Changes
 
+- Workshop edition: removed the built-in tool factories `createReadTool`, `createWriteTool`, `createEditTool`, `createBashTool`, `createGrepTool`, `createFindTool`, `createLsTool`, `createPowerShellTool`, every `create*ToolDefinition`, `createCodingTools` and `createReadOnlyTools`, and the tools' `*Operations` and `*Options` types. Register tools through an extension with `pi.registerTool()` instead; the input and details types (`ReadToolInput`, `EditToolDetails`, ...), `createLocalBashOperations` and `createLocalPowerShellOperations` remain
 - Extension components: `render()` now returns `readonly string[]`, and `Container` returns the same cached array while its children are unchanged. Extensions that modify render output in place, including `super.render()` in a `Container` subclass or an embedded component's output, must copy it first ([#9549](https://github.com/earendil-works/pi/issues/9549))
 
 ### Added
@@ -47,6 +48,8 @@
 
 ### Removed
 
+- Workshop edition: removed the built-in `read`, `write`, `edit`, `bash`, `grep`, `find`, `ls` and `powershell` tools. A session without extensions offers the model no tools; workshop participants implement them as extensions (`education/exercises/`). Their TUI renderers, the user `!` shell and the tool loadout settings (`defaultTools`, `--tools`, `--exclude-tools`) remain
+- Workshop edition: removed the `ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts` and `bash-spawn-hook.ts` example extensions, which wrapped the removed tools
 - Removed the retired `deepseek-v3.2` and `deepseek-v4-flash` from the Qwen Token Plan Team providers; use `deepseek-v4-flash-0731` or `deepseek-v4.1-flash` ([#11773](https://github.com/earendil-works/pi/issues/11773))
 
 ## [1.5.2] - 2026-11-10

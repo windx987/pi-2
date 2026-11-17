@@ -10,6 +10,7 @@ import {
 import { Type } from "typebox";
 import { afterEach, describe, expect, it } from "vitest";
 import type { BuildSystemPromptOptions, ExtensionAPI } from "../../src/index.ts";
+import { standInToolsExtension } from "../fixtures/stand-in-tools.ts";
 import { createHarness, getAssistantTexts, type Harness } from "./harness.ts";
 
 describe("AgentSession model and extension characterization", () => {
@@ -470,6 +471,7 @@ describe("AgentSession model and extension characterization", () => {
 		const seenOptions: BuildSystemPromptOptions[] = [];
 		const harness = await createHarness({
 			extensionFactories: [
+				standInToolsExtension,
 				(pi) => {
 					pi.registerCommand("inspect-options", {
 						description: "Inspect system prompt options",

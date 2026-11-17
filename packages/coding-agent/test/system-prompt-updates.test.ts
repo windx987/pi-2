@@ -22,11 +22,12 @@ import {
 	diffSystemPromptSections,
 } from "../src/core/system-prompt.ts";
 import type { ExtensionFactory } from "../src/index.ts";
+import { standInToolsExtension } from "./fixtures/stand-in-tools.ts";
 import { createHarness } from "./suite/harness.ts";
 
 describe("system prompt updates", () => {
 	test("declares the prompt and tools once and reuses them across resume", async () => {
-		const harness = await createHarness();
+		const harness = await createHarness({ extensionFactories: [standInToolsExtension] });
 		try {
 			harness.setResponses([fauxAssistantMessage("first"), fauxAssistantMessage("second")]);
 			await harness.session.prompt("one");

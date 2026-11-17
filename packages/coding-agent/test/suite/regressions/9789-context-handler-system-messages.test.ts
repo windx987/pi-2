@@ -7,6 +7,7 @@ import {
 } from "@earendil-works/pi-ai";
 import { afterEach, describe, expect, it } from "vitest";
 import type { ExtensionFactory } from "../../../src/index.ts";
+import { standInToolsExtension } from "../../fixtures/stand-in-tools.ts";
 import { createHarness, type Harness } from "../harness.ts";
 
 /** Compaction supplied by an extension hook, as in the reported sessions. */
@@ -166,6 +167,7 @@ describe("context_with_system handlers", () => {
 		const seen: AgentMessage[][] = [];
 		const harness = await createHarness({
 			extensionFactories: [
+				standInToolsExtension,
 				compactViaHook,
 				(pi) => {
 					pi.on("context_with_system", async (event) => {

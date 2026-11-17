@@ -5,10 +5,12 @@ import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 
 import { getReadmePath } from "../src/config.ts";
 import type { ToolDefinition } from "../src/core/extensions/types.ts";
-import { type BashOperations, createBashToolDefinition } from "../src/core/tools/bash.ts";
-import { createReadTool, createReadToolDefinition } from "../src/core/tools/read.ts";
-import { withBuiltInRenderers } from "../src/core/tools/renderers/index.ts";
-import { createWriteToolDefinition } from "../src/core/tools/write.ts";
+import {
+	createShellRenderers,
+	readRenderers,
+	withBuiltInRenderers,
+	writeRenderers,
+} from "../src/core/tools/renderers/index.ts";
 import { ToolExecutionComponent } from "../src/modes/interactive/components/tool-execution.ts";
 import { initTheme, theme } from "../src/modes/interactive/theme/theme.ts";
 import { stripAnsi } from "../src/utils/ansi.ts";
@@ -164,63 +166,6 @@ describe("ToolExecutionComponent parity", () => {
 		expect(rendered).toContain("README.md");
 	});
 
-	test("bash execute emits an initial empty partial update before output arrives", async () => {
-		const updates: Array<{ content: Array<{ type: string; text?: string }>; details?: unknown }> = [];
-		const operations: BashOperations = {
-			exec: async () => {
-				await new Promise((resolve) => setTimeout(resolve, 10));
-				return { exitCode: 0 };
-			},
-		};
-		const tool = createBashToolDefinition(process.cwd(), { operations, exposeSessionEnvironment: false });
-		const promise = tool.execute(
-			"tool-bash-1",
-			{ command: "sleep 10" },
-			undefined,
-			(update) => updates.push(update as { content: Array<{ type: string; text?: string }>; details?: unknown }),
-			{} as never,
-		);
-		expect(updates).toEqual([{ content: [], details: undefined }]);
-		await promise;
-	});
-
-	test("bash renderer does not duplicate final full output truncation details", async () => {
-		const operations: BashOperations = {
-			exec: async (_command, _cwd, { onData }) => {
-				for (let i = 1; i <= 4000; i++) {
-					onData(Buffer.from(`line-${String(i).padStart(4, "0")}\n`));
-				}
-				return { exitCode: 0 };
-			},
-		};
-		const tool = createBashToolDefinition(process.cwd(), { operations, exposeSessionEnvironment: false });
-		const result = await tool.execute(
-			"tool-bash-1b",
-			{ command: "generate output" },
-			undefined,
-			undefined,
-			{} as never,
-		);
-		const component = new ToolExecutionComponent(
-			"bash",
-			"tool-bash-1b",
-			{ command: "generate output" },
-			{},
-			tool,
-			createFakeTui(),
-			process.cwd(),
-		);
-		component.setExpanded(true);
-		component.updateResult({ ...result, isError: false }, false);
-
-		const rendered = stripAnsi(component.render(200).join("\n"));
-		expect(rendered.match(/Full output:/g)?.length ?? 0).toBe(1);
-		expect(rendered).toMatch(/line-4000[^\n]*\n[^\S\n]*\n \[Full output:/);
-		expect(rendered).not.toMatch(/line-4000[^\n]*\n[^\S\n]*\n[^\S\n]*\n \[Full output:/);
-		expect(rendered).toContain("Truncated: showing 2000 of 4000 lines");
-		expect(rendered).not.toContain("[Showing lines 2001-4000 of 4000. Full output:");
-	});
-
 	// Issue #9628: keep short durations precise and make long shell durations readable.
 	test.each([
 		{ ms: 0, formatted: "0.0s" },
@@ -241,7 +186,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-bash-duration",
 			{ command: "long-running-command" },
 			{},
-			createBashToolDefinition(process.cwd(), { exposeSessionEnvironment: false }),
+			createShellRenderers("$"),
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -272,7 +217,7 @@ describe("ToolExecutionComponent parity", () => {
 				"tool-bash-recorded",
 				{ command: "sleep 4" },
 				{},
-				createBashToolDefinition(process.cwd(), { exposeSessionEnvironment: false }),
+				createShellRenderers("$"),
 				createFakeTui(),
 				process.cwd(),
 			);
@@ -295,7 +240,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-4",
 			{ path: "README.md" },
 			{},
-			createReadToolDefinition(process.cwd()),
+			readRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -311,7 +256,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-read-null-range",
 			{ path: "src/example.ts", offset: null, limit: null },
 			{},
-			createReadToolDefinition(process.cwd()),
+			readRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -362,50 +307,6 @@ describe("ToolExecutionComponent parity", () => {
 		expect(rendered).toContain("read");
 		expect(rendered).toContain("README.md");
 		expect(rendered).toContain("override result");
-	});
-
-	test("uses custom renderers for built-in overrides that reuse built-in definition parameters", () => {
-		const builtInDefinition = createReadToolDefinition(process.cwd());
-		const component = new ToolExecutionComponent(
-			"read",
-			"tool-4d",
-			{ path: "README.md" },
-			{},
-			{
-				...builtInDefinition,
-				renderCall: () => new Text("override call", 0, 0),
-				renderResult: () => new Text("override result", 0, 0),
-			},
-			createFakeTui(),
-			process.cwd(),
-		);
-		component.updateResult({ content: [{ type: "text", text: "hello" }], details: undefined, isError: false }, false);
-		const rendered = stripAnsi(component.render(120).join("\n"));
-		expect(rendered).toContain("override call");
-		expect(rendered).toContain("override result");
-		expect(rendered).not.toContain("read README.md");
-	});
-
-	test("uses custom renderers for built-in overrides that reuse wrapped built-in tool parameters", () => {
-		const builtInTool = createReadTool(process.cwd());
-		const component = new ToolExecutionComponent(
-			"read",
-			"tool-4e",
-			{ path: "README.md" },
-			{},
-			{
-				...createBaseToolDefinition("read"),
-				parameters: builtInTool.parameters,
-				renderCall: () => new Text("wrapped override call", 0, 0),
-				renderResult: () => new Text("wrapped override result", 0, 0),
-			},
-			createFakeTui(),
-			process.cwd(),
-		);
-		component.updateResult({ content: [{ type: "text", text: "hello" }], details: undefined, isError: false }, false);
-		const rendered = stripAnsi(component.render(120).join("\n"));
-		expect(rendered).toContain("wrapped override call");
-		expect(rendered).toContain("wrapped override result");
 	});
 
 	test("shares renderer state across custom call and result slots", () => {
@@ -521,7 +422,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-7",
 			{ path: "README.md", content: "one\ntwo\n" },
 			{},
-			createWriteToolDefinition(process.cwd()),
+			writeRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -533,7 +434,7 @@ describe("ToolExecutionComponent parity", () => {
 
 	// #9265: every argument delta re-ran the call renderer; a streamed `write` re-highlighted its whole content each time.
 	test("renders streamed partial arguments once per frame, with the latest arguments", () => {
-		const write = createWriteToolDefinition(process.cwd());
+		const write = writeRenderers;
 		let renderCalls = 0;
 		const counted: typeof write = {
 			...write,
@@ -590,7 +491,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-8",
 			{ path: "notes.txt" },
 			{},
-			createReadToolDefinition(process.cwd()),
+			readRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -611,7 +512,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-read-error-highlighting",
 			{ path: "config.exs", offset: 120, limit: 130 },
 			{},
-			createReadToolDefinition(process.cwd()),
+			readRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -629,7 +530,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-click-expand",
 			{ path: "notes.txt" },
 			{},
-			createReadToolDefinition(process.cwd()),
+			readRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -665,7 +566,7 @@ describe("ToolExecutionComponent parity", () => {
 			"tool-ordinary-read-collapsed",
 			{ path: "notes.txt" },
 			{},
-			createReadToolDefinition(process.cwd()),
+			readRenderers,
 			createFakeTui(),
 			process.cwd(),
 		);
@@ -732,7 +633,7 @@ describe("ToolExecutionComponent parity", () => {
 				`tool-compact-${scenario.title}`,
 				{ path: scenario.path },
 				{},
-				createReadToolDefinition(process.cwd()),
+				readRenderers,
 				createFakeTui(),
 				process.cwd(),
 			);
@@ -764,7 +665,7 @@ describe("ToolExecutionComponent parity", () => {
 				`tool-compact-range-${scenario.title}`,
 				{ path: scenario.path, offset: 120, limit: 210 },
 				{},
-				createReadToolDefinition(process.cwd()),
+				readRenderers,
 				createFakeTui(),
 				process.cwd(),
 			);
