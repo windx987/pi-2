@@ -143,12 +143,12 @@ flowchart LR
     class own,more extend
 ```
 
-| Stage | Time | You leave with | Start here |
-|---|---|---|---|
-| 1 · Understand Pi | 0–20 min | A map of the packages and where a request goes | [Architecture](#architecture) |
-| 2 · Explore the agent | 20–65 min | The tool-call cycle, traced in real source | [Sequence diagram](#how-a-request-becomes-a-tool-call), `packages/agent/src/agent-loop.ts` |
-| 3 · Build the tools | 65–145 min | An agent that reads, writes, edits and runs tests with your code | [Exercises](education/exercises/README.md) |
-| 4 · Extend | 145–180 min | Ideas for your next tool, and a demo | [Extensions docs](packages/coding-agent/docs/extensions.md) |
+| Stage | You leave with | Start here |
+|---|---|---|
+| 1 · Understand Pi | A map of the packages and where a request goes | [Architecture](#architecture) |
+| 2 · Explore the agent | The tool-call cycle, traced in real source | [Sequence diagram](#how-a-request-becomes-a-tool-call), `packages/agent/src/agent-loop.ts` |
+| 3 · Build the tools | An agent that reads, writes, edits and runs tests with your code | [Exercises](education/exercises/README.md) |
+| 4 · Extend | Ideas for your next tool, and a demo | [Extensions docs](packages/coding-agent/docs/extensions.md) |
 
 By the end of stage 3 you can ask "run the tests and fix what fails", and watch the agent use all four of your tools to do it.
 
