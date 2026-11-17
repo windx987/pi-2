@@ -19,7 +19,45 @@ npm run build
 docker pull node:22-bookworm-slim     # for exercise 04: Docker Desktop, or `colima start` with Colima
 ```
 
-Configure a model provider once (`./pi-test.sh`, then `/login`, or set an API key such as `ANTHROPIC_API_KEY`).
+## Model: Gemma 4 through Ollama
+
+The workshop uses an open model served by [Ollama](https://ollama.com). Pick the variant that fits your machine:
+
+| Model | Runs | Needs |
+|---|---|---|
+| `gemma4:31b` | Locally | About 20 GB of free memory (for example a 32 GB Mac) |
+| `gemma4:31b-cloud` | On Ollama's servers | `ollama signin`; an account with cloud usage available |
+| `gemma4:12b` | Locally | About 8 GB of free memory (works on a 16 GB M1) |
+
+Ollama gives local models a 4096-token context by default and silently cuts longer requests, which is too small for Pi's system prompt, tool definitions and file contents. Create a variant with a larger context once:
+
+```bash
+ollama pull gemma4:12b                 # or gemma4:31b
+printf 'FROM gemma4:12b\nPARAMETER num_ctx 32768\n' > Modelfile
+ollama create gemma4-workshop:12b -f Modelfile
+```
+
+Tell Pi about the models in `~/.pi/agent/models.json`:
+
+```json
+{
+  "$schema": "https://pi.dev/schemas/models.schema.json",
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "compat": { "supportsDeveloperRole": false },
+      "models": [
+        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (local, 32k)", "contextWindow": 32768, "maxTokens": 8192 },
+        { "id": "gemma4:31b-cloud", "name": "Gemma 4 31B (Ollama Cloud)", "contextWindow": 131072, "maxTokens": 8192 }
+      ]
+    }
+  }
+}
+```
+
+Start Pi with `--model ollama/gemma4-workshop:12b`, or choose the model with `/model`. Any other provider Pi supports works too (`/login`, or an API key such as `ANTHROPIC_API_KEY`).
 
 ## Work on a copy of the playground
 

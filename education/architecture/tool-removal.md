@@ -246,5 +246,5 @@ Taken from the recommendations (reversible; say so to change):
 3. ~~Update tests and examples; add the verification suite test.~~ Done. Loadout tests register stand-ins for the removed tools through the extension API (`test/fixtures/stand-in-tools.ts`, inactive on registration like the removed built-ins); `test/suite/agent-session-workshop-tools.test.ts` covers the verification in section 7, item 3.
 4. ~~`npm run check`, `./test.sh`.~~ Done. `packages/env` needs `cargo` to build its daemon and was not run where cargo is missing; no change touches it.
 5. ~~Write the starter extensions and instructor solutions; test each solution.~~ Done; the bash solution is tested with a stand-in for `docker` where no Docker daemon runs.
-6. Manual interactive check. Open: needs a real provider, and Docker for the bash isolation checks.
+6. ~~Manual interactive check.~~ Done on 2026-11-18: in the TUI with `gemma4:12b` (32k context) through Ollama on a 16 GB M1, the four solutions fixed the playground bug end to end (bash, read, bash, edit, bash), with bash in Colima. Bash isolation verified by `workshop-solutions-docker.test.ts` on the solutions branch.
 7. ~~Update docs.~~ Done: a note at the top of each affected file (decision 6), and the root README describes the workshop edition.
