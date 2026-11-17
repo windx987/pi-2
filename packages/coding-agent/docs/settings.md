@@ -1,5 +1,7 @@
 # Settings Reference
 
+> **Workshop edition:** the built-in coding tools (`read`, `write`, `edit`, `bash`, `grep`, `find`, `ls`, `powershell`), their `create*Tool` factories and the examples that wrapped them (`ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts`, `bash-spawn-hook.ts`) were removed. This page describes upstream Pi: where it mentions them, a session has such tools only when an extension registers them. See [tool-removal.md](../../../education/architecture/tool-removal.md).
+
 This reference lists user-configurable settings, their types, defaults, and purposes. Project settings override agent-directory settings. Resource lists are combined. See [Configuration](configuration.md) for file locations and trust behavior.
 
 Add `"$schema": "https://pi.dev/schemas/settings.schema.json"` to `settings.json` for editor validation and completion.

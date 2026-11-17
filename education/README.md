@@ -1,0 +1,23 @@
+# Workshop roadmap
+
+This directory is the educational layer of Pi Workshop Edition. It adds material next to Pi's packages and does not change their structure.
+
+| Path | Contents |
+|---|---|
+| [architecture/tool-removal.md](architecture/tool-removal.md) | What was removed from Pi, what was kept, and why |
+| [exercises/](exercises/README.md) | The four tool exercises: README and starter extension each |
+| [playground/](playground/README.md) | A tiny project for the agent to work on, used from a copy |
+
+## Levels
+
+**1. Understand the application.** What the packages do and how they depend on each other: the architecture diagram in the [root README](../README.md#architecture), then `packages/coding-agent/src/core/agent-session.ts` as the center of the application.
+
+**2. Explore the agent.** How a prompt becomes model requests and tool calls: the [sequence diagram](../README.md#how-a-request-becomes-a-tool-call), then `packages/agent/src/agent-loop.ts`.
+
+**3. Build your own tools.** [Exercises 01 to 04](exercises/README.md): read, write, edit, bash.
+
+**4. Extend the framework.** Pi's extension documentation covers events, commands, skills and MCP: [extensions.md](../packages/coding-agent/docs/extensions.md), [skills.md](../packages/coding-agent/docs/skills.md), [mcp.md](../packages/coding-agent/docs/mcp.md), and the examples in [packages/coding-agent/examples/extensions/](../packages/coding-agent/examples/extensions/).
+
+## For instructors
+
+Reference solutions are not in this repository's `main` branch. The original Pi implementations are in git history at the baseline commit, for example `git show cead615b4:packages/coding-agent/src/core/tools/edit.ts`.

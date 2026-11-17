@@ -1,5 +1,7 @@
 # Environment Variables
 
+> **Workshop edition:** the built-in coding tools (`read`, `write`, `edit`, `bash`, `grep`, `find`, `ls`, `powershell`), their `create*Tool` factories and the examples that wrapped them (`ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts`, `bash-spawn-hook.ts`) were removed. This page describes upstream Pi: where it mentions them, a session has such tools only when an extension registers them. See [tool-removal.md](../../../education/architecture/tool-removal.md).
+
 Pi uses environment variables in three ways:
 
 - Variables such as `PI_OFFLINE` configure the Pi process.

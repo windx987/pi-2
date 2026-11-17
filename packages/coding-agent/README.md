@@ -12,6 +12,8 @@
 
 # Pi
 
+> **Workshop edition:** the built-in coding tools (`read`, `write`, `edit`, `bash`, `grep`, `find`, `ls`, `powershell`), their `create*Tool` factories and the examples that wrapped them (`ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts`, `bash-spawn-hook.ts`) were removed. This page describes upstream Pi: where it mentions them, a session has such tools only when an extension registers them. See [tool-removal.md](../../education/architecture/tool-removal.md).
+
 Pi is a minimal, extensible agent harness that you can make your own.
 
 Adapt Pi to your workflows, not the other way around. Customize Pi with [extensions](docs/extensions.md), [skills](docs/skills.md), [prompt templates](docs/prompt-templates.md), and [themes](docs/themes.md). Bundle them as [Pi packages](docs/packages.md) and share via npm or git.

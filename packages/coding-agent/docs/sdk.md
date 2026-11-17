@@ -1,5 +1,7 @@
 # SDK
 
+> **Workshop edition:** the built-in coding tools (`read`, `write`, `edit`, `bash`, `grep`, `find`, `ls`, `powershell`), their `create*Tool` factories and the examples that wrapped them (`ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts`, `bash-spawn-hook.ts`) were removed. This page describes upstream Pi: where it mentions them, a session has such tools only when an extension registers them. See [tool-removal.md](../../../education/architecture/tool-removal.md).
+
 `@earendil-works/pi-coding-agent` embeds Pi in a Node.js or Bun process. It provides direct TypeScript access to the agent, sessions, tools, models, and resources used by the command-line application.
 
 Use the SDK for in-process TypeScript integration. For a language-independent or isolated subprocess, see [CLI Integration](cli-integration.md).

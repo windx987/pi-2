@@ -1,206 +1,188 @@
 <p align="center">
-  <a href="https://pi.dev">
-    <img alt="pi/2 logo" src="./assets/logo.svg" width="128">
-  </a>
-</p>
-<p align="center">
-  <a href="https://discord.com/invite/3cU7Bz4UPx"><img alt="Discord" src="https://img.shields.io/badge/discord-community-5865F2?style=flat-square&logo=discord&logoColor=white" /></a>
-  <a href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent"><img alt="npm" src="https://img.shields.io/npm/v/@earendil-works/pi-coding-agent?style=flat-square" /></a>
+  <img alt="pi/2 logo" src="./assets/logo.svg" width="128">
 </p>
 
-> New issues and PRs from new contributors are auto-closed by default. Maintainers review auto-closed issues daily. See [CONTRIBUTING.md](CONTRIBUTING.md).
+# Pi Workshop Edition (pi/2)
 
-# Pi
+Pi Workshop Edition is an educational version of the [Pi agent framework](https://github.com/earendil-works/pi). It keeps Pi's architecture, packages and terminal UI, and removes the built-in coding tools (`read`, `write`, `edit`, `bash`, ...). In the workshop you write those tools yourself, as Pi extensions, and learn how a real agent works by completing it.
 
-Pi is a minimal, extensible agent harness that you can make your own.
+Start this edition without extensions and ask it to read a file: it cannot. The model is offered no tools. After the exercises it reads, writes, edits and runs code with tools you built.
 
-Adapt Pi to your workflows, not the other way around. Customize Pi with [extensions](packages/coding-agent/docs/extensions.md), [skills](packages/coding-agent/docs/skills.md), [prompt templates](packages/coding-agent/docs/prompt-templates.md), and [themes](packages/coding-agent/docs/themes.md). Bundle them as [Pi packages](packages/coding-agent/docs/packages.md) and share via npm or git.
+## What you'll learn
 
-Pi ships with powerful defaults but skips features like sub-agents and plan mode. Ask Pi to build what you want, or install a package that does it your way.
+- How an LLM provider, the agent loop and the terminal UI fit together in a real agent.
+- How a tool call travels: from the model's request, through validation and execution, back to the model.
+- How to define, register and implement tools with Pi's extension API.
+- How to make tools safe: validating input, refusing ambiguous edits, isolating commands.
 
-Use Pi [interactively](packages/coding-agent/docs/usage.md), automate it in [print or JSON mode](packages/coding-agent/docs/cli.md), control it over [RPC](packages/coding-agent/docs/rpc.md), or build apps with the [Pi TypeScript SDK](packages/coding-agent/docs/sdk.md). See [OpenClaw](https://github.com/OpenClaw/OpenClaw) for a real-world integration.
+## Architecture
+
+```mermaid
+flowchart TB
+    user([User])
+    subgraph coding["packages/coding-agent"]
+        tui["Interactive mode<br/>modes/interactive"]
+        session["AgentSession<br/>core/agent-session.ts"]
+        runner["ExtensionRunner<br/>core/extensions/runner.ts"]
+        registry["Tool registry and loadout<br/>defaultTools, --tools"]
+        sessions["SessionManager<br/>transcript, resume, compaction"]
+        runtime["ModelRuntime<br/>core/model-runtime.ts"]
+    end
+    ext["Your extensions<br/>education/exercises"]
+    subgraph agent["packages/agent - pi-agent-core"]
+        loop["Agent and agent loop<br/>agent.ts, agent-loop.ts"]
+    end
+    subgraph ai["packages/ai - pi-ai"]
+        providers["Providers, streaming,<br/>validateToolArguments"]
+    end
+    tuilib["packages/tui<br/>rendering library"]
+    llm[("LLM provider API")]
+
+    user --> tui
+    tui --> tuilib
+    tui -- "prompt()" --> session
+    session -- "events" --> tui
+    ext -- "pi.registerTool()" --> runner
+    runner -- "registered tools" --> registry
+    session --> registry
+    registry -- "active tools: agent.state.tools" --> loop
+    session -- "agent.prompt()" --> loop
+    loop -- "events" --> session
+    session -- "appendMessage()" --> sessions
+    loop -- "beforeToolCall / afterToolCall" --> session
+    session -- "tool_call / tool_result events" --> runner
+    loop -- "streamFn" --> runtime
+    runtime --> providers
+    providers --> llm
+    loop -- "execute()" --> ext
+```
+
+`coding-agent` depends on `agent`, `ai` and `tui` (and on `mcp` and `codemode` for built-in extensions); `agent` depends on `ai`, whose `validateToolArguments` the loop uses. The loop does not choose a provider: `AgentSession`'s `streamFn` sends requests through `ModelRuntime`, which resolves auth and calls the pi-ai provider. Your extensions enter only through the extension API. See [education/architecture/](education/architecture/) for details.
+
+## How a request becomes a tool call
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant TUI as Interactive mode
+    participant Session as AgentSession
+    participant Loop as Agent loop (pi-agent-core)
+    participant Model as ModelRuntime and pi-ai
+    participant LLM as LLM provider
+    participant Tool as Your tool
+
+    User->>TUI: Fix the failing test
+    TUI->>Session: prompt(text)
+    Note over Session: active tools are already in agent.state.tools
+    Session->>Loop: agent.prompt(messages)
+    loop until the model answers without tool calls
+        Loop->>Model: streamFn(model, messages and tool definitions)
+        Model->>LLM: provider request
+        LLM-->>Model: streamed response
+        Model-->>Loop: assistant message with a tool call
+        Loop-->>Session: message events
+        Session-->>TUI: events, rendered as they stream
+        Loop->>Loop: validateToolArguments(tool, call)
+        Loop->>Session: beforeToolCall
+        Note over Session: extensions get a tool_call event and may block the call
+        Loop->>Tool: execute(toolCallId, params, signal, onUpdate, ctx)
+        Tool-->>Loop: content, details, isError
+        Loop->>Session: afterToolCall
+        Note over Session: extensions get a tool_result event
+        Loop-->>Session: tool execution and result events
+        Session-->>TUI: events
+        Note over Loop: the tool result joins the messages for the next request
+    end
+    Loop-->>Session: final assistant message
+    Note over Session: SessionManager.appendMessage persists each message
+    Session-->>TUI: events
+    TUI-->>User: rendered answer
+```
+
+The model decides which tool to call. Pi runs the tool lifecycle. You implement what the tool does.
+
+## Learning path
+
+```mermaid
+flowchart LR
+    a["Understand Pi"] --> b["Agent loop"] --> c["Tool calling"]
+    c --> r["01 Read"] --> w["02 Write"] --> e["03 Edit"] --> s["04 Bash"]
+    s --> x["Your own extensions"]
+```
 
 ## Getting started
 
-Install the command-line interface:
+Requires Node.js 22.19 or newer, and Docker for exercise 04.
 
 ```bash
-curl -fsSL https://pi.dev/install.sh | sh
+git clone https://github.com/windx987/pi-2.git
+cd pi-2
+npm install --ignore-scripts
+npm run build
+./pi-test.sh                      # run Pi from source; /login connects a provider
 ```
 
-On Windows:
+## Building your first tool
 
-```shell
-powershell -c "irm https://pi.dev/install.ps1 | iex"
+A tool is a definition plus one function, registered by an extension:
+
+```typescript
+import { defineTool, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+
+const hello = defineTool({
+	name: "hello",
+	label: "hello",
+	description: "Greet someone by name",
+	parameters: Type.Object({ name: Type.String() }),
+	async execute(_toolCallId, params) {
+		return { content: [{ type: "text", text: `Hello, ${params.name}!` }], details: undefined };
+	},
+});
+
+export default function (pi: ExtensionAPI) {
+	pi.registerTool(hello);
+}
 ```
 
-The installer pins all dependencies and updates Pi with `pi update`. Alternatively, install directly with npm, which does not pin transitive dependencies:
+Load it with `./pi-test.sh -e hello.ts` and ask Pi to greet you.
 
-```bash
-npm install -g --ignore-scripts @earendil-works/pi-coding-agent
-```
+## Workshop exercises
 
-Pi requires Node.js 22.19 or newer. The macOS, Linux, and Windows installers can install it if needed. Pi does not require dependency lifecycle scripts for a normal npm installation.
+| Exercise | Tool | You learn |
+|---|---|---|
+| [01-read](education/exercises/01-read/README.md) | `read` | Arguments, filesystem access, error results |
+| [02-write](education/exercises/02-write/README.md) | `write` | Structured input, validation, filesystem writes |
+| [03-edit](education/exercises/03-edit/README.md) | `edit` | Exact matching, uniqueness, diffs, safe changes |
+| [04-bash](education/exercises/04-bash/README.md) | `bash` | Processes, exit codes, isolation in Docker |
 
-Start Pi in the directory where you want it to work:
+Start with [education/exercises/README.md](education/exercises/README.md). The full roadmap is in [education/README.md](education/README.md).
 
-```bash
-cd /path/to/project
-pi
-```
+## Project structure
 
-For a built-in AI provider, run `/login` inside Pi to connect a subscription or API key. Then give Pi a task.
-
-See the [documentation](https://pi.dev/docs/latest) for full setup and usage instructions, or [visit pi.dev](https://pi.dev) for demos.
-
-## Run with Nix
-
-```bash
-nix run github:earendil-works/pi/stable
-```
-
-`stable` points at the latest release. Install it with `nix profile add github:earendil-works/pi/stable` and update with `nix profile upgrade pi`. Use a release tag such as `github:earendil-works/pi/v1.0.0` to pin a version, or `github:earendil-works/pi` for unreleased changes on `main`. Nix builds Pi from source.
-
-Supports ARM64 and x86-64 on Linux and macOS. Use `nix build .` or `nix run .` to build or run your checkout.
-
-Nix builds are offline, so the bundled model data comes from a pi.dev model catalog revision pinned in `nix/model-catalog.json`. At runtime, Pi still overlays newer catalog data from pi.dev as usual. The Nix workflow replaces the pin on `main` when it no longer matches the checkout, for example after a provider is added or gains a new model type. To refresh it by hand:
-
-```bash
-npm run update:model-catalog-pin
-```
-
-## Packages
-
-This monorepo contains the Pi CLI and its supporting libraries.
-
-| Package | Description |
-|---------|-------------|
-| **[@earendil-works/chord](packages/chord)** | Object runtime for apps across processes: contracts, documents, a store, links, plugins with hot reload, HTTP, workers, web and terminal clients |
-| **[@earendil-works/pi-telemetry](packages/telemetry)** | Vendor-neutral telemetry contracts, reference adapter, conformance tests, and typed schemas |
-| **[@earendil-works/pi-ai](packages/ai)** | Unified multi-provider LLM API (OpenAI, Anthropic, Google, etc.) |
-| **[@earendil-works/pi-durable](packages/durable)** | Durable conversation, task, and document runtime |
-| **[@earendil-works/pi-agent-core](packages/agent)** | Agent runtime with tool calling and state management |
-| **[@earendil-works/pi-coding-agent](packages/coding-agent)** | Interactive coding agent CLI |
-| **[@earendil-works/pi-tui](packages/tui)** | Terminal UI library with differential rendering |
-
-For Slack/chat automation and workflows see [earendil-works/pi-chat](https://github.com/earendil-works/pi-chat).
-
-## Permissions & Containerization
-
-Pi does not include a built-in permission system for restricting filesystem, process, network, or credential access. By default, it runs with the permissions of the user and process that launched it.
-
-If you need stronger boundaries, containerize or sandbox Pi. See [packages/coding-agent/docs/containerization.md](packages/coding-agent/docs/containerization.md) for three patterns:
-
-- **Gondolin extension**: keep `pi` and provider auth on the host while routing built-in tools and `!` commands into a local Linux micro-VM.
-- **Plain Docker**: run the whole `pi` process in a local container for simple isolation.
-- **OpenShell**: run the whole `pi` process in a policy-controlled sandbox.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and [AGENTS.md](AGENTS.md) for project-specific rules (for both humans and agents).  Longer term plans for Pi can also be found in [RFCs](https://rfc.earendil.com/keyword/pi).
+| Path | Contents |
+|---|---|
+| [packages/ai](packages/ai) | Multi-provider LLM API, streaming, model catalog |
+| [packages/agent](packages/agent) | Agent loop, state, tool calling |
+| [packages/coding-agent](packages/coding-agent) | The `pi` application: sessions, extensions, skills, interactive mode |
+| [packages/tui](packages/tui) | Terminal UI library |
+| [packages/mcp](packages/mcp), [packages/codemode](packages/codemode) | MCP integration and sandboxed JavaScript tool, used by built-in extensions |
+| [packages/durable](packages/durable), [packages/chord](packages/chord), [apps/](apps) | Advanced runtimes and apps, outside the workshop path |
+| [education/](education) | Workshop material: architecture notes, exercises, playground |
 
 ## Development
 
 ```bash
-npm install --ignore-scripts  # Install all dependencies without running lifecycle scripts
-npm run build         # Refresh model data, then build all packages
-npm run build:offline # Rebuild using existing model data without network access
-npm run check         # Lint, format, and type check
-./test.sh            # Run tests (skips LLM-dependent tests without API keys)
-./pi-test.sh         # Run pi from sources (can be run from any directory)
+npm run check   # lint, format, type check (including the exercises)
+./test.sh       # tests without API keys
 ```
 
-### Using local packages outside the monorepo
+See [AGENTS.md](AGENTS.md) for project rules.
 
-Build every public package into one coherent local artifact set:
+## Original Pi framework
 
-```bash
-npm run pack:packages -- --out .artifacts/pi-packages
-```
-
-This refreshes model data before building `pi-ai`. To avoid network access when
-model data is already hydrated, pass `--offline-model-data`.
-
-Then configure an external project to consume one package and resolve all of
-its Pi dependencies from the same artifact set. npm is the default:
-
-```bash
-node scripts/use-local-packages.mjs \
-  --manifest .artifacts/pi-packages/manifest.json \
-  --consumer ../my-project \
-  --package @earendil-works/pi-durable \
-  --package @earendil-works/pi-agent-core
-cd ../my-project
-npm install --ignore-scripts
-```
-
-For a pnpm project, point `--consumer` at the workspace root:
-
-```bash
-node scripts/use-local-packages.mjs \
-  --manifest .artifacts/pi-packages/manifest.json \
-  --consumer ../my-project \
-  --package @earendil-works/pi-agent-core \
-  --package-manager pnpm
-cd ../my-project
-pnpm install --ignore-scripts
-```
-
-Repeat `--package` for each direct dependency. The command updates the
-consumer's `package.json` with content-addressed local `file:` references. It
-writes transitive overrides to `package.json` for npm or `pnpm-workspace.yaml`
-for pnpm. Keep the artifact directory available while installing or updating
-the consumer. Re-run both commands after changing Pi source.
-
-## Building standalone binaries from release source
-
-GitHub releases include a versioned source archive covered by the release's `SHA256SUMS` file. Extract it and run the same build script used for the official standalone binaries:
-
-```bash
-VERSION="<release-version>"
-tar -xzf "pi-${VERSION}-source.tar.gz"
-cd "pi-${VERSION}"
-./scripts/build-binaries.sh --offline-model-data --platform linux-x64 --out "$PWD/out"
-```
-
-The archive includes release model data and native prebuilds. `--offline-model-data` uses that model data without refreshing provider catalogs. The script installs dependencies and builds the executable with its runtime assets; pass `--skip-install` if dependencies are already provided.
-
-## Supply-chain hardening
-
-We treat npm dependency changes as reviewed code changes.
-
-- Direct external dependencies are pinned to exact versions. Internal workspace packages remain version-ranged.
-- `.npmrc` sets `save-exact=true` and `min-release-age=2` to avoid same-day dependency releases during npm resolution.
-- `package-lock.json` is the dependency ground truth. Pre-commit blocks accidental lockfile commits unless `PI_ALLOW_LOCKFILE_CHANGE=1` is set.
-- `npm run check` verifies pinned direct deps, native TypeScript import compatibility, and the generated coding-agent install lock.
-- The pi.dev installer installs from `packages/coding-agent/install-lock/`, generated from the root lockfile, to pin transitive deps. The npm package does not pin transitive deps.
-- Local release smoke tests and npm publication use the same tarball packer; npm publishes the validated tarballs rather than repacking workspace directories.
-- Local release installs, documented npm installs, and `pi update --self` use `--ignore-scripts` where supported.
-- CI installs with `npm ci --ignore-scripts`, and a scheduled GitHub workflow runs `npm audit --omit=dev` plus `npm audit signatures --omit=dev`.
-- Install lock generation has an explicit allowlist for dependency lifecycle scripts; new lifecycle-script deps fail checks until reviewed.
-
-## Share your OSS coding agent sessions
-
-If you use Pi or other coding agents for open source work, please share your sessions.
-
-Public OSS session data helps improve coding agents with real-world tasks, tool use, failures, and fixes instead of toy benchmarks.
-
-For the full explanation, see [this post on X](https://x.com/badlogicgames/status/2037811643774652911).
-
-To publish sessions, use [`badlogic/pi-share-hf`](https://github.com/badlogic/pi-share-hf). Read its README.md for setup instructions. All you need is a Hugging Face account, the Hugging Face CLI, and `pi-share-hf`.
-
-You can also watch [this video](https://x.com/badlogicgames/status/2041151967695634619), where I show how I publish my `pi-mono` sessions.
-
-I regularly publish my own `pi-mono` work sessions here:
-
-- [badlogicgames/pi-mono on Hugging Face](https://huggingface.co/datasets/badlogicgames/pi-mono)
+This edition is based on [earendil-works/pi](https://github.com/earendil-works/pi) at commit `cead615b4`. The original tool implementations are in git history there: `git show cead615b4:packages/coding-agent/src/core/tools/read.ts`. What was removed and why: [education/architecture/tool-removal.md](education/architecture/tool-removal.md). For Pi itself, see [pi.dev](https://pi.dev) and the [Pi documentation](https://pi.dev/docs/latest).
 
 ## License
 
-MIT
-
-<p align="center">
-  <a href="https://pi.dev">pi.dev</a> domain graciously donated by
-  <br /><br />
-  <a href="https://exe.dev"><img src="packages/coding-agent/docs/images/exy.png" alt="Exy mascot" width="48" /><br />exe.dev</a>
-</p>
+MIT, as the original Pi.

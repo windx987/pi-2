@@ -1,5 +1,7 @@
 # Run Pi safely
 
+> **Workshop edition:** the built-in coding tools (`read`, `write`, `edit`, `bash`, `grep`, `find`, `ls`, `powershell`), their `create*Tool` factories and the examples that wrapped them (`ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts`, `bash-spawn-hook.ts`) were removed. This page describes upstream Pi: where it mentions them, a session has such tools only when an extension registers them. See [tool-removal.md](../../../education/architecture/tool-removal.md).
+
 Treat model-generated commands and code as untrusted. Pi can read, change, and execute files with the permissions of the account that started it, and it does not ask for approval before every tool call. Extensions, package installers, language servers, and other child processes run with those same permissions unless an operating-system or virtualization boundary restricts them.
 
 Files, comments, instructions, command output, and model responses can steer the model through prompt injection. Project trust controls which project resources load at startup, but it does not make that content or the resulting actions safe.

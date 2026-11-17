@@ -1,5 +1,7 @@
 # Run Pi in an isolated environment
 
+> **Workshop edition:** the built-in coding tools (`read`, `write`, `edit`, `bash`, `grep`, `find`, `ls`, `powershell`), their `create*Tool` factories and the examples that wrapped them (`ssh.ts`, `gondolin/`, `minimal-mode.ts`, `built-in-tool-renderer.ts`, `bash-spawn-hook.ts`) were removed. This page describes upstream Pi: where it mentions them, a session has such tools only when an extension registers them. See [tool-removal.md](../../../education/architecture/tool-removal.md).
+
 Use an isolated environment to limit the files, credentials, processes, and network services that generated commands can access or affect.
 
 You can isolate the complete Pi process or keep Pi on the host and route selected tools into an isolated environment.
