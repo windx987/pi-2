@@ -103,12 +103,54 @@ The model decides which tool to call. Pi runs the tool lifecycle. You implement 
 
 ## Learning path
 
+The workshop gives a blind agent its senses and hands, one tool at a time. Every exercise adds a capability you can try on the spot, and each one builds on the last: the agent cannot fix code it cannot read, and cannot check a fix it cannot run.
+
 ```mermaid
 flowchart LR
-    a["Understand Pi"] --> b["Agent loop"] --> c["Tool calling"]
-    c --> r["01 Read"] --> w["02 Write"] --> e["03 Edit"] --> s["04 Bash"]
-    s --> x["Your own extensions"]
+    subgraph l1["1 · Understand Pi"]
+        direction TB
+        pkgs["Packages and<br/>how they connect"]
+        flow["From a prompt to<br/>a model request"]
+        pkgs --> flow
+    end
+    subgraph l2["2 · Explore the agent"]
+        direction TB
+        agentloop["The agent loop:<br/>call, run, feed back"]
+        calls["Tool calls:<br/>schema, validation, result"]
+        agentloop --> calls
+    end
+    subgraph l3["3 · Build the tools"]
+        direction TB
+        read["01 read<br/><i>the agent can look</i>"]
+        write["02 write<br/><i>the agent can create</i>"]
+        edit["03 edit<br/><i>the agent can change</i>"]
+        bash["04 bash<br/><i>the agent can check its work</i>"]
+        read --> write --> edit --> bash
+    end
+    subgraph l4["4 · Extend"]
+        direction TB
+        own["Your own tools:<br/>APIs, browsers, MCP"]
+        more["Hooks, skills,<br/>subagents"]
+        own --> more
+    end
+    l1 --> l2 --> l3 --> l4
+
+    classDef learn fill:#e8f0fe,stroke:#4a6fa5,color:#1a2b45
+    classDef build fill:#fdecea,stroke:#c0504d,color:#4a1a18
+    classDef extend fill:#e6f4ea,stroke:#3c8d5a,color:#16351f
+    class pkgs,flow,agentloop,calls learn
+    class read,write,edit,bash build
+    class own,more extend
 ```
+
+| Stage | Time | You leave with | Start here |
+|---|---|---|---|
+| 1 · Understand Pi | 0–20 min | A map of the packages and where a request goes | [Architecture](#architecture) |
+| 2 · Explore the agent | 20–65 min | The tool-call cycle, traced in real source | [Sequence diagram](#how-a-request-becomes-a-tool-call), `packages/agent/src/agent-loop.ts` |
+| 3 · Build the tools | 65–145 min | An agent that reads, writes, edits and runs tests with your code | [Exercises](education/exercises/README.md) |
+| 4 · Extend | 145–180 min | Ideas for your next tool, and a demo | [Extensions docs](packages/coding-agent/docs/extensions.md) |
+
+By the end of stage 3 you can ask "run the tests and fix what fails", and watch the agent use all four of your tools to do it.
 
 ## Getting started
 
