@@ -66,7 +66,7 @@ sequenceDiagram
     actor User
     participant TUI as Interactive mode
     participant Session as AgentSession
-    participant Loop as Agent loop (pi-agent-core)
+    participant AgentLoop as Agent loop (pi-agent-core)
     participant Model as ModelRuntime and pi-ai
     participant LLM as LLM provider
     participant Tool as Your tool
@@ -74,26 +74,26 @@ sequenceDiagram
     User->>TUI: Fix the failing test
     TUI->>Session: prompt(text)
     Note over Session: active tools are already in agent.state.tools
-    Session->>Loop: agent.prompt(messages)
+    Session->>AgentLoop: agent.prompt(messages)
     loop until the model answers without tool calls
-        Loop->>Model: streamFn(model, messages and tool definitions)
+        AgentLoop->>Model: streamFn(model, messages and tool definitions)
         Model->>LLM: provider request
         LLM-->>Model: streamed response
-        Model-->>Loop: assistant message with a tool call
-        Loop-->>Session: message events
+        Model-->>AgentLoop: assistant message with a tool call
+        AgentLoop-->>Session: message events
         Session-->>TUI: events, rendered as they stream
-        Loop->>Loop: validateToolArguments(tool, call)
-        Loop->>Session: beforeToolCall
+        AgentLoop->>AgentLoop: validateToolArguments(tool, call)
+        AgentLoop->>Session: beforeToolCall
         Note over Session: extensions get a tool_call event and may block the call
-        Loop->>Tool: execute(toolCallId, params, signal, onUpdate, ctx)
-        Tool-->>Loop: content, details, isError
-        Loop->>Session: afterToolCall
+        AgentLoop->>Tool: execute(toolCallId, params, signal, onUpdate, ctx)
+        Tool-->>AgentLoop: content, details, isError
+        AgentLoop->>Session: afterToolCall
         Note over Session: extensions get a tool_result event
-        Loop-->>Session: tool execution and result events
+        AgentLoop-->>Session: tool execution and result events
         Session-->>TUI: events
-        Note over Loop: the tool result joins the messages for the next request
+        Note over AgentLoop: the tool result joins the messages for the next request
     end
-    Loop-->>Session: final assistant message
+    AgentLoop-->>Session: final assistant message
     Note over Session: SessionManager.appendMessage persists each message
     Session-->>TUI: events
     TUI-->>User: rendered answer
