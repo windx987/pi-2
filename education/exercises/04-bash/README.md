@@ -32,12 +32,12 @@ A command result has three parts the model needs: the output (stdout and stderr 
 
 ## Hands-on exercise
 
-Start Docker and pull the image once: `docker pull node:22-bookworm-slim`. Implement `execute()` in `starter.ts` (EXERCISE 1 to 4). Load all four tools from the playground copy and ask:
+Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Work in a playground copy under your home directory (see [the exercises README](../README.md)). Implement `execute()` in `starter.ts` (EXERCISE 1 to 4). Load all four tools from the playground copy and ask:
 
 - "Run the tests." The result shows a failing test and exit code 1.
 - "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again.
 - "Run `sleep 30` with a 2 second timeout."
-- "Run `curl https://example.com`." It fails: the container has no network.
+- "Run `getent hosts example.com`." It fails: the container has no network.
 
 ## Expected result
 
@@ -47,14 +47,14 @@ Start Docker and pull the image once: `docker pull node:22-bookworm-slim`. Imple
 
 ## Isolation checks
 
-Status: not yet verified with a running Docker daemon. Each check below is a command to ask the agent to run, with the result that shows the isolation holds.
+Status: verified on 2026-11-18 with Colima (Docker 29.2.1, arm64, macOS) by `packages/coding-agent/test/suite/workshop-solutions-docker.test.ts` on the `workshop-solutions` branch, which runs the bash solution through Pi's tool lifecycle against real containers (`PI_WORKSHOP_DOCKER=1`). Other runtimes, such as Docker Desktop or Linux, are not verified yet. Each check below is also a command you can ask the agent to run, with the result that shows the isolation holds.
 
 | Check | Command | Expected |
 |---|---|---|
-| No network | `curl -sS https://example.com` or `node -e "fetch('https://example.com')"` | Fails to resolve or connect |
+| No network | `getent hosts example.com`, or `node -e "fetch('https://example.com')"` (the image has no `curl`) | Fails to resolve or connect |
 | No host files outside the workspace | `ls /Users /home; cat /etc/hostname` | No host home directories; the hostname is the container's |
-| Memory limit | `node -e "const a=[]; for(;;) a.push(Buffer.alloc(1e8))"` | Killed (exit code 137) at about 1 GB |
-| Process limit | `for i in $(seq 400); do sleep 60 & done; wait` | Fails after about 256 processes |
+| Memory limit | `node -e "const a=[]; for(;;) a.push(Buffer.alloc(1e8, 1))"` | Killed (exit code 137) at about 1 GB |
+| Process limit | `cat /sys/fs/cgroup/pids.max`, then start 400 processes | `256`; about 250 start, the rest fail with `EAGAIN` |
 | Timeout stops the container | `sleep 300` with `timeout: 2`, then `docker ps` on the host | No container left running |
 | Cleanup after errors | a failing command, then `docker ps -a` on the host | No leftover container (`--rm`) |
 | No escape through symlinks | `ln -s / host-root && ls host-root/` | Lists the container's root, not the host's |
