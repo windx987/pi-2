@@ -16,18 +16,18 @@ Each exercise directory has a `README.md` with the steps and a `starter.ts`: an 
 ```bash
 npm install --ignore-scripts
 npm run build
-docker pull node:22-bookworm-slim     # for exercise 04
+docker pull node:22-bookworm-slim     # for exercise 04: Docker Desktop, or `colima start` with Colima
 ```
 
 Configure a model provider once (`./pi-test.sh`, then `/login`, or set an API key such as `ANTHROPIC_API_KEY`).
 
 ## Work on a copy of the playground
 
-The agent changes files. Run it in a copy of [the playground](../playground/), never in the repository:
+The agent changes files. Run it in a copy of [the playground](../playground/), never in the repository. Keep the copy under your home directory: Docker runtimes such as Colima share only the home directory with containers, and a workspace elsewhere (for example in `/tmp`) appears empty inside the container.
 
 ```bash
-cp -R education/playground /tmp/pi-workshop
-cd /tmp/pi-workshop
+cp -R education/playground ~/pi-workshop
+cd ~/pi-workshop
 ```
 
 ## Load your tools

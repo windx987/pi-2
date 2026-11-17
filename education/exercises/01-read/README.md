@@ -31,7 +31,7 @@ The model cannot touch your machine. It can only answer with text or with a tool
 Open `starter.ts` and implement `execute()`, following EXERCISE 1 to 4 in its comments. Run it:
 
 ```bash
-cd /tmp/pi-workshop
+cd ~/pi-workshop
 "$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/starter.ts"
 ```
 
