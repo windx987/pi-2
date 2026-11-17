@@ -26,7 +26,6 @@ The workshop uses an open model served by [Ollama](https://ollama.com). Pick the
 | Model | Runs | Needs |
 |---|---|---|
 | `gemma4:31b` | Locally | About 20 GB of free memory (for example a 32 GB Mac) |
-| `gemma4:31b-cloud` | On Ollama's servers | `ollama signin`; an account with cloud usage available |
 | `gemma4:12b` | Locally | About 8 GB of free memory (works on a 16 GB M1) |
 
 Ollama gives local models a 4096-token context by default and silently cuts longer requests, which is too small for Pi's system prompt, tool definitions and file contents. Create a variant with a larger context once:
@@ -37,7 +36,7 @@ printf 'FROM gemma4:12b\nPARAMETER num_ctx 32768\n' > Modelfile
 ollama create gemma4-workshop:12b -f Modelfile
 ```
 
-Tell Pi about the models in `~/.pi/agent/models.json`:
+Tell Pi about the model in `~/.pi/agent/models.json`:
 
 ```json
 {
@@ -49,8 +48,7 @@ Tell Pi about the models in `~/.pi/agent/models.json`:
       "apiKey": "ollama",
       "compat": { "supportsDeveloperRole": false },
       "models": [
-        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (local, 32k)", "contextWindow": 32768, "maxTokens": 8192 },
-        { "id": "gemma4:31b-cloud", "name": "Gemma 4 31B (Ollama Cloud)", "contextWindow": 131072, "maxTokens": 8192 }
+        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (local, 32k)", "contextWindow": 32768, "maxTokens": 8192 }
       ]
     }
   }
