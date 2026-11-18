@@ -5,7 +5,8 @@ w ├── education/ -- workshop material
 w │   ├── architecture/ -- what was removed from Pi and why
 w │   ├── exercises/ -- 01-read, 02-write, 03-edit, 04-bash
 w │   │   └── 0N-name/ -- README.md + starter.ts: you implement execute()
-w │   └── playground/ -- a tiny project with a bug for the agent to fix
+w │   ├── playground/ -- a tiny project with a bug for the agent to fix
+w │   └── typescript/ -- TypeScript primer and the official cheat sheets
 d ├── packages/
 c │   ├── coding-agent/ -- the pi application
 c │   │   ├── src/core/agent-session.ts -- session, tool registry, hooks
