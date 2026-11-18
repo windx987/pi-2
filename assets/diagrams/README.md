@@ -12,4 +12,4 @@ Run it from this directory, once per changed diagram. `mermaid.config.json` turn
 
 `project-structure.svg` is a file tree, which Mermaid lays out poorly. Edit `project-structure.txt` and run `node render-tree.mjs` instead.
 
-`python-structure.mmd` shows the Python version on this branch: which file does each step, and where your extensions come in.
+`python-structure.svg` is the same kind of tree for the Python version on this branch: edit `python-structure.txt` and run `node render-tree.mjs python-structure`.

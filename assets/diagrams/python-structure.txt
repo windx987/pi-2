@@ -1,0 +1,22 @@
+# Source for python-structure.svg; render with: node render-tree.mjs python-structure
+# Format: <role> <tree path> -- <explanation>. Roles: d directory, w workshop, c core, o other.
+d pi-2/ (python branch)
+d ├── python/ -- Lobotomized: pi/2 in Python
+c │   ├── pi2/ -- the agent, one file per step
+c │   │   ├── cli.py -- options, loads extensions (-e)
+c │   │   ├── tui.py -- 1 · interactive mode: editor, footer, tool boxes
+c │   │   ├── session.py -- 2 · AgentSession; 8 · saves messages
+c │   │   ├── agent_loop.py -- 3 · ask, run tool calls, repeat (6, 7, 8)
+c │   │   ├── model_runtime.py -- 4 · models.json, API key, stream_fn
+c │   │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
+c │   │   ├── schema.py -- 6 · checks tool arguments
+c │   │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
+w │   ├── exercises/ -- your extensions
+w │   │   ├── 0N-name/ -- 01-read … 04-bash: you implement execute()
+w │   │   └── 05-subagent/ -- a tool that runs a second agent
+w │   ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
+o │   ├── tests/ -- unit tests, no model needed
+o │   └── pyproject.toml -- pip install -e python
+w ├── education/ -- instructions for 01 to 04, the playground
+o ├── assets/ -- logo and diagrams
+o └── packages/, apps/ -- the TypeScript Pi this is modelled on

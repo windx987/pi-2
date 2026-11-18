@@ -85,27 +85,9 @@ Read them in that order. [python/pi2/extensions.py](python/pi2/extensions.py) is
 
 ## Project structure
 
-<p align="center"><img alt="Lobotomized's structure: your extension files (exercises 01 to 04, 05-subagent, examples hello.py and permission_gate.py) are loaded through extensions.py. cli.py starts tui.py (step 1), which calls session.py (step 2); session.py runs agent_loop.py (step 3), which checks arguments with schema.py (step 6), calls your tools' execute (step 7), and asks model_runtime.py (step 4) and ai.py (step 5) for the model's answer from Ollama. session.py saves messages to a JSONL file (step 8)." src="./assets/diagrams/python-structure.svg" width="640"></p>
+<p align="center"><img alt="Project structure of the python branch: python/pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). python/exercises/ holds your extensions 01-read to 04-bash and 05-subagent, python/examples/ hello.py and permission_gate.py. tests/, pyproject.toml, assets/ and the TypeScript packages/ and apps/ are outside the workshop path; education/ has the instructions for 01 to 04 and the playground." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
-Red is what you write, blue is pi2. The step numbers are the eight steps of [the big picture](#the-big-picture).
-
-```
-python/
-├── pi2/                    the agent, one file per part
-│   ├── cli.py              options (--model, -e), loads extensions, starts the UI
-│   ├── tui.py              step 1: interactive mode
-│   ├── session.py          step 2: AgentSession, tool_call hook, session file
-│   ├── agent_loop.py       steps 3, 6, 7, 8: ask the model, run tool calls, repeat
-│   ├── model_runtime.py    step 4: models.json, API key, stream_fn
-│   ├── ai.py               step 5: OpenAI-compatible streaming provider
-│   ├── schema.py           step 6: JSON Schema check of tool arguments
-│   └── extensions.py       define_tool, ExtensionAPI, loading -e files
-├── examples/               hello.py (a tool), permission_gate.py (a listener)
-├── exercises/              01-read … 04-bash, 05-subagent: starter.py each
-└── tests/test_pi2.py       unit tests, no model needed
-```
-
-The rest of the repository is the TypeScript Pi this edition is modelled on. The 01 to 04 exercise instructions are in [education/exercises/](education/exercises/).
+You work in red: your extensions, and the instructions in [education/](education/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](python/pi2/session.py) and [agent_loop.py](python/pi2/agent_loop.py). Grey parts are not needed for the workshop.
 
 ## Extensions
 

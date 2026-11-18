@@ -1,7 +1,9 @@
-// Renders project-structure.txt to project-structure.svg: a file tree with an aligned explanation column.
+// Renders <name>.txt to <name>.svg: a file tree with an aligned explanation column.
+// Usage: node render-tree.mjs [name], default project-structure.
 import { readFileSync, writeFileSync } from "node:fs";
 
 const dir = import.meta.dirname;
+const name = process.argv[2] ?? "project-structure";
 const colors = {
 	d: { path: "#1a2b45", note: "#1a2b45" },
 	w: { path: "#b03a37", note: "#4a1a18" },
@@ -14,7 +16,7 @@ const legend = [
 	["o", "other: outside the workshop path"],
 ];
 
-const rows = readFileSync(`${dir}/project-structure.txt`, "utf-8")
+const rows = readFileSync(`${dir}/${name}.txt`, "utf-8")
 	.split("\n")
 	.filter((line) => line && !line.startsWith("#"))
 	.map((line) => {
@@ -58,4 +60,4 @@ ${lines.join("\n")}
 ${legendItems.join("\n")}
 </svg>
 `;
-writeFileSync(`${dir}/project-structure.svg`, svg);
+writeFileSync(`${dir}/${name}.svg`, svg);
