@@ -35,7 +35,7 @@ The workshop gives a blind agent its senses and hands, one tool at a time. Every
 
 | Stage | You leave with | Start here |
 |---|---|---|
-| 1 · Understand Pi | A map of the packages and where a request goes | [Architecture](#architecture) |
+| 1 · Understand Pi | A map of the packages and where a request goes | [Architecture](#architecture), [External libraries](education/architecture/external-libraries.md) |
 | 2 · Explore the agent | The tool-call cycle, traced in real source | [Sequence diagram](#how-a-request-becomes-a-tool-call), `packages/agent/src/agent-loop.ts` |
 | 3 · Build the tools | An agent that reads, writes, edits and runs tests with your code | [Exercises](education/exercises/README.md) |
 | 4 · Extend | Ideas for your next tool, and a demo | [Extensions docs](packages/coding-agent/docs/extensions.md) |
