@@ -2,6 +2,8 @@
 provider. Run from python/:  python -m unittest discover tests
 """
 
+import contextlib
+import io
 import json
 import tempfile
 import threading
@@ -10,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 from pi2 import ExtensionAPI, define_tool
-from pi2 import agent_loop, ai
+from pi2 import agent_loop, ai, tui
 from pi2.extensions import ToolContext
 from pi2.model_runtime import ModelRuntime
 from pi2.session import AgentSession
@@ -199,6 +201,29 @@ class ProviderTest(unittest.TestCase):
         self.assertEqual(message["usage"], {"input": 12, "output": 7})
         self.assertEqual(requests[0]["messages"][0], {"role": "system", "content": "sys"})
         self.assertEqual(requests[0]["tools"][0]["function"]["name"], "echo")
+
+
+class InteractiveModeTest(unittest.TestCase):
+    def render_end(self, message):
+        class Session:
+            def subscribe(self, listener):
+                pass
+
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            tui.InteractiveMode(Session()).on_event({"type": "message_end", "message": message})
+        return out.getvalue()
+
+    def test_an_empty_answer_says_so(self):
+        self.assertIn("without a reply", self.render_end(answer()))
+        self.assertIn("without a reply", self.render_end(answer({"type": "thinking", "text": "hmm"}, {"type": "text", "text": " \n"})))
+
+    def test_answers_with_text_or_tool_calls_get_no_note(self):
+        self.assertNotIn("without a reply", self.render_end(answer({"type": "text", "text": "hello"})))
+        self.assertNotIn("without a reply", self.render_end(answer(call("echo", {"text": "x"}), stop_reason="tool_use")))
+
+    def test_a_truncated_answer_says_so(self):
+        self.assertIn("truncated", self.render_end(answer({"type": "text", "text": "cut"}, stop_reason="length")))
 
 
 if __name__ == "__main__":

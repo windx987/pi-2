@@ -31,7 +31,7 @@ def docker_args(command, workspace):
     user = ["--user", f"{os.getuid()}:{os.getgid()}"] if hasattr(os, "getuid") else []
     return [
         "run", "--rm",
-        # An init process forwards the stop signal to the command, so killing `docker run` stops it.
+        # An init process forwards the stop signal to the command, so SIGTERM to `docker run` stops it.
         "--init",
         "--network", "none",
         "--memory", "1g",
@@ -46,17 +46,23 @@ def docker_args(command, workspace):
 
 
 def execute(params, ctx):
-    # EXERCISE 1: Run the process: subprocess.run(["docker", *docker_args(params["command"], ctx.cwd)]).
-    # It raises FileNotFoundError when Docker is not installed; raise an exception that says so.
+    # EXERCISE 1: Start the process: subprocess.Popen(["docker", *docker_args(params["command"], ctx.cwd)],
+    # stdout=subprocess.PIPE, text=True). It raises FileNotFoundError when Docker is not installed;
+    # raise an exception that says so.
     #
     # EXERCISE 2: Collect output. Send stderr into stdout (stderr=subprocess.STDOUT) so both arrive in
-    # one text, in order, the way a terminal shows them (capture_output is not enough: it splits them).
+    # one text, in order, the way a terminal shows them. proc.communicate() waits for the process and
+    # returns (output, None).
     #
-    # EXERCISE 3: Return the output; when the exit code is not 0, raise an exception with the output
+    # EXERCISE 3: Return the output; when proc.returncode is not 0, raise an exception with the output
     # and "Command exited with code N", so the model gets an error result.
     #
-    # EXERCISE 4: Stop runaway commands. Pass timeout=params.get("timeout") and catch
-    # subprocess.TimeoutExpired. Say in the result that the command was stopped.
+    # EXERCISE 4: Stop runaway commands. Pass timeout=params.get("timeout") to communicate() and catch
+    # subprocess.TimeoutExpired. Then stop the process with proc.terminate() and call communicate()
+    # again to wait for it. Say in the result that the command was stopped.
+    # Use terminate() (SIGTERM), not kill() and not subprocess.run(timeout=...): docker run passes
+    # SIGTERM on to the container, but SIGKILL ends only the docker client and leaves the container
+    # running. Check your tool with:  python3 python/exercises/04-bash/check_timeout.py
     #
     # CHALLENGE: Long output. Keep the last 2000 lines for the model and say how much was left out.
     raise NotImplementedError(f"bash is not implemented yet (asked to run {params['command']} in {ctx.cwd}).")

@@ -7,6 +7,7 @@ and colors follow Pi's interactive mode and dark theme, drawn with plain ANSI es
 
 import os
 import shutil
+import signal
 import sys
 import textwrap
 from contextlib import contextmanager
@@ -47,6 +48,7 @@ PREVIEW_LINES = 5
 @contextmanager
 def no_echo():
     """Hide what is typed while the agent works. The keys stay buffered and appear in the next editor."""
+    # Only while the agent works: GNU readline does not draw the editor line when echo is off.
     if termios is None:
         yield
         return
@@ -63,6 +65,11 @@ def no_echo():
         yield
     finally:
         termios.tcsetattr(fd, termios.TCSANOW, saved)
+
+
+def exit_on_signal(signum, frame):
+    """Exit through Python's cleanup, so readline and no_echo() give the terminal its settings back."""
+    sys.exit(128 + signum)
 
 
 def write(text):
@@ -83,6 +90,10 @@ class InteractiveMode:
         session.subscribe(self.on_event)
 
     def run(self):
+        if termios is not None:
+            # SIGTERM and SIGHUP (terminal closed) would end Python at once and leave the echo off.
+            signal.signal(signal.SIGTERM, exit_on_signal)
+            signal.signal(signal.SIGHUP, exit_on_signal)
         self.print_header()
         while True:
             text = self.read_input()
@@ -214,6 +225,12 @@ class InteractiveMode:
                     write(f"\n {ERROR}Error: {message['error_message']}{RESET}\n")
                 elif message["stop_reason"] == "aborted":
                     write(f"\n {ERROR}Operation aborted{RESET}\n")
+                elif message["stop_reason"] == "length":
+                    write(f"\n {ERROR}Response was truncated before completion.{RESET}\n")
+                elif not any(block["type"] == "toolCall" or (block["type"] == "text" and block["text"].strip())
+                             for block in message["content"]):
+                    # Pi shows nothing here; small models sometimes end a turn empty, which looks like a hang.
+                    write(f"\n {DIM}The model ended its turn without a reply. Type \"go on\" to continue.{RESET}\n")
         elif kind == "tool_execution_start":
             self.clear_working()
             self.tool_box_height = self.print_box(TOOL_BG["pending"], [tool_title(event["tool_call"])])

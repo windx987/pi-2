@@ -162,7 +162,7 @@ Load several with repeated `-e`; they work together. In Pi it is the same idea i
 | [01-read](python/exercises/01-read/starter.py) | `read` | [README](education/exercises/01-read/README.md) |
 | [02-write](python/exercises/02-write/starter.py) | `write` | [README](education/exercises/02-write/README.md) |
 | [03-edit](python/exercises/03-edit/starter.py) | `edit` | [README](education/exercises/03-edit/README.md) |
-| [04-bash](python/exercises/04-bash/starter.py) | `bash` | [README](education/exercises/04-bash/README.md) |
+| [04-bash](python/exercises/04-bash/starter.py) | `bash` | [README](education/exercises/04-bash/README.md); test the timeout with [check_timeout.py](python/exercises/04-bash/check_timeout.py) |
 | [05-subagent](python/exercises/05-subagent/starter.py) | `subagent` | [README](python/exercises/05-subagent/README.md) (Python only) |
 
 The READMEs for 01 to 04 are the TypeScript exercises'; the tasks are the same, and each starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
