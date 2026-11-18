@@ -10,8 +10,6 @@ This page lists the runtime dependencies of the four packages the workshop uses,
 
 Solid arrows are Pi's own packages, dotted arrows outside libraries. Green packages have no outside libraries.
 
-`schema` and `telemetry` have no outside libraries either.
-
 ## packages/ai: talking to model providers
 
 <p align="center"><img alt="packages/ai: each provider file in src/api uses that provider's SDK (openai, @anthropic-ai/sdk, @google/genai, the AWS Bedrock SDK); json-parse.ts uses partial-json; validation.ts uses Pi's own pi-schema." src="../../assets/diagrams/package-ai.svg" width="760"></p>
