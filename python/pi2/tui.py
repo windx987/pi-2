@@ -33,7 +33,7 @@ def bg(r, g, b):
     return f"\x1b[48;2;{r};{g};{b}m"
 
 
-# Logo colors from assets/logo.svg; the rest approximates Pi's dark theme.
+# Pi's logo colors; the rest approximates Pi's dark theme.
 CORAL, BLUE, YELLOW, MINT = (228, 138, 122), (79, 142, 179), (234, 182, 93), (121, 191, 163)
 ACCENT = fg(198, 146, 234)
 WARNING = fg(222, 199, 101)

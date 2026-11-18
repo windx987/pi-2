@@ -1,8 +1,0 @@
-{
-	"name": "pi-workshop-playground",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"test": "node --test"
-	}
-}

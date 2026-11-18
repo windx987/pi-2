@@ -1,7 +1,7 @@
 """Steps 3, 6, 7 and 8: the agent loop.
 
 Asks the model for an answer, runs the tool calls in it, adds the results, and asks again. Stops when an
-answer has no tool calls. Like packages/agent, it knows no provider and no terminal: it calls
+answer has no tool calls. Like Pi's agent loop, it knows no provider and no terminal: it calls
 `config["stream_fn"]` for the model and reports what happens through `emit(event)`.
 """
 
