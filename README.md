@@ -147,6 +147,10 @@ Load it with `./pi-test.sh -e hello.ts` and ask Pi to greet you.
 
 Start with [education/exercises/README.md](education/exercises/README.md). The full roadmap is in [education/README.md](education/README.md).
 
+## Lobotomized: pi/2 in Python
+
+[Lobotomized](https://github.com/windx987/pi-2/tree/python/python) is pi/2 cut down to about 800 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, compaction, and providers other than OpenAI-compatible ones such as Ollama. It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: extensions that do more than one tool, such as a subagent.
+
 ## Project structure
 
 <p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="./assets/diagrams/project-structure.svg" width="760"></p>
