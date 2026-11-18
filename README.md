@@ -8,7 +8,7 @@
 
 Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follows the same eight steps as Pi, one file per step, in about 800 lines of standard-library Python. Its terminal looks and behaves like Pi's: the logo header, the editor between two borders, thinking in dim italics, tool calls in colored boxes, and the footer with tokens and model.
 
-Like pi/2 it has no built-in tools. You write `read`, `write`, `edit` and `bash` as extensions, in [python/exercises/](python/exercises/).
+Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `edit` and `bash` yourself, in [python/exercises/](python/exercises/).
 
 ## The big picture
 
@@ -81,9 +81,13 @@ Text you type while the agent works waits in the editor for the next message.
 | 7. Tool runs | your extension's `execute()` | your extension's `execute()`, called in `agent_loop.execute_tool_call` |
 | 8. Result back, saved | `currentContext.messages.push`, `appendMessage` | `agent_loop.run`, `AgentSession.save` |
 
-Read them in that order. [python/pi2/extensions.py](python/pi2/extensions.py) is how tools get in, and [python/pi2/cli.py](python/pi2/cli.py) starts everything.
+Read them in that order. [python/pi2/extensions.py](python/pi2/extensions.py) is how [extensions](#extensions) get in, and [python/pi2/cli.py](python/pi2/cli.py) starts everything.
 
 ## Project structure
+
+<p align="center"><img alt="Lobotomized's structure: your extension files (exercises 01 to 04, 05-subagent, examples hello.py and permission_gate.py) are loaded through extensions.py. cli.py starts tui.py (step 1), which calls session.py (step 2); session.py runs agent_loop.py (step 3), which checks arguments with schema.py (step 6), calls your tools' execute (step 7), and asks model_runtime.py (step 4) and ai.py (step 5) for the model's answer from Ollama. session.py saves messages to a JSONL file (step 8)." src="./assets/diagrams/python-structure.svg" width="640"></p>
+
+Red is what you write, blue is pi2. The step numbers are the eight steps of [the big picture](#the-big-picture).
 
 ```
 python/
@@ -96,14 +100,34 @@ python/
 │   ├── ai.py               step 5: OpenAI-compatible streaming provider
 │   ├── schema.py           step 6: JSON Schema check of tool arguments
 │   └── extensions.py       define_tool, ExtensionAPI, loading -e files
-├── examples/hello.py       the smallest tool
-├── exercises/              01-read … 04-bash starters, 05-extensions
+├── examples/               hello.py (a tool), permission_gate.py (a listener)
+├── exercises/              01-read … 04-bash, 05-subagent: starter.py each
 └── tests/test_pi2.py       unit tests, no model needed
 ```
 
 The rest of the repository is the TypeScript Pi this edition is modelled on. The 01 to 04 exercise instructions are in [education/exercises/](education/exercises/).
 
-## Write a tool
+## Extensions
+
+An extension is any Python file you load with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. Everything the model can do comes from extensions: pi2 itself contains no tools. Start it without `-e` and the model cannot read, write or run anything.
+
+Through `pi`, an extension can do two things:
+
+| Call | Does | Step |
+|---|---|---|
+| `pi.register_tool(tool)` | Offers a tool to the model. Its `execute(params, ctx)` runs when the model calls it | 2, 7 |
+| `pi.on("tool_call", handler)` | Sees every tool call before it runs. `handler(call, args)` returns a reason to block it, or `None` | 6 |
+
+So one file can add a tool, put a rule on other files' tools, or both. These are all the extensions in this branch:
+
+| File | Kind | What it shows |
+|---|---|---|
+| [examples/hello.py](python/examples/hello.py) | tool | The smallest tool |
+| [examples/permission_gate.py](python/examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
+| [exercises/01-read](python/exercises/01-read/starter.py) to [04-bash](python/exercises/04-bash/starter.py) | tool | The four coding tools, which you write |
+| [exercises/05-subagent](python/exercises/05-subagent/starter.py) | tool | A tool that runs a second agent through `ctx.session` |
+
+A tool extension:
 
 ```python
 from pi2 import ExtensionAPI, define_tool
@@ -126,7 +150,22 @@ def extension(pi: ExtensionAPI):
     pi.register_tool(hello)
 ```
 
-`execute(params, ctx)` gets the validated arguments, `ctx.cwd` (the directory the agent works in) and `ctx.session` (the running `AgentSession`). Return a string; raise an exception for an error result, whose message the model reads. `pi.on("tool_call", handler)` lets an extension block calls: `handler(call, args)` returns a reason to block, or `None`.
+`define_tool` describes the tool to the model: its name, a description, and the JSON Schema of its arguments. pi2 checks the model's arguments against that schema before `execute` runs, so `params` always has the right shape. `ctx.cwd` is the directory the agent works in, and `ctx.session` is the running `AgentSession`. Return a string; raise an exception for an error result, whose message the model reads.
+
+A listener extension:
+
+```python
+def on_tool_call(call, args):
+    if call["name"] == "bash" and "rm -rf" in args["command"]:
+        return "Dangerous command blocked"   # the tool does not run; the model reads this
+    return None                              # let the call run
+
+
+def extension(pi):
+    pi.on("tool_call", on_tool_call)
+```
+
+Load several with repeated `-e`; they work together. In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](packages/coding-agent/examples/extensions/).
 
 ## Exercises
 
@@ -136,7 +175,7 @@ def extension(pi: ExtensionAPI):
 | [02-write](python/exercises/02-write/starter.py) | `write` | [README](education/exercises/02-write/README.md) |
 | [03-edit](python/exercises/03-edit/starter.py) | `edit` | [README](education/exercises/03-edit/README.md) |
 | [04-bash](python/exercises/04-bash/starter.py) | `bash` | [README](education/exercises/04-bash/README.md) |
-| [05-extensions](python/exercises/05-extensions/README.md) | `subagent`, a permission gate | [README](python/exercises/05-extensions/README.md) (Python only) |
+| [05-subagent](python/exercises/05-subagent/starter.py) | `subagent` | [README](python/exercises/05-subagent/README.md) (Python only) |
 
 The READMEs for 01 to 04 are the TypeScript exercises'; the tasks are the same, and each starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
 

@@ -11,3 +11,5 @@ Run it from this directory, once per changed diagram. `mermaid.config.json` turn
 `big-picture.svg` puts code next to each step, which Mermaid cannot draw. Edit the steps in `render-big-picture.mjs` and run `node render-big-picture.mjs`. Its code is quoted from the baseline `cead615b4`; keep quotes exact.
 
 `project-structure.svg` is a file tree, which Mermaid lays out poorly. Edit `project-structure.txt` and run `node render-tree.mjs` instead.
+
+`python-structure.mmd` shows the Python version on this branch: which file does each step, and where your extensions come in.
