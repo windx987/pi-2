@@ -6,13 +6,13 @@
   <a href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent"><img alt="npm" src="https://img.shields.io/npm/v/@earendil-works/pi-coding-agent?style=flat-square" /></a>
 </p>
 
-> This is the `python` branch: pi/2 cut down to Python. The TypeScript edition, with the full Pi framework, is on [`main`](https://github.com/windx987/pi-2).
+> This is the `python` branch: only the Python version of pi/2. The TypeScript edition, with the full Pi framework it is modelled on, is on [`main`](https://github.com/windx987/pi-2).
 
 # Lobotomized: pi/2 in Python
 
 Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follows the same eight steps as Pi, one file per step, in about 800 lines of standard-library Python. Its terminal looks and behaves like Pi's: the logo header, the editor between two borders, thinking in dim italics, tool calls in colored boxes, and the footer with tokens and model.
 
-Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `edit` and `bash` yourself, in [python/exercises/](python/exercises/).
+Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `edit` and `bash` yourself, in [exercises/](exercises/).
 
 ## The big picture
 
@@ -57,12 +57,12 @@ Add the endpoint to `~/.pi/agent/models.json`, the same file Pi uses. For a shar
 Then start it from the clone with the example tool, the way the TypeScript edition starts with `./pi-test.sh`:
 
 ```bash
-./pi2.sh -e python/examples/hello.py
+./pi2.sh -e examples/hello.py
 ```
 
 It starts with the first model in `models.json`. Type `/model` to list the others and `/model 2` to switch, or start with one: `./pi2.sh --model ollama/gemma4-workshop:12b`.
 
-Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` with `python/` on the module path and works from any directory; set `PYTHON` to use another interpreter. To get a `pi2` command instead, run `pip install -e python` once.
+Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works from any directory; set `PYTHON` to use another interpreter. To get a `pi2` command instead, run `pip install -e .` once.
 
 | Key or command | Does |
 |---|---|
@@ -78,22 +78,22 @@ Text you type while the agent works waits in the editor for the next message.
 
 | Step | Pi (TypeScript) | Lobotomized (Python) |
 |---|---|---|
-| 1. Interactive mode | `modes/interactive/interactive-mode.ts` | [python/pi2/tui.py](python/pi2/tui.py) `InteractiveMode.run` |
-| 2. AgentSession | `core/agent-session.ts` | [python/pi2/session.py](python/pi2/session.py) `AgentSession.prompt` |
-| 3. Agent loop | `packages/agent/src/agent-loop.ts` | [python/pi2/agent_loop.py](python/pi2/agent_loop.py) `run` |
-| 4. streamFn and ModelRuntime | `core/sdk.ts`, `core/model-runtime.ts` | [python/pi2/model_runtime.py](python/pi2/model_runtime.py) `stream_fn` |
-| 5. Provider → LLM | `packages/ai/src/api/openai-completions.ts` | [python/pi2/ai.py](python/pi2/ai.py) `stream` |
-| 6. Validate, then ask extensions | `validateToolArguments`, `beforeToolCall` | [python/pi2/schema.py](python/pi2/schema.py), `AgentSession.before_tool_call` |
+| 1. Interactive mode | [`modes/interactive/interactive-mode.ts`](https://github.com/windx987/pi-2/blob/main/packages/coding-agent/src/modes/interactive/interactive-mode.ts) | [pi2/tui.py](pi2/tui.py) `InteractiveMode.run` |
+| 2. AgentSession | [`core/agent-session.ts`](https://github.com/windx987/pi-2/blob/main/packages/coding-agent/src/core/agent-session.ts) | [pi2/session.py](pi2/session.py) `AgentSession.prompt` |
+| 3. Agent loop | [`packages/agent/src/agent-loop.ts`](https://github.com/windx987/pi-2/blob/main/packages/agent/src/agent-loop.ts) | [pi2/agent_loop.py](pi2/agent_loop.py) `run` |
+| 4. streamFn and ModelRuntime | `core/sdk.ts`, `core/model-runtime.ts` | [pi2/model_runtime.py](pi2/model_runtime.py) `stream_fn` |
+| 5. Provider → LLM | [`packages/ai/src/api/openai-completions.ts`](https://github.com/windx987/pi-2/blob/main/packages/ai/src/api/openai-completions.ts) | [pi2/ai.py](pi2/ai.py) `stream` |
+| 6. Validate, then ask extensions | `validateToolArguments`, `beforeToolCall` | [pi2/schema.py](pi2/schema.py), `AgentSession.before_tool_call` |
 | 7. Tool runs | your extension's `execute()` | your extension's `execute()`, called in `agent_loop.execute_tool_call` |
 | 8. Result back, saved | `currentContext.messages.push`, `appendMessage` | `agent_loop.run`, `AgentSession.save` |
 
-Read them in that order. [python/pi2/extensions.py](python/pi2/extensions.py) is how [extensions](#extensions) get in, and [python/pi2/cli.py](python/pi2/cli.py) starts everything.
+Read them in that order. [pi2/extensions.py](pi2/extensions.py) is how [extensions](#extensions) get in, and [pi2/cli.py](pi2/cli.py) starts everything.
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch: python/pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). python/exercises/ holds your extensions 01-read to 04-bash and 05-subagent, python/examples/ hello.py and permission_gate.py. tests/, pyproject.toml, assets/ and the TypeScript packages/ and apps/ are outside the workshop path; education/ has the instructions for 01 to 04 and the playground." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). exercises/ holds your extensions 01-read to 04-bash and 05-subagent, each with a README; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
-You work in red: your extensions, and the instructions in [education/](education/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](python/pi2/session.py) and [agent_loop.py](python/pi2/agent_loop.py). Grey parts are not needed for the workshop.
+You work in red: your extensions, their instructions, and a copy of the [playground](playground/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). Grey parts are not needed for the workshop.
 
 ## Extensions
 
@@ -110,10 +110,10 @@ So one file can add a tool, put a rule on other files' tools, or both. These are
 
 | File | Kind | What it shows |
 |---|---|---|
-| [examples/hello.py](python/examples/hello.py) | tool | The smallest tool |
-| [examples/permission_gate.py](python/examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
-| [exercises/01-read](python/exercises/01-read/starter.py) to [04-bash](python/exercises/04-bash/starter.py) | tool | The four coding tools, which you write |
-| [exercises/05-subagent](python/exercises/05-subagent/starter.py) | tool | A tool that runs a second agent through `ctx.session` |
+| [examples/hello.py](examples/hello.py) | tool | The smallest tool |
+| [examples/permission_gate.py](examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
+| [exercises/01-read](exercises/01-read/starter.py) to [04-bash](exercises/04-bash/starter.py) | tool | The four coding tools, which you write |
+| [exercises/05-subagent](exercises/05-subagent/starter.py) | tool | A tool that runs a second agent through `ctx.session` |
 
 A tool extension:
 
@@ -153,23 +153,23 @@ def extension(pi):
     pi.on("tool_call", on_tool_call)
 ```
 
-Load several with repeated `-e`; they work together. In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](packages/coding-agent/examples/extensions/).
+Load several with repeated `-e`; they work together. In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](https://github.com/windx987/pi-2/tree/main/packages/coding-agent/examples/extensions).
 
 ## Exercises
 
 | Exercise | Tool | Instructions |
 |---|---|---|
-| [01-read](python/exercises/01-read/starter.py) | `read` | [README](education/exercises/01-read/README.md) |
-| [02-write](python/exercises/02-write/starter.py) | `write` | [README](education/exercises/02-write/README.md) |
-| [03-edit](python/exercises/03-edit/starter.py) | `edit` | [README](education/exercises/03-edit/README.md) |
-| [04-bash](python/exercises/04-bash/starter.py) | `bash` | [README](education/exercises/04-bash/README.md); test the timeout with [check_timeout.py](python/exercises/04-bash/check_timeout.py) |
-| [05-subagent](python/exercises/05-subagent/starter.py) | `subagent` | [README](python/exercises/05-subagent/README.md) (Python only) |
+| [01-read](exercises/01-read/starter.py) | `read` | [README](exercises/01-read/README.md) |
+| [02-write](exercises/02-write/starter.py) | `write` | [README](exercises/02-write/README.md) |
+| [03-edit](exercises/03-edit/starter.py) | `edit` | [README](exercises/03-edit/README.md) |
+| [04-bash](exercises/04-bash/starter.py) | `bash` | [README](exercises/04-bash/README.md); test the timeout with [check_timeout.py](exercises/04-bash/check_timeout.py) |
+| [05-subagent](exercises/05-subagent/starter.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
 
-The READMEs for 01 to 04 are the TypeScript exercises'; the tasks are the same, and each starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
+Each README says what the tool does, the steps, what to ask the agent and what you should see; the starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
 
 ```bash
-cp -R education/playground ~/pi-workshop && cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/python/exercises/01-read/starter.py"
+cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py"
 ```
 
 `REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
@@ -181,8 +181,7 @@ It keeps the path of one prompt and drops the rest: one provider API (`openai-co
 ## Tests
 
 ```bash
-cd python
-python -m unittest discover tests
+python3 -m unittest discover tests
 ```
 
 The tests need no model: a fake stream function drives the agent loop, and a local HTTP server streams a recorded answer to the provider.

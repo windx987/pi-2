@@ -11,4 +11,4 @@ if ! "$PYTHON" -c 'import sys; sys.exit(sys.version_info < (3, 10))' 2>/dev/null
   exit 1
 fi
 
-PYTHONPATH="$SCRIPT_DIR/python${PYTHONPATH:+:$PYTHONPATH}" exec "$PYTHON" -m pi2 "$@"
+PYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec "$PYTHON" -m pi2 "$@"

@@ -1,7 +1,0 @@
-// Type-checks the exercise extensions against the modules extensions see at run time, like
-// packages/coding-agent/examples/tsconfig.json, whose module paths this reuses.
-{
-	"extends": "../packages/coding-agent/examples/tsconfig.json",
-	"include": ["./exercises/**/*.ts", "../packages/*/src/**/*.d.ts"],
-	"exclude": ["**/node_modules/**"]
-}

@@ -26,11 +26,12 @@ const rows = readFileSync(`${dir}/${name}.txt`, "utf-8")
 	});
 
 const fontSize = 14;
-const charWidth = 8.43; // advance of a 14px monospace glyph
+const charWidth = 9.1; // advance of a 14px monospace glyph, with room for wider fonts such as Menlo
 const lineHeight = 24;
 const pad = 24;
 const noteX = pad + Math.max(...rows.map((row) => [...row.path].length)) * charWidth + 32;
-const width = Math.ceil(noteX + Math.max(...rows.map((row) => [...row.note].length)) * charWidth + pad);
+const legendWidth = legend.reduce((sum, [, label]) => sum + 18 + label.length * charWidth + 28, 0) - 28;
+const width = Math.ceil(Math.max(noteX + Math.max(...rows.map((row) => [...row.note].length)) * charWidth, pad + legendWidth) + pad);
 const legendY = pad + rows.length * lineHeight + 20;
 const height = legendY + 24 + pad;
 
