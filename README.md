@@ -99,6 +99,8 @@ You work in red: your extensions, their instructions, and a copy of the [playgro
 
 An extension is any Python file you load with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. Everything the model can do comes from extensions: pi2 itself contains no tools. Start it without `-e` and the model cannot read, write or run anything.
 
+<p align="center"><img alt="Extensions in pi2. At startup: you start ./pi2.sh with -e files, cli.py creates an ExtensionAPI and loads each file, your file's extension(pi) runs and calls pi.register_tool (stored in pi.tools) or pi.on('tool_call') (stored in pi.handlers). At every request: step 1, you type a message and interactive mode hands it to AgentSession.prompt; step 2 offers every tool in pi.tools to the model; steps 3 to 5, the agent loop asks the model, which answers with a tool call; step 6 checks the arguments against the schema (wrong shape: error result, the tool does not run) and then every listener in pi.handlers sees the call (a returned reason blocks it: error result 'Blocked by extension'); step 7 runs tool.execute(params, ctx), where a return value is the result and an exception an error result; step 8 sends the result back to the model, which answers or calls another tool." src="./assets/diagrams/extensions.svg" width="900"></p>
+
 Through `pi`, an extension can do two things:
 
 | Call | Does | Step |
@@ -153,7 +155,11 @@ def extension(pi):
     pi.on("tool_call", on_tool_call)
 ```
 
-Load several with repeated `-e`; they work together. In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](https://github.com/windx987/pi-2/tree/main/packages/coding-agent/examples/extensions).
+Load several with repeated `-e`; they work together. Here is one run with both kinds, step by step: the real `examples/hello.py` and `examples/permission_gate.py` on the left, each line highlighted with the step that uses it, and what happens when you ask "Greet Ada." on the right.
+
+<p align="center"><img alt="One example, step by step. Left: the code of examples/hello.py and part of examples/permission_gate.py, with lines highlighted by step. Start: def extension(pi) with pi.register_tool(hello) in hello.py, and pi.on('tool_call', on_tool_call) in permission_gate.py. Step 2: name, description and parameters of define_tool, which the model sees. Step 6: parameters, which pi2 checks the arguments against, and on_tool_call, which returns None for a call that is not bash. Step 7: def execute(params, ctx). Step 8: its return value. Right: start, both files loaded; 1, you type Greet Ada.; 2, pi2 offers hello to the model; 3 to 5, the model answers hello({'name': 'Ada'}); 6, the arguments match and the listener lets the call run; 7, execute returns 'Hello, Ada!'; 8, the result goes back to the model." src="./assets/diagrams/extension-example.svg" width="900"></p>
+
+In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](https://github.com/windx987/pi-2/tree/main/packages/coding-agent/examples/extensions).
 
 ## Exercises
 

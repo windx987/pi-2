@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1120" height="1050" viewBox="0 0 1120 1050" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker>
+<marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cf222e"/></marker>
+<marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2f7d5b"/></marker>
+<marker id="arrowLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6d4bb3"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+
+<!-- Title -->
+<text x="40" y="44" fill="#1a2b45" font-size="24" font-weight="700">Extensions in pi2: how they get in, and where they act</text>
+<text x="40" y="70" fill="#4b5563">An extension is a Python file with one function, extension(pi). Everything the model can do comes from extensions.</text>
+
+<!-- At startup -->
+<text x="40" y="112" fill="#4b5563" font-size="15" font-weight="700">At startup</text>
+
+<rect x="40" y="126" width="250" height="160" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
+<text x="56" y="152" fill="#1a2b45" font-size="15" font-weight="700">You start pi2</text>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" fill="#1f2328">
+<text x="56" y="180">./pi2.sh -e hello.py \</text>
+<text x="56" y="200">&#160;&#160;-e permission_gate.py</text>
+</g>
+<text x="56" y="230" fill="#4b5563" font-size="13">Each -e names one extension file.</text>
+<text x="56" y="249" fill="#4b5563" font-size="13">Load as many as you need: they</text>
+<text x="56" y="268" fill="#4b5563" font-size="13">load in the order you give them.</text>
+<line x1="290" y1="174" x2="326" y2="174" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="330" y="126" width="250" height="160" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
+<text x="346" y="152" fill="#1a2b45" font-size="15" font-weight="700">cli.py loads each file</text>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" fill="#1f2328">
+<text x="346" y="180">pi = ExtensionAPI()</text>
+<text x="346" y="200">pi.load(path)&#160; # per -e</text>
+</g>
+<text x="346" y="230" fill="#4b5563" font-size="13">One pi for all files. load() runs</text>
+<text x="346" y="249" fill="#4b5563" font-size="13">the file like an import, then calls</text>
+<text x="346" y="268" fill="#4b5563" font-size="13">its extension(pi).</text>
+<line x1="580" y1="174" x2="616" y2="174" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="620" y="126" width="220" height="160" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<text x="636" y="152" fill="#b03a37" font-size="15" font-weight="700">Your file runs</text>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" fill="#1f2328">
+<text x="636" y="180">def extension(pi):</text>
+<text x="636" y="200">&#160;&#160;&#160;&#160;...</text>
+</g>
+<text x="636" y="230" fill="#4b5563" font-size="13">The only function pi2 calls.</text>
+<text x="636" y="249" fill="#4b5563" font-size="13">It tells pi what the file</text>
+<text x="636" y="268" fill="#4b5563" font-size="13">adds, with one or both calls:</text>
+<path d="M 840 180 C 858 180 860 160 876 160" fill="none" stroke="#2f5a96" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M 840 240 C 858 240 860 254 876 254" fill="none" stroke="#6d4bb3" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="880" y="116" width="200" height="86" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="894" y="139" fill="#2f5a96" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">pi.register_tool(t)</text>
+<text x="894" y="160" fill="#1f2328" font-size="13">adds a tool the model</text>
+<text x="894" y="178" fill="#1f2328" font-size="13">can call (steps 2 and 7)</text>
+<text x="894" y="196" fill="#4b5563" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">→ pi.tools</text>
+<rect x="880" y="210" width="200" height="86" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
+<text x="894" y="233" fill="#6d4bb3" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">pi.on("tool_call", h)</text>
+<text x="894" y="254" fill="#1f2328" font-size="13">adds a rule that sees every</text>
+<text x="894" y="272" fill="#1f2328" font-size="13">call before it runs (step 6)</text>
+<text x="894" y="290" fill="#4b5563" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">→ pi.handlers</text>
+
+<!-- At every request -->
+<line x1="40" y1="316" x2="1080" y2="316" stroke="#e5e7eb"/>
+<text x="40" y="344" fill="#4b5563" font-size="15" font-weight="700">At every request: the eight steps of the big picture, and where extensions act</text>
+
+<!-- Step 1 -->
+<rect x="90" y="360" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
+<circle cx="60" cy="392" r="13" fill="#2f5a96"/>
+<text x="60" y="397" text-anchor="middle" fill="#fff" font-weight="700">1</text>
+<text x="106" y="385" fill="#1a2b45" font-size="15" font-weight="700">You type a message</text>
+<text x="106" y="410" fill="#374151">interactive mode (tui.py) hands it to AgentSession.prompt</text>
+<line x1="390" y1="424" x2="390" y2="446" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 2 -->
+<rect x="90" y="450" width="600" height="64" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<circle cx="60" cy="482" r="13" fill="#2f5a96"/>
+<text x="60" y="487" text-anchor="middle" fill="#fff" font-weight="700">2</text>
+<text x="106" y="475" fill="#1a2b45" font-size="15" font-weight="700">AgentSession.prompt offers every tool in pi.tools to the model</text>
+<text x="106" y="500" fill="#374151">with its name, description and the JSON Schema of its arguments</text>
+<line x1="390" y1="514" x2="390" y2="536" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Model: steps 3 to 5 -->
+<rect x="38" y="557" width="44" height="26" rx="13" fill="#2f5a96"/>
+<text x="60" y="575" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">3–5</text>
+<rect x="90" y="540" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
+<text x="106" y="565" fill="#1a2b45" font-size="15" font-weight="700">The agent loop asks the model; it answers with a tool call</text>
+<text x="106" y="590" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">hello({"name": "Ada"})</text>
+<line x1="390" y1="604" x2="390" y2="626" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 6: schema -->
+<rect x="90" y="630" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
+<circle cx="60" cy="662" r="13" fill="#2f5a96"/>
+<text x="60" y="667" text-anchor="middle" fill="#fff" font-weight="700">6</text>
+<text x="106" y="655" fill="#1a2b45" font-size="15" font-weight="700">pi2 checks the arguments against the tool's schema</text>
+<text x="106" y="680" fill="#374151">so execute() only ever gets arguments of the right shape</text>
+<line x1="690" y1="662" x2="756" y2="662" stroke="#cf222e" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+<text x="700" y="654" fill="#cf222e" font-size="12">no</text>
+<rect x="760" y="636" width="320" height="52" rx="10" fill="#fff1f0" stroke="#cf222e" stroke-width="1.5"/>
+<text x="776" y="658" fill="#1f2328">Error result; the tool does not run.</text>
+<text x="776" y="677" fill="#4b5563" font-size="13">The model reads what was wrong.</text>
+<line x1="390" y1="694" x2="390" y2="716" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 6: listeners -->
+<rect x="90" y="720" width="600" height="64" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
+<circle cx="60" cy="752" r="13" fill="#2f5a96"/>
+<text x="60" y="757" text-anchor="middle" fill="#fff" font-weight="700">6</text>
+<text x="106" y="745" fill="#1a2b45" font-size="15" font-weight="700">Every listener in pi.handlers sees the call</text>
+<text x="106" y="770" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">h(call, args) → None: let it run · a reason: block it</text>
+<line x1="690" y1="752" x2="756" y2="752" stroke="#cf222e" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+<text x="698" y="744" fill="#cf222e" font-size="12">reason</text>
+<rect x="760" y="726" width="320" height="52" rx="10" fill="#fff1f0" stroke="#cf222e" stroke-width="1.5"/>
+<text x="776" y="748" fill="#1f2328">Error result; the tool does not run.</text>
+<text x="776" y="767" fill="#4b5563" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">"Blocked by extension: &lt;reason&gt;"</text>
+<line x1="390" y1="784" x2="390" y2="806" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 7 -->
+<rect x="90" y="810" width="600" height="64" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<circle cx="60" cy="842" r="13" fill="#2f5a96"/>
+<text x="60" y="847" text-anchor="middle" fill="#fff" font-weight="700">7</text>
+<text x="106" y="835" fill="#1a2b45" font-size="15" font-weight="700">Your tool runs</text>
+<text x="106" y="860" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">tool.execute(params, ctx)&#160;&#160; # ctx.cwd, ctx.session</text>
+<line x1="690" y1="826" x2="756" y2="820" stroke="#2f7d5b" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+<rect x="760" y="802" width="320" height="36" rx="10" fill="#eaf5ef" stroke="#2f7d5b" stroke-width="1.5"/>
+<text x="776" y="825" fill="#1f2328"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">return "Hello, Ada!"</tspan> → the result</text>
+<line x1="690" y1="858" x2="756" y2="864" stroke="#cf222e" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+<rect x="760" y="846" width="320" height="36" rx="10" fill="#fff1f0" stroke="#cf222e" stroke-width="1.5"/>
+<text x="776" y="869" fill="#1f2328"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">raise ...</tspan> → error result with the message</text>
+<line x1="390" y1="874" x2="390" y2="896" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 8 -->
+<rect x="90" y="900" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
+<circle cx="60" cy="932" r="13" fill="#2f5a96"/>
+<text x="60" y="937" text-anchor="middle" fill="#fff" font-weight="700">8</text>
+<text x="106" y="925" fill="#1a2b45" font-size="15" font-weight="700">The result goes back to the model as the next message</text>
+<text x="106" y="950" fill="#374151">every result and error result above ends here, and is saved</text>
+<path d="M 90 954 H 22 V 590 H 86" fill="none" stroke="#6d4bb3" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrowLoop)"/>
+<text x="16" y="772" fill="#6d4bb3" font-size="12" transform="rotate(-90 16 772)" text-anchor="middle">the model answers, or calls another tool</text>
+
+<!-- Legend -->
+<line x1="40" y1="992" x2="1080" y2="992" stroke="#e5e7eb"/>
+<g font-size="13" fill="#4b5563">
+<rect x="40" y="1010" width="14" height="14" rx="3" fill="#eef3fa" stroke="#2f5a96"/><text x="62" y="1022">your tool (register_tool)</text>
+<rect x="240" y="1010" width="14" height="14" rx="3" fill="#f3effa" stroke="#6d4bb3"/><text x="262" y="1022">your listener (pi.on)</text>
+<rect x="420" y="1010" width="14" height="14" rx="3" fill="#fbeeee" stroke="#b03a37"/><text x="442" y="1022">your extension file</text>
+<rect x="590" y="1010" width="14" height="14" rx="3" fill="#f6f8fa" stroke="#6b7280"/><text x="612" y="1022">pi2 or the model</text>
+<rect x="740" y="1010" width="14" height="14" rx="3" fill="#eaf5ef" stroke="#2f7d5b"/><text x="762" y="1022">result</text>
+<rect x="830" y="1010" width="14" height="14" rx="3" fill="#fff1f0" stroke="#cf222e"/><text x="852" y="1022">error result, back to the model</text>
+</g>
+</svg>
