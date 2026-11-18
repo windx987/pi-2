@@ -1,6 +1,6 @@
 # Diagrams
 
-The root README shows these diagrams as pre-rendered SVG, because GitHub's live Mermaid rendering lays them out poorly. Edit the `.mmd` source, then render it again:
+The root README and the education pages show these diagrams as pre-rendered SVG, because GitHub's live Mermaid rendering lays them out poorly. Edit the `.mmd` source, then render it again:
 
 ```bash
 npx -y @mermaid-js/mermaid-cli@11.4.0 -c mermaid.config.json -b white -i architecture.mmd -o architecture.svg

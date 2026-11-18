@@ -1,0 +1,33 @@
+flowchart LR
+    pkg["packages/ai<br/>pi-ai"]
+    subgraph api["src/api/ : one file per provider API"]
+        direction TB
+        oai["openai-completions.ts<br/>openai-responses.ts, ..."]
+        ant["anthropic-messages.ts"]
+        goo["google-generative-ai.ts<br/>google-vertex.ts"]
+        bed["bedrock-converse-stream.ts"]
+    end
+    subgraph utils["src/utils/"]
+        direction TB
+        json["json-parse.ts<br/>streaming tool arguments"]
+        val["validation.ts<br/>validateToolArguments"]
+    end
+    pkg --> api
+    pkg --> utils
+    oai -.-> lOai["openai<br/>also Ollama, vLLM, LM Studio"]
+    ant -.-> lAnt["@anthropic-ai/sdk"]
+    goo -.-> lGoo["@google/genai"]
+    bed -.-> lBed["@aws-sdk/client-bedrock-runtime<br/>@smithy/node-http-handler<br/>http(s)-proxy-agent"]
+    json -.-> lJson["partial-json"]
+    val --> own["pi-schema<br/>Pi's own validator"]
+
+    classDef pkg fill:#e8f0fe,stroke:#4a6fa5,color:#1a2b45
+    classDef file fill:#ffffff,stroke:#4a6fa5,color:#1a2b45
+    classDef lib fill:#f3f4f6,stroke:#9aa7b8,color:#4b5563
+    classDef pi fill:#e6f4ea,stroke:#3c8d5a,color:#16351f
+    class pkg pkg
+    class oai,ant,goo,bed,json,val file
+    class lOai,lAnt,lGoo,lBed,lJson lib
+    class own pi
+    style api fill:#f7f9fc,stroke:#9aa7b8
+    style utils fill:#f7f9fc,stroke:#9aa7b8
