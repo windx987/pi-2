@@ -21,6 +21,12 @@ Start this edition without extensions and ask it to read a file: it cannot. The 
 - How to define, register and implement tools with Pi's extension API.
 - How to make tools safe: validating input, refusing ambiguous edits, isolating commands.
 
+## The big picture
+
+Before any detail: what the original Pi does with one prompt, step by step, with the code that does each step. Step 7 is what this edition removes and you build back.
+
+<p align="center"><img alt="The original Pi: 1 interactive mode reads your input, 2 AgentSession starts the agent and declares the built-in tools, 3 the agent loop asks the model, 4 streamFn and ModelRuntime route the request, 5 the pi-ai provider calls the LLM, 6 the arguments are validated and extensions see the call, 7 the built-in tool's execute runs (removed in pi/2), 8 the result goes back to the model and is saved; the loop repeats while the model calls tools. Each step shows its source code." src="./assets/diagrams/big-picture.svg" width="900"></p>
+
 ## Architecture
 
 <p align="center"><img alt="Architecture: the interactive mode sends prompts to AgentSession, which drives the agent loop in pi-agent-core; the loop streams model requests through ModelRuntime and pi-ai to the LLM provider, and calls the tools your extensions registered through the ExtensionRunner." src="./assets/diagrams/architecture.svg" width="760"></p>
@@ -41,9 +47,9 @@ The workshop gives a blind agent its senses and hands, one tool at a time. Every
 
 | Stage | You leave with | Start here |
 |---|---|---|
-| 1 · Understand Pi | A map of the packages and where a request goes | [Architecture](#architecture), [External libraries](education/architecture/external-libraries.md) |
+| 1 · Understand Pi | A map of the packages and where a request goes | [The big picture](#the-big-picture), [Architecture](#architecture), [External libraries](education/architecture/external-libraries.md) |
 | 2 · Explore the agent | The tool-call cycle, traced in real source | [Sequence diagram](#how-a-request-becomes-a-tool-call), `packages/agent/src/agent-loop.ts` |
-| 3 · Build the tools | An agent that reads, writes, edits and runs tests with your code | [Exercises](education/exercises/README.md) |
+| 3 · Build the tools | An agent that reads, writes, edits and runs tests with your code | [Exercises](education/exercises/README.md), [TypeScript primer](education/typescript/README.md) |
 | 4 · Extend | Ideas for your next tool, and a demo | [Extensions docs](packages/coding-agent/docs/extensions.md) |
 
 By the end of stage 3 you can ask "run the tests and fix what fails", and watch the agent use all four of your tools to do it.
