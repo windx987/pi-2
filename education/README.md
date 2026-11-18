@@ -9,12 +9,13 @@ You work in red, in this directory. The blue paths are the Pi code the exercises
 | Path | Contents |
 |---|---|
 | [architecture/tool-removal.md](architecture/tool-removal.md) | What was removed from Pi, what was kept, and why |
+| [architecture/external-libraries.md](architecture/external-libraries.md) | The outside libraries Pi uses, and where |
 | [exercises/](exercises/README.md) | The four tool exercises: README and starter extension each |
 | [playground/](playground/README.md) | A tiny project for the agent to work on, used from a copy |
 
 ## Levels
 
-**1. Understand the application.** What the packages do and how they depend on each other: the architecture diagram in the [root README](../README.md#architecture), then `packages/coding-agent/src/core/agent-session.ts` as the center of the application.
+**1. Understand the application.** What the packages do and how they depend on each other: the architecture diagram in the [root README](../README.md#architecture), then `packages/coding-agent/src/core/agent-session.ts` as the center of the application. [External libraries](architecture/external-libraries.md) shows what Pi builds itself and what it takes from outside.
 
 **2. Explore the agent.** How a prompt becomes model requests and tool calls: the [sequence diagram](../README.md#how-a-request-becomes-a-tool-call), then `packages/agent/src/agent-loop.ts`.
 
