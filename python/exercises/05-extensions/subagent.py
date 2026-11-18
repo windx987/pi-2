@@ -1,7 +1,7 @@
-# Exercise 05: the subagent tool. Lets the agent hand a task to a second agent with its own context.
+# Exercise 05a: the subagent tool. Lets the agent hand a task to a second agent with its own context.
 #
 # Load it with your read tool (the subagent uses the tools you load):
-#   python -m pi2 -e exercises/01-read/starter.py -e exercises/05-subagent/starter.py
+#   python -m pi2 -e exercises/01-read/starter.py -e exercises/05-extensions/subagent.py
 # Then ask: "Use a subagent to find out what each file in this directory does."
 #
 # LEARN:
