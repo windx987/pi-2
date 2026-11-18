@@ -137,15 +137,9 @@ Start with [education/exercises/README.md](education/exercises/README.md). The f
 
 ## Project structure
 
-| Path | Contents |
-|---|---|
-| [packages/ai](packages/ai) | Multi-provider LLM API, streaming, model catalog |
-| [packages/agent](packages/agent) | Agent loop, state, tool calling |
-| [packages/coding-agent](packages/coding-agent) | The `pi` application: sessions, extensions, skills, interactive mode |
-| [packages/tui](packages/tui) | Terminal UI library |
-| [packages/mcp](packages/mcp), [packages/codemode](packages/codemode) | MCP integration and sandboxed JavaScript tool, used by built-in extensions |
-| [packages/durable](packages/durable), [packages/chord](packages/chord), [apps/](apps) | Advanced runtimes and apps, outside the workshop path |
-| [education/](education) | Workshop material: architecture notes, exercises, playground |
+<p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="./assets/diagrams/project-structure.svg" width="760"></p>
+
+You work in red: [education/](education). The blue paths are the Pi code the exercises point to: start with [agent-session.ts](packages/coding-agent/src/core/agent-session.ts) and [agent-loop.ts](packages/agent/src/agent-loop.ts). Grey parts are Pi's other packages and apps, which the workshop does not need.
 
 ## Development
 
