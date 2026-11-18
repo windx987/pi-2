@@ -1,0 +1,39 @@
+flowchart LR
+    subgraph l1["1 · Understand Pi"]
+        direction TB
+        pkgs["Packages and<br/>how they connect"]
+        flow["From a prompt to<br/>a model request"]
+        pkgs --> flow
+    end
+    subgraph l2["2 · Explore the agent"]
+        direction TB
+        agentloop["The agent loop:<br/>call, run, feed back"]
+        calls["Tool calls:<br/>schema, validation, result"]
+        agentloop --> calls
+    end
+    subgraph l3["3 · Build the tools"]
+        direction TB
+        read["01 read<br/>the agent can look"]
+        write["02 write<br/>the agent can create"]
+        edit["03 edit<br/>the agent can change"]
+        bash["04 bash<br/>the agent can check its work"]
+        read --> write --> edit --> bash
+    end
+    subgraph l4["4 · Extend"]
+        direction TB
+        own["Your own tools:<br/>APIs, browsers, MCP"]
+        more["Hooks, skills,<br/>subagents"]
+        own --> more
+    end
+    l1 --> l2 --> l3 --> l4
+
+    classDef learn fill:#e8f0fe,stroke:#4a6fa5,color:#1a2b45
+    classDef build fill:#fdecea,stroke:#c0504d,color:#4a1a18
+    classDef extend fill:#e6f4ea,stroke:#3c8d5a,color:#16351f
+    class pkgs,flow,agentloop,calls learn
+    class read,write,edit,bash build
+    class own,more extend
+    style l1 fill:#f7f9fc,stroke:#9aa7b8
+    style l2 fill:#f7f9fc,stroke:#9aa7b8
+    style l3 fill:#f7f9fc,stroke:#9aa7b8
+    style l4 fill:#f7f9fc,stroke:#9aa7b8
