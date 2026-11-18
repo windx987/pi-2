@@ -1,0 +1,20 @@
+flowchart LR
+    pkg["packages/tui<br/>pi-tui"]
+    md["src/components/markdown.ts<br/>model answers as terminal text"]
+    utils["src/utils.ts<br/>line wrapping"]
+    render["differential rendering,<br/>components, input"]
+    pkg --> md
+    pkg --> utils
+    pkg --> render
+    md -.-> lMd["marked<br/>marked-cjk-friendly"]
+    utils -.-> lW["get-east-asian-width"]
+    render --> own["Pi's own code"]
+
+    classDef pkg fill:#e8f0fe,stroke:#4a6fa5,color:#1a2b45
+    classDef file fill:#ffffff,stroke:#4a6fa5,color:#1a2b45
+    classDef lib fill:#f3f4f6,stroke:#9aa7b8,color:#4b5563
+    classDef pi fill:#e6f4ea,stroke:#3c8d5a,color:#16351f
+    class pkg pkg
+    class md,utils,render file
+    class lMd,lW lib
+    class own pi

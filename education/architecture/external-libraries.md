@@ -6,18 +6,15 @@ This page lists the runtime dependencies of the four packages the workshop uses,
 
 ## How the packages depend on each other
 
-```text
-coding-agent ──> agent ──> ai ──> schema, telemetry   (Pi's own packages)
-     │                      │
-     │                      └──> provider SDKs, proxy agents, partial-json
-     ├──> tui ──> marked, get-east-asian-width
-     ├──> mcp, codemode
-     └──> typebox, jiti, undici, diff, ... (below)
-```
+<p align="center"><img alt="Package dependencies: coding-agent depends on agent, ai, tui, mcp and codemode; agent depends on ai and schema; ai depends on schema and telemetry. Dotted lines lead to each package's external libraries. agent, schema and telemetry, in green, have none." src="../../assets/diagrams/package-dependencies.svg" width="760"></p>
 
-`agent` (pi-agent-core) has no external dependencies at all: the agent loop is plain TypeScript on top of `ai`. `schema` and `telemetry` have none either.
+Solid arrows are Pi's own packages, dotted arrows outside libraries. Green packages have no outside libraries.
+
+`schema` and `telemetry` have no outside libraries either.
 
 ## packages/ai: talking to model providers
+
+<p align="center"><img alt="packages/ai: each provider file in src/api uses that provider's SDK (openai, @anthropic-ai/sdk, @google/genai, the AWS Bedrock SDK); json-parse.ts uses partial-json; validation.ts uses Pi's own pi-schema." src="../../assets/diagrams/package-ai.svg" width="760"></p>
 
 | Library | What it does | Where Pi uses it |
 |---|---|---|
@@ -32,7 +29,17 @@ Each provider SDK only sends requests and parses responses. Pi turns every provi
 
 Tool arguments are validated with Pi's own `@earendil-works/pi-schema` (`validateToolArguments` in `src/utils/validation.ts`), not with an outside validator.
 
+## packages/agent: the agent loop
+
+<p align="center"><img alt="packages/agent: agent.ts drives agent-loop.ts, which uses pi-ai for streaming and validateToolArguments; types.ts uses pi-schema. No external libraries." src="../../assets/diagrams/package-agent.svg" width="700"></p>
+
+`agent` (pi-agent-core) has no outside libraries at all. The agent loop is plain TypeScript on top of `ai`, which is why it is a good file to read in full.
+
 ## packages/coding-agent: the application
+
+<p align="center"><img alt="packages/coding-agent: files grouped by job, each with the library it uses. Extensions and tools: loader.ts uses jiti, tool parameters use typebox, edit-diff.ts uses diff, child-process.ts uses cross-spawn. Network and storage: undici, proper-lockfile. Skills, packages, models: yaml, ignore, semver, minimatch, brace-expansion, hosted-git-info. Terminal output: highlight.js, lovely-mermaid, photon-node, chalk." src="../../assets/diagrams/package-coding-agent.svg" width="640"></p>
+
+The three libraries in red are the ones the exercises touch.
 
 | Library | What it does | Where Pi uses it |
 |---|---|---|
@@ -54,6 +61,8 @@ Tool arguments are validated with Pi's own `@earendil-works/pi-schema` (`validat
 | `quickjs-wasi` | A JavaScript engine in WebAssembly | The sandbox the `codemode` package runs code in; `src/bun/runtime-setup.ts` embeds its WebAssembly file in standalone binaries |
 
 ## packages/tui: the terminal
+
+<p align="center"><img alt="packages/tui: markdown.ts uses marked and marked-cjk-friendly, utils.ts uses get-east-asian-width; differential rendering, components and input are Pi's own code." src="../../assets/diagrams/package-tui.svg" width="700"></p>
 
 | Library | What it does | Where Pi uses it |
 |---|---|---|
