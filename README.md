@@ -17,87 +17,13 @@ Start this edition without extensions and ask it to read a file: it cannot. The 
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    user([User])
-    subgraph coding["packages/coding-agent"]
-        tui["Interactive mode<br/>modes/interactive"]
-        session["AgentSession<br/>core/agent-session.ts"]
-        runner["ExtensionRunner<br/>core/extensions/runner.ts"]
-        registry["Tool registry and loadout<br/>defaultTools, --tools"]
-        sessions["SessionManager<br/>transcript, resume, compaction"]
-        runtime["ModelRuntime<br/>core/model-runtime.ts"]
-    end
-    ext["Your extensions<br/>education/exercises"]
-    subgraph agent["packages/agent - pi-agent-core"]
-        loop["Agent and agent loop<br/>agent.ts, agent-loop.ts"]
-    end
-    subgraph ai["packages/ai - pi-ai"]
-        providers["Providers, streaming,<br/>validateToolArguments"]
-    end
-    tuilib["packages/tui<br/>rendering library"]
-    llm[("LLM provider API")]
-
-    user --> tui
-    tui --> tuilib
-    tui -- "prompt()" --> session
-    session -- "events" --> tui
-    ext -- "pi.registerTool()" --> runner
-    runner -- "registered tools" --> registry
-    session --> registry
-    registry -- "active tools: agent.state.tools" --> loop
-    session -- "agent.prompt()" --> loop
-    loop -- "events" --> session
-    session -- "appendMessage()" --> sessions
-    loop -- "beforeToolCall / afterToolCall" --> session
-    session -- "tool_call / tool_result events" --> runner
-    loop -- "streamFn" --> runtime
-    runtime --> providers
-    providers --> llm
-    loop -- "execute()" --> ext
-```
+<p align="center"><img alt="Architecture: the interactive mode sends prompts to AgentSession, which drives the agent loop in pi-agent-core; the loop streams model requests through ModelRuntime and pi-ai to the LLM provider, and calls the tools your extensions registered through the ExtensionRunner." src="./assets/diagrams/architecture.svg" width="760"></p>
 
 `coding-agent` depends on `agent`, `ai` and `tui` (and on `mcp` and `codemode` for built-in extensions); `agent` depends on `ai`, whose `validateToolArguments` the loop uses. The loop does not choose a provider: `AgentSession`'s `streamFn` sends requests through `ModelRuntime`, which resolves auth and calls the pi-ai provider. Your extensions enter only through the extension API. See [education/architecture/](education/architecture/) for details.
 
 ## How a request becomes a tool call
 
-```mermaid
-sequenceDiagram
-    actor User
-    participant TUI as Interactive mode
-    participant Session as AgentSession
-    participant AgentLoop as Agent loop (pi-agent-core)
-    participant Model as ModelRuntime and pi-ai
-    participant LLM as LLM provider
-    participant Tool as Your tool
-
-    User->>TUI: Fix the failing test
-    TUI->>Session: prompt(text)
-    Note over Session: active tools are already in agent.state.tools
-    Session->>AgentLoop: agent.prompt(messages)
-    loop until the model answers without tool calls
-        AgentLoop->>Model: streamFn(model, messages and tool definitions)
-        Model->>LLM: provider request
-        LLM-->>Model: streamed response
-        Model-->>AgentLoop: assistant message with a tool call
-        AgentLoop-->>Session: message events
-        Session-->>TUI: events, rendered as they stream
-        AgentLoop->>AgentLoop: validateToolArguments(tool, call)
-        AgentLoop->>Session: beforeToolCall
-        Note over Session: extensions get a tool_call event and may block the call
-        AgentLoop->>Tool: execute(toolCallId, params, signal, onUpdate, ctx)
-        Tool-->>AgentLoop: content, details, isError
-        AgentLoop->>Session: afterToolCall
-        Note over Session: extensions get a tool_result event
-        AgentLoop-->>Session: tool execution and result events
-        Session-->>TUI: events
-        Note over AgentLoop: the tool result joins the messages for the next request
-    end
-    AgentLoop-->>Session: final assistant message
-    Note over Session: SessionManager.appendMessage persists each message
-    Session-->>TUI: events
-    TUI-->>User: rendered answer
-```
+<p align="center"><img alt="Sequence: the user prompt goes from the interactive mode to AgentSession and the agent loop; in a loop the agent streams a model request, receives a tool call, validates its arguments, runs beforeToolCall, executes your tool, runs afterToolCall and adds the result to the messages, until the model answers without tool calls." src="./assets/diagrams/request-sequence.svg" width="900"></p>
 
 The model decides which tool to call. Pi runs the tool lifecycle. You implement what the tool does.
 
@@ -105,43 +31,7 @@ The model decides which tool to call. Pi runs the tool lifecycle. You implement 
 
 The workshop gives a blind agent its senses and hands, one tool at a time. Every exercise adds a capability you can try on the spot, and each one builds on the last: the agent cannot fix code it cannot read, and cannot check a fix it cannot run.
 
-```mermaid
-flowchart LR
-    subgraph l1["1 · Understand Pi"]
-        direction TB
-        pkgs["Packages and<br/>how they connect"]
-        flow["From a prompt to<br/>a model request"]
-        pkgs --> flow
-    end
-    subgraph l2["2 · Explore the agent"]
-        direction TB
-        agentloop["The agent loop:<br/>call, run, feed back"]
-        calls["Tool calls:<br/>schema, validation, result"]
-        agentloop --> calls
-    end
-    subgraph l3["3 · Build the tools"]
-        direction TB
-        read["01 read<br/><i>the agent can look</i>"]
-        write["02 write<br/><i>the agent can create</i>"]
-        edit["03 edit<br/><i>the agent can change</i>"]
-        bash["04 bash<br/><i>the agent can check its work</i>"]
-        read --> write --> edit --> bash
-    end
-    subgraph l4["4 · Extend"]
-        direction TB
-        own["Your own tools:<br/>APIs, browsers, MCP"]
-        more["Hooks, skills,<br/>subagents"]
-        own --> more
-    end
-    l1 --> l2 --> l3 --> l4
-
-    classDef learn fill:#e8f0fe,stroke:#4a6fa5,color:#1a2b45
-    classDef build fill:#fdecea,stroke:#c0504d,color:#4a1a18
-    classDef extend fill:#e6f4ea,stroke:#3c8d5a,color:#16351f
-    class pkgs,flow,agentloop,calls learn
-    class read,write,edit,bash build
-    class own,more extend
-```
+<p align="center"><img alt="Learning path: 1 Understand Pi, 2 Explore the agent, 3 Build the tools (01 read, 02 write, 03 edit, 04 bash), 4 Extend." src="./assets/diagrams/learning-path.svg" width="900"></p>
 
 | Stage | You leave with | Start here |
 |---|---|---|
@@ -154,15 +44,60 @@ By the end of stage 3 you can ask "run the tests and fix what fails", and watch 
 
 ## Getting started
 
-Requires Node.js 22.19 or newer, and Docker for exercise 04.
+Requires Node.js 22.19 or newer, [Ollama](https://ollama.com) for the model, and Docker for exercise 04.
 
 ```bash
 git clone https://github.com/windx987/pi-2.git
 cd pi-2
 npm install --ignore-scripts
 npm run build
-./pi-test.sh                      # run Pi from source; /login connects a provider
 ```
+
+### Connect a model through Ollama
+
+The workshop runs Gemma 4 through Ollama's OpenAI-compatible endpoint. Pi only needs the endpoint's address, so the model can run on your machine or on a shared server.
+
+| Ollama runs on | `baseUrl` in `models.json` |
+|---|---|
+| Your machine | `http://localhost:11434/v1` |
+| A shared workshop server | `http://<server-ip>:11434/v1` |
+
+On the machine that runs Ollama, pull the model and give it a 32k context (Ollama's default of 4096 tokens is too small for Pi and cuts requests without an error):
+
+```bash
+ollama pull gemma4:12b                       # gemma4:31b needs about 20 GB of free memory
+printf 'FROM gemma4:12b\nPARAMETER num_ctx 32768\n' > Modelfile
+ollama create gemma4-workshop:12b -f Modelfile
+```
+
+For a shared server, start Ollama listening on all interfaces with `OLLAMA_HOST=0.0.0.0:11434 ollama serve`. Ollama has no authentication: anyone who can reach the port can use the model. Keep the server on the workshop network or behind a firewall that allows only participants' addresses, never open on the public internet.
+
+On each participant's machine, add the endpoint to `~/.pi/agent/models.json`, with `localhost` replaced by the server's address when you use a shared server:
+
+```json
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "compat": { "supportsDeveloperRole": false },
+      "models": [
+        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (32k)", "contextWindow": 32768, "maxTokens": 8192 }
+      ]
+    }
+  }
+}
+```
+
+Check the endpoint, then start Pi from source with that model:
+
+```bash
+curl http://localhost:11434/v1/models          # lists gemma4-workshop:12b
+./pi-test.sh --model ollama/gemma4-workshop:12b
+```
+
+Any other provider Pi supports works too: run `./pi-test.sh` and `/login`, or set an API key such as `ANTHROPIC_API_KEY`. Setup details are in [education/exercises/README.md](education/exercises/README.md).
 
 ## Building your first tool
 
