@@ -1,0 +1,35 @@
+%% Source for request-sequence.svg. Render from assets/diagrams/:
+%% npx @mermaid-js/mermaid-cli@11.4.0 -i request-sequence.mmd -o request-sequence.svg -c mermaid.config.json -b white
+sequenceDiagram
+    actor You
+    participant TUI as tui.py (InteractiveMode)
+    participant Session as session.py (AgentSession)
+    participant AgentLoop as agent_loop.py
+    participant Model as model_runtime.py and ai.py
+    participant LLM as LLM server
+    participant Tool as Your tool (extension)
+
+    You->>TUI: 1 · Fix the failing test
+    TUI->>Session: prompt(text)
+    Note over Session: 2 · the tools come from pi.tools (your extensions)
+    Session->>AgentLoop: run(context, config, emit)
+    loop until an answer has no tool calls
+        AgentLoop->>Model: 3, 4 · stream_fn(model, context)
+        Model->>LLM: 5 · POST /chat/completions, streamed
+        LLM-->>Model: text, thinking and tool calls, in pieces
+        Model-->>AgentLoop: deltas, then the whole assistant message
+        AgentLoop-->>Session: emit(message events)
+        Session-->>TUI: events, drawn as they stream
+        Note over Session: 8 · save() appends each finished message to the .jsonl file
+        AgentLoop->>AgentLoop: 6 · validate_tool_arguments(tool, arguments)
+        AgentLoop->>Session: 6 · before_tool_call(call, args)
+        Note over Session: every tool_call listener runs, and a reason blocks the call
+        AgentLoop->>Tool: 7 · execute(params, ctx)
+        Tool-->>AgentLoop: a string, or an exception (error result)
+        AgentLoop-->>Session: emit(tool_execution_end, the result message)
+        Session-->>TUI: the tool box turns green or red
+        Note over AgentLoop: 8 · the result joins the messages for the next request
+    end
+    AgentLoop-->>Session: emit(agent_end)
+    Session-->>TUI: events
+    TUI-->>You: the answer, then the editor again
