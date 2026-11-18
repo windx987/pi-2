@@ -1,0 +1,12 @@
+{
+  "agentDir": "~/.pi/agent",
+  "provider": {
+    "baseUrl": "http://localhost:8000/v1",
+    "api": "openai-completions",
+    "apiKey": "local",
+    "model": "local-model",
+    "name": "Local model",
+    "contextWindow": 32768,
+    "maxTokens": 8192
+  }
+}

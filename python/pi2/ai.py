@@ -1,8 +1,8 @@
 """Step 5: the provider.
 
 Converts Pi's messages and tools to the OpenAI chat format, sends the request, and turns the streamed
-answer back into Pi events: thinking, text and tool calls. Works with any OpenAI-compatible endpoint,
-such as Ollama's http://localhost:11434/v1. Like pi-ai, nothing above this file knows the wire format.
+answer back into Pi events: thinking, text and tool calls. Works with any OpenAI-compatible endpoint.
+Like pi-ai, nothing above this file knows the wire format.
 """
 
 import json
@@ -30,10 +30,13 @@ def stream(model, context, api_key):
     if model.get("max_tokens"):
         body["max_tokens"] = model["max_tokens"]
 
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
     request = urllib.request.Request(
         f"{model['base_url'].rstrip('/')}/chat/completions",
         data=json.dumps(body).encode(),
-        headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+        headers=headers,
     )
     message = {"role": "assistant", "content": [], "stop_reason": "stop", "usage": {"input": 0, "output": 0}}
     calls = {}  # the provider streams each tool call in pieces, keyed by its index

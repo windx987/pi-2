@@ -1,14 +1,17 @@
-# The workshop file: five tools. `hello` works; read, write, edit and bash are yours.
+# The workshop file: five tools. `hello` and `bash` work; read, write and edit are yours.
 #
 # Load it from python/:
-#   python3 -m pi2 --model ollama/gemma4-workshop:12b -e exercises/tools.py
+#   python3 -m pi2 -e exercises/tools.py
 #
-# Or from a copy of the playground (~/pi-workshop):
+# With a private settings file:
+#   python3 -m pi2 --settings ../settings.local.json -e exercises/tools.py
+#
+# From a copy of the playground (~/pi-workshop):
 #   PYTHONPATH="$REPO/python" python3 -m pi2 -e "$REPO/python/exercises/tools.py"
 #
-# Each execute() below holds the exercise steps. Start with read, then write, edit, bash.
+# The bash tool is a complete example. The comments on read, write and edit are the exercises.
 
-import os
+import subprocess
 
 from pi2 import ExtensionAPI, define_tool
 
@@ -153,53 +156,33 @@ edit_tool = define_tool(
 )
 
 
-# Image the commands run in. It must have python3 and bash.
-WORKSHOP_IMAGE = "python:3.12-slim"
-
-
-def docker_args(command, workspace):
-    """Arguments for `docker` that run `command` in a disposable container with only `workspace` mounted."""
-    # Run as the host user, so files the command creates in the workspace stay editable on the host.
-    user = ["--user", f"{os.getuid()}:{os.getgid()}"] if hasattr(os, "getuid") else []
-    return [
-        "run", "--rm",
-        # An init process forwards the stop signal to the command, so killing `docker run` stops it.
-        "--init",
-        "--network", "none",
-        "--memory", "1g",
-        "--pids-limit", "256",
-        *user,
-        "--env", "HOME=/tmp",
-        "--volume", f"{workspace}:/workspace",
-        "--workdir", "/workspace",
-        WORKSHOP_IMAGE,
-        "bash", "-c", command,
-    ]
-
-
 def execute_bash(params, ctx):
-    # EXERCISE 1: Run the process: subprocess.run(["docker", *docker_args(params["command"], ctx.cwd)]).
-    # It raises FileNotFoundError when Docker is not installed; raise an exception that says so.
-    #
-    # EXERCISE 2: Collect output. Send stderr into stdout (stderr=subprocess.STDOUT) so both arrive in
-    # one text, in order, the way a terminal shows them (capture_output is not enough: it splits them).
-    #
-    # EXERCISE 3: Return the output; when the exit code is not 0, raise an exception with the output
-    # and "Command exited with code N", so the model gets an error result.
-    #
-    # EXERCISE 4: Stop runaway commands. Pass timeout=params.get("timeout") and catch
-    # subprocess.TimeoutExpired. Say in the result that the command was stopped.
-    #
-    # CHALLENGE: Long output. Keep the last 2000 lines for the model and say how much was left out.
-    raise NotImplementedError(f"bash is not implemented yet (asked to run {params['command']} in {ctx.cwd}).")
+    """Run the command on the host, in the working directory."""
+    # Commands run as your user, on your machine. There is no sandbox here: the model can do
+    # anything you can. Work in a copy of the playground, not in the repository.
+    try:
+        result = subprocess.run(
+            ["bash", "-c", params["command"]],
+            cwd=ctx.cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            timeout=params.get("timeout"),
+        )
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError("Command stopped after the timeout.") from error
+    output = result.stdout
+    if result.returncode != 0:
+        raise RuntimeError(f"{output}\nCommand exited with code {result.returncode}")
+    return output
 
 
 bash_tool = define_tool(
     name="bash",
     label="bash",
     description=(
-        "Execute a bash command in the working directory, inside a container without network. Returns "
-        "stdout and stderr combined. Optionally provide a timeout in seconds."
+        "Execute a bash command in the working directory. Returns stdout and stderr combined. "
+        "Optionally provide a timeout in seconds."
     ),
     prompt_snippet="Execute bash commands (ls, grep, find, etc.)",
     parameters={

@@ -1,82 +1,101 @@
-# Lobotomized: pi/2 in Python (lean workshop)
+# pi/2 Python Workshop
 
-A small coding agent in standard-library Python with a terminal UI. It has no built-in tools: you write `read`, `write`, `edit` and `bash` yourself. This branch is the workshop cut. The TypeScript Pi is not included.
+## What is this repo
 
-## What is here
+This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educational workshops. It is a small coding agent written in standard-library Python with a terminal UI. It has no built-in tools: they live in `python/exercises/tools.py`. `hello` and `bash` work; `read`, `write` and `edit` are the exercises. The TypeScript version of Pi is not included.
 
 | Path | What it is |
 |---|---|
+| `settings.json` | The one config file: endpoint, model, key and agent directory |
 | `python/pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions |
-| `python/exercises/tools.py` | The file you edit: four tools plus a working `hello` |
+| `python/exercises/tools.py` | The tools file: `hello` and `bash` work; `read`, `write` and `edit` are the exercises |
 | `python/playground/math.py` | A disposable file with one bug, for the tools to work on |
-| `README.md` | Setup and exercises |
-| `LICENSE` | MIT |
-
-Everything else is intentionally absent.
 
 ## Requirements
 
 - Python 3.10 or newer, no packages.
-- [Ollama](https://ollama.com) for the model.
-- Docker for exercise 04.
+- An OpenAI-compatible LLM endpoint in the form `https://XXX/v1`, plus an API key if your endpoint requires one.
 
-## Get the repository
+## Get started
+
+Clone the repository:
 
 ```bash
-git clone --depth 1 --single-branch -b lean https://github.com/windx987/pi-2.git
+git clone -b lean https://github.com/windx987/pi-2.git
 cd pi-2
 ```
 
-The shallow clone keeps the download small.
-
-## Model
-
-Pull the model and give it a 32k context. Ollama's default of 4096 tokens is too small and cuts requests without an error:
-
-```bash
-ollama pull gemma4:12b
-printf 'FROM gemma4:12b\nPARAMETER num_ctx 32768\n' > Modelfile
-ollama create gemma4-workshop:12b -f Modelfile
-```
-
-Add the endpoint to `~/.pi/agent/models.json`, the same file Pi uses. For a shared Ollama server, replace `localhost` with its address:
+Edit `settings.json` in the repository root. Replace the endpoint, model id and key with yours:
 
 ```json
 {
-  "providers": {
-    "ollama": {
-      "baseUrl": "http://localhost:11434/v1",
-      "api": "openai-completions",
-      "apiKey": "ollama",
-      "models": [
-        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (32k)", "contextWindow": 32768, "maxTokens": 8192 }
-      ]
-    }
+  "agentDir": "~/.pi/agent",
+  "provider": {
+    "baseUrl": "http://localhost:8000/v1",
+    "api": "openai-completions",
+    "apiKey": "local",
+    "model": "local-model",
+    "name": "Local model",
+    "contextWindow": 32768,
+    "maxTokens": 8192
   }
 }
 ```
 
-## Run
+- `baseUrl` must accept `POST /chat/completions`.
+- `model` is the model id sent to the endpoint.
+- `apiKey` can be `local` for a local server that ignores it. Use `""` if the server does not want an `Authorization` header.
+- `agentDir` is where sessions are written. Relative paths are resolved from the directory containing `settings.json`.
+- `contextWindow` defaults to 32768. `maxTokens` is optional.
 
-From the repository root:
+The repository copy uses a dummy local key. For a real key, keep it out of git:
+
+```bash
+cp settings.json settings.local.json
+# edit settings.local.json
+```
+
+`settings.local.json` is ignored by git.
+
+Check that the agent imports:
 
 ```bash
 cd python
-python3 -m pi2 --model ollama/gemma4-workshop:12b -e exercises/tools.py
+python3 -m pi2 --help
 ```
 
-Ask "Greet Ada." The `hello` tool answers. The other four tools raise `NotImplementedError` until you implement them.
+## How to use
+
+### Run
+
+From `python/`:
+
+```bash
+python3 -m pi2 -e exercises/tools.py
+```
+
+The default settings file is `settings.json` in the repository root, independent of the current directory.
+
+Use a private settings file:
+
+```bash
+cd python
+python3 -m pi2 --settings ../settings.local.json -e exercises/tools.py
+```
+
+`--settings` accepts a path relative to the current directory or an absolute path.
+
+Ask "Greet Ada." The `hello` tool answers. The `read`, `write` and `edit` tools raise `NotImplementedError` until participants implement them.
 
 To run from a copy of the playground:
 
 ```bash
 cp -R python/playground ~/pi-workshop
 cd ~/pi-workshop
-PYTHONPATH="$REPO/python" python3 -m pi2 --model ollama/gemma4-workshop:12b \
-  -e "$REPO/python/exercises/tools.py"
+PYTHONPATH="$REPO/python" python3 -m pi2 -e "$REPO/python/exercises/tools.py"
 ```
 
-`REPO` is the path to this clone. There is no install step; `PYTHONPATH` is enough.
+`REPO` is the path to this clone. Add `--settings "$REPO/settings.local.json"` to use a private settings file.
 
 | Key or command | Does |
 |---|---|
@@ -85,64 +104,9 @@ PYTHONPATH="$REPO/python" python3 -m pi2 --model ollama/gemma4-workshop:12b \
 | ctrl+d | Exit |
 | `/new`, `/quit`, `/help` | New session, exit, list commands |
 
-## Exercises
+### Extensions
 
-Implement the four `execute_*` functions in `python/exercises/tools.py`, in this order. The comments above each function are the exercise.
-
-### 01 Read
-
-Let the agent read files. Resolve the path against `ctx.cwd`, read UTF-8 text, apply `offset` and `limit`, and raise an exception for a missing file. Ask:
-
-- "What is in math.py?"
-- "Show me lines 1 to 3 of math.py."
-
-### 02 Write
-
-Let the agent create files. Refuse paths outside `ctx.cwd`, create parent directories, write UTF-8, and return a short confirmation. Ask:
-
-- "Create notes/todo.md with three workshop goals, then read it back."
-- "Write a file to /tmp/outside.txt." It must be refused.
-
-### 03 Edit
-
-Let the agent change part of a file. Each `oldText` must occur exactly once in the original file; zero or two matches are errors, never guesses. Ask:
-
-- "Fix the failing assertion in math.py."
-- "In math.py, replace `return a - b` with `return a + b`."
-- Copy that line twice and ask again: the edit must fail as ambiguous.
-
-### 04 Bash
-
-Let the agent run commands in a disposable container. Run the process, combine stdout and stderr, report a non-zero exit code as an error result, and honor `timeout`. Ask:
-
-- "Run python3 math.py." It fails with exit code 1 until the edit is fixed.
-- "Run sleep 30 with a 2 second timeout."
-
-## Bash and Docker
-
-Exercise 04 runs each command in a container. Pull the image once:
-
-```bash
-docker pull python:3.12-slim
-```
-
-`docker_args()` in `tools.py` sets `--rm`, no network, a 1 GB memory limit, 256 PIDs, only the working directory mounted at `/workspace`, and an init process so ctrl+c stops the command. Run from `~/pi-workshop`, because Docker and Colima share the home directory with containers.
-
-Isolation checks:
-
-| Check | Command | Expected |
-|---|---|---|
-| No network | `getent hosts example.com` | Fails to resolve |
-| No host files outside the workspace | `ls /Users /home` | No host home directories |
-| Memory limit | `python3 -c "a=[];\\nwhile True: a.append(bytearray(10**8))"` | Killed at about 1 GB |
-| Timeout stops the container | `sleep 300` with `timeout: 2`, then `docker ps` | No container left |
-| Cleanup after errors | a failing command, then `docker ps -a` | No leftover container |
-
-SAFETY: `read`, `write` and `edit` run on the host. A symlink in the workspace that points outside it makes them reach the host. Resolve paths with `realpath` before the containment check if that matters for your setup.
-
-## Extensions
-
-An extension is any Python file loaded with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. An extension can register tools and listen to tool calls:
+An extension is any Python file loaded with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. `-e` is repeatable, and an extension can register tools and listen to tool calls:
 
 ```python
 def extension(pi):
@@ -156,7 +120,9 @@ def extension(pi):
 
 A tool is a `define_tool(...)` value: name, description, JSON Schema of its arguments, and `execute(params, ctx)`. Return a string; raise an exception for an error result. `ctx.cwd` is the working directory and `ctx.session` is the running session.
 
-## How the agent works
+Without `-e`, no tools are loaded: the model cannot read, write or run anything. `python/exercises/tools.py` registers `hello`, `read`, `write`, `edit` and `bash`.
+
+### Code map
 
 | Step | File |
 |---|---|
@@ -171,12 +137,12 @@ A tool is a `define_tool(...)` value: name, description, JSON Schema of its argu
 
 Read them in that order. `python/pi2/extensions.py` is how extensions get in, and `python/pi2/cli.py` starts everything.
 
-## Notes
+### Notes
 
-- Sessions are written to `~/.pi/agent/python-sessions/` but are not resumed.
+- Sessions are written to `<agentDir>/python-sessions/`; the default is `~/.pi/agent/python-sessions/`. They are not resumed.
+- The `bash` tool runs commands directly on the host as your user. There is no sandbox; work in a copy of the playground.
 - This branch has no tests and no packaging. Check the import path with `python3 -m pi2 --help`.
-- One provider API is supported: `openai-completions`, which covers Ollama.
-
-## License
+- One provider and one model are configured at a time. Edit `settings.json`, or pass a different `--settings` file.
+- One provider API is supported: `openai-completions`.
 
 MIT, as the original Pi.

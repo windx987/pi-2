@@ -49,7 +49,7 @@ class ExtensionAPI:
 
     def load(self, path):
         """Load one extension file and call its extension(pi) function."""
-        path = Path(path).resolve()
+        path = Path(path).expanduser().resolve()
         spec = importlib.util.spec_from_file_location(f"pi2_extension_{path.stem}", path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
