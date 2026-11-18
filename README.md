@@ -149,7 +149,17 @@ Start with [education/exercises/README.md](education/exercises/README.md). The f
 
 ## Lobotomized: pi/2 in Python
 
-[Lobotomized](https://github.com/windx987/pi-2/tree/python/python) is pi/2 cut down to about 800 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, compaction, and providers other than OpenAI-compatible ones such as Ollama. It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: a subagent, a tool that runs a second agent with its own context.
+[Lobotomized](https://github.com/windx987/pi-2/tree/python) is pi/2 cut down to about 800 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, compaction, and providers other than OpenAI-compatible ones such as Ollama. It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: a subagent, a tool that runs a second agent with its own context.
+
+It uses the same `~/.pi/agent/models.json` as Pi and starts like `./pi-test.sh`:
+
+```bash
+git clone -b python https://github.com/windx987/pi-2.git pi-2-python
+cd pi-2-python
+./pi2.sh -e python/examples/hello.py
+```
+
+Type `/model` inside it to list and switch models.
 
 ## Project structure
 
