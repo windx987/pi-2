@@ -2,6 +2,10 @@
 
 This directory is the educational layer of Pi Workshop Edition. It adds material next to Pi's packages and does not change their structure.
 
+<p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="../assets/diagrams/project-structure.svg" width="760"></p>
+
+You work in red, in this directory. The blue paths are the Pi code the exercises point to. Grey parts are not needed for the workshop.
+
 | Path | Contents |
 |---|---|
 | [architecture/tool-removal.md](architecture/tool-removal.md) | What was removed from Pi, what was kept, and why |
