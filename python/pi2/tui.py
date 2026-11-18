@@ -108,7 +108,7 @@ class InteractiveMode:
     def print_header(self):
         top = f"{fg(*CORAL)}{bg(*BLUE)}▀{RESET}{fg(*CORAL)}▀█{RESET}    {fg(*MINT)}▄▀{RESET} {fg(*CORAL)}▀▀█{RESET}"
         bottom = f"{fg(*BLUE)}█▀{RESET} {fg(*YELLOW)}█{RESET} {fg(*MINT)}▄▀{RESET}   {fg(*CORAL)}█▄▄{RESET}"
-        hints = " · ".join(["ctrl+c interrupt", "ctrl+d exit", "/help commands"])
+        hints = " · ".join(["ctrl+c interrupt", "ctrl+d exit", "/model models", "/help commands"])
         write(f" {top} {DIM}v{__version__} (python){RESET}\n {bottom} {DIM}{hints}{RESET}\n\n")
         sources = self.session.extensions.sources
         if sources:
@@ -149,17 +149,41 @@ class InteractiveMode:
 
     def command(self, text):
         """Handle a slash command. Returns False to exit."""
-        name = text.split()[0]
+        name, *args = text.split()
         if name in ("/quit", "/exit"):
             return False
         if name == "/new":
             self.session.new_session()
             write(f"\n {DIM}New session started{RESET}\n")
+        elif name == "/model":
+            self.select_model(args)
         elif name == "/help":
-            write(f"\n {DIM}/new  start a new session\n /quit exit pi2{RESET}\n")
+            write(
+                f"\n {DIM}/model         list models; /model <number> or <provider/id> switches\n"
+                f" /new           start a new session\n /quit          exit pi2{RESET}\n"
+            )
         else:
             write(f"\n {ERROR}Unknown command {name}. Try /help.{RESET}\n")
         return True
+
+    def select_model(self, args):
+        """/model lists the models in models.json; /model <number or provider/id> switches to one."""
+        runtime = self.session.runtime
+        if args:
+            model = runtime.match(args[0])
+            if model is None:
+                write(f"\n {ERROR}No model {args[0]} in models.json. Type /model to list them.{RESET}\n")
+                return
+            self.session.model = model  # the next request uses it; the conversation stays
+            write(f"\n {DIM}Model: {RESET}{ACCENT}{model['provider']}/{model['id']}{RESET}\n")
+            return
+        rows = []
+        for number, model in enumerate(runtime.models, 1):
+            current = model is self.session.model
+            marker = f"{ACCENT}→{RESET}" if current else " "
+            label = f"{model['provider']}/{model['id']}"
+            rows.append(f" {marker} {number}. {ACCENT if current else ''}{label}{RESET} {DIM}{model['name']}{RESET}\n")
+        write("\n" + "".join(rows) + f"\n {DIM}Switch with /model <number> or /model <provider/id>.{RESET}\n")
 
     # Session events --------------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 # Exercise 02: the write tool. Lets the agent create files and replace them whole.
 #
 # Load it with the read tool:
-#   python -m pi2 -e exercises/01-read/starter.py -e exercises/02-write/starter.py
+#   ./pi2.sh -e python/exercises/01-read/starter.py -e python/exercises/02-write/starter.py
 # Then ask: "Create notes/todo.md with three items."
 #
 # LEARN:

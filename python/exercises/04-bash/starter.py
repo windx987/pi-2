@@ -2,7 +2,7 @@
 #
 # Needs Docker running and the image pulled once:  docker pull node:22-bookworm-slim
 # Load it with the earlier tools, from a playground copy under your home directory:
-#   python -m pi2 -e .../01-read/starter.py -e .../02-write/starter.py -e .../03-edit/starter.py \
+#   "$REPO/pi2.sh" -e .../01-read/starter.py -e .../02-write/starter.py -e .../03-edit/starter.py \
 #     -e .../04-bash/starter.py
 # Then ask: "Run the tests and fix what fails."
 #

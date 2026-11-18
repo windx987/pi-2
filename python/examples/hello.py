@@ -1,6 +1,6 @@
 # A tool is a definition plus one function, registered by an extension.
 #
-# Load it:  python -m pi2 -e examples/hello.py
+# Load it:  ./pi2.sh -e python/examples/hello.py
 # Then ask: "Greet Ada."
 
 from pi2 import ExtensionAPI, define_tool

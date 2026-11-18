@@ -1,6 +1,10 @@
 <p align="center">
   <img alt="pi/2 logo" src="./assets/logo.svg" width="128">
 </p>
+<p align="center">
+  <a href="https://discord.com/invite/3cU7Bz4UPx"><img alt="Discord" src="https://img.shields.io/badge/discord-community-5865F2?style=flat-square&logo=discord&logoColor=white" /></a>
+  <a href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent"><img alt="npm" src="https://img.shields.io/npm/v/@earendil-works/pi-coding-agent?style=flat-square" /></a>
+</p>
 
 > This is the `python` branch: pi/2 cut down to Python. The TypeScript edition, with the full Pi framework, is on [`main`](https://github.com/windx987/pi-2).
 
@@ -50,20 +54,22 @@ Add the endpoint to `~/.pi/agent/models.json`, the same file Pi uses. For a shar
 }
 ```
 
-Then start it with the example tool:
+Then start it from the clone with the example tool, the way the TypeScript edition starts with `./pi-test.sh`:
 
 ```bash
-cd python
-python -m pi2 --model ollama/gemma4-workshop:12b -e examples/hello.py
+./pi2.sh -e python/examples/hello.py
 ```
 
-Ask it to greet someone. To run `pi2` in any directory, install the command once with `pip install -e python`.
+It starts with the first model in `models.json`. Type `/model` to list the others and `/model 2` to switch, or start with one: `./pi2.sh --model ollama/gemma4-workshop:12b`.
+
+Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` with `python/` on the module path and works from any directory; set `PYTHON` to use another interpreter. To get a `pi2` command instead, run `pip install -e python` once.
 
 | Key or command | Does |
 |---|---|
 | Enter | Send the message |
 | ctrl+c | While the agent works: stop it. In the editor: clear it |
 | ctrl+d | Exit |
+| `/model` | List the models in `models.json`; `/model <number>` or `/model <provider/id>` switches |
 | `/new`, `/quit`, `/help` | New session, exit, list commands |
 
 Text you type while the agent works waits in the editor for the next message.
@@ -163,10 +169,10 @@ The READMEs for 01 to 04 are the TypeScript exercises'; the tasks are the same, 
 
 ```bash
 cp -R education/playground ~/pi-workshop && cd ~/pi-workshop
-PYTHONPATH="$REPO/python" python -m pi2 -e "$REPO/python/exercises/01-read/starter.py"
+"$REPO/pi2.sh" -e "$REPO/python/exercises/01-read/starter.py"
 ```
 
-`REPO` is the path of your clone. After `pip install -e python`, `pi2 -e ...` works without `PYTHONPATH`.
+`REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
 
 ## What Pi does that Lobotomized leaves out
 

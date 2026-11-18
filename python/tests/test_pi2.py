@@ -141,6 +141,21 @@ class SessionTest(unittest.TestCase):
         self.assertEqual(extensions.tools["hello"].execute({"name": "Ada"}, None), "Hello, Ada!")
 
 
+class ModelRuntimeTest(unittest.TestCase):
+    def test_models_are_found_by_number_id_or_provider_and_id(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            models = [{"id": "a"}, {"id": "b", "contextWindow": 8000}]
+            config = {"providers": {"ollama": {"baseUrl": "http://localhost:11434/v1", "models": models}}}
+            Path(agent_dir, "models.json").write_text(json.dumps(config))
+            runtime = ModelRuntime(agent_dir)
+            self.assertEqual(runtime.find()["id"], "a")
+            self.assertEqual(runtime.match("2")["id"], "b")
+            self.assertEqual(runtime.match("b")["context_window"], 8000)
+            self.assertEqual(runtime.match("ollama/a")["id"], "a")
+            self.assertIsNone(runtime.match("3"))
+            self.assertIsNone(runtime.match("other/a"))
+
+
 class ProviderTest(unittest.TestCase):
     def test_streamed_text_thinking_and_tool_call_arguments_are_assembled(self):
         chunks = [

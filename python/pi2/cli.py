@@ -1,6 +1,8 @@
 """The command line: reads the options, loads the extensions and starts interactive mode.
 
-    python -m pi2 --model ollama/gemma4-workshop:12b -e exercises/01-read/starter.py
+    ./pi2.sh --model ollama/gemma4-workshop:12b -e python/exercises/01-read/starter.py
+
+(pi2.sh runs `python3 -m pi2` with python/ on the module path.)
 """
 
 import argparse

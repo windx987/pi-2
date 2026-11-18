@@ -18,5 +18,6 @@ w │   ├── examples/ -- hello.py (a tool), permission_gate.py (a listener
 o │   ├── tests/ -- unit tests, no model needed
 o │   └── pyproject.toml -- pip install -e python
 w ├── education/ -- instructions for 01 to 04, the playground
+w ├── pi2.sh -- runs Lobotomized from the clone, like pi-test.sh
 o ├── assets/ -- logo and diagrams
 o └── packages/, apps/ -- the TypeScript Pi this is modelled on

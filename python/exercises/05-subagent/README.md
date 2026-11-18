@@ -25,7 +25,7 @@ Follow the comments in [starter.py](starter.py):
 ## Try it
 
 ```bash
-python -m pi2 -e exercises/01-read/starter.py -e exercises/05-subagent/starter.py
+./pi2.sh -e python/exercises/01-read/starter.py -e python/exercises/05-subagent/starter.py
 ```
 
 Ask: "Use a subagent to find out what each file in this directory does." Your read tool must work first: the subagent has only the tools you load. Compare the footer's context percentage with and without the subagent.

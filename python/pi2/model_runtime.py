@@ -35,10 +35,19 @@ class ModelRuntime:
             raise SystemExit("No models configured. Add one to models.json (see Getting started in README.md).")
         if reference is None:
             return self.models[0]
+        model = self.match(reference)
+        if model is None:
+            raise SystemExit(f"Model {reference} not found in models.json.")
+        return model
+
+    def match(self, reference):
+        """The model named "provider/id", "id" or its 1-based number in models.json, or None."""
+        if reference.isdigit() and 0 < int(reference) <= len(self.models):
+            return self.models[int(reference) - 1]
         for model in self.models:
             if reference in (model["id"], f"{model['provider']}/{model['id']}"):
                 return model
-        raise SystemExit(f"Model {reference} not found in models.json.")
+        return None
 
     def stream_fn(self, model, context):
         """Send one request to the model's provider. Yields the provider's events."""

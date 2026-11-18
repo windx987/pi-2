@@ -1,8 +1,8 @@
 # Exercise 03: the edit tool. Lets the agent change part of a file without rewriting all of it.
 #
 # Load it with the earlier tools:
-#   python -m pi2 -e exercises/01-read/starter.py -e exercises/02-write/starter.py \
-#     -e exercises/03-edit/starter.py
+#   ./pi2.sh -e python/exercises/01-read/starter.py -e python/exercises/02-write/starter.py \
+#     -e python/exercises/03-edit/starter.py
 # Then ask: "Rename the function add to sum in math.js."
 #
 # LEARN:
