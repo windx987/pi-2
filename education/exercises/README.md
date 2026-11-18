@@ -11,6 +11,8 @@ The workshop edition of Pi ships without coding tools. Start it and ask it to re
 
 Each exercise directory has a `README.md` with the steps and a `starter.ts`: an extension whose tool is already defined and registered, with its JSON Schema written. You implement `execute()`.
 
+The starters are TypeScript. If you have not used it before, read [TypeScript for the workshop](../typescript/README.md) first.
+
 ## Setup (before the workshop)
 
 ```bash
