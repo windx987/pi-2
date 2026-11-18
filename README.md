@@ -1,6 +1,12 @@
 <p align="center">
   <img alt="pi/2 logo" src="./assets/logo.svg" width="128">
 </p>
+<p align="center">
+  <a href="https://discord.com/invite/3cU7Bz4UPx"><img alt="Discord" src="https://img.shields.io/badge/discord-community-5865F2?style=flat-square&logo=discord&logoColor=white" /></a>
+  <a href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent"><img alt="npm" src="https://img.shields.io/npm/v/@earendil-works/pi-coding-agent?style=flat-square" /></a>
+</p>
+
+> An educational fork of [Pi](https://github.com/earendil-works/pi) for workshops, with the built-in coding tools removed so you can build them yourself. The badges link to the original Pi community and npm package; this edition is not published to npm, so run it from source (see [Getting started](#getting-started)).
 
 # Pi Workshop Edition (pi/2)
 
