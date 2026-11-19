@@ -27,11 +27,34 @@ Before any detail: what the original Pi does with one prompt, step by step, with
 
 <p align="center"><img alt="The original Pi: 1 interactive mode reads your input, 2 AgentSession starts the agent and declares the built-in tools, 3 the agent loop asks the model, 4 streamFn and ModelRuntime route the request, 5 the pi-ai provider calls the LLM, 6 the arguments are validated and extensions see the call, 7 the built-in tool's execute runs (removed in pi/2), 8 the result goes back to the model and is saved; the loop repeats while the model calls tools. Each step shows its source code." src="./assets/diagrams/big-picture.svg" width="900"></p>
 
+| Step | What happens | Where |
+|---|---|---|
+| 1. Interactive mode | Waits for your input, calls `session.prompt()`, and draws every event while the answer streams in | [`modes/interactive/interactive-mode.ts`](packages/coding-agent/src/modes/interactive/interactive-mode.ts) |
+| 2. AgentSession | Turns your text into messages, declares the tools to the model, starts the agent | [`core/agent-session.ts`](packages/coding-agent/src/core/agent-session.ts) |
+| 3. Agent loop | Asks the model, runs the tool calls in its answer, asks again; stops when an answer has no tool calls | [`agent/src/agent-loop.ts`](packages/agent/src/agent-loop.ts) |
+| 4. streamFn and ModelRuntime | Picks the provider for the model and adds the API key; the loop itself knows no provider | [`core/sdk.ts`](packages/coding-agent/src/core/sdk.ts), [`core/model-runtime.ts`](packages/coding-agent/src/core/model-runtime.ts) |
+| 5. Provider → LLM | Converts messages and tool schemas to the provider's format, sends the request, streams back text, thinking and tool calls | [`ai/src/api/`](packages/ai/src/api/), for example [`openai-completions.ts`](packages/ai/src/api/openai-completions.ts) |
+| 6. Validate, then ask extensions | Checks the arguments against the tool's JSON Schema, then fires `tool_call` so extensions can block the call | [`ai/src/utils/validation.ts`](packages/ai/src/utils/validation.ts), [`core/extensions/runner.ts`](packages/coding-agent/src/core/extensions/runner.ts) |
+| 7. Tool runs | The tool's `execute()`: in the original Pi a built-in tool, in pi/2 the one you write | your extension; the originals at `cead615b4:packages/coding-agent/src/core/tools/` |
+| 8. Result back, saved | The result joins the messages for the next request; the session appends every finished message to the session file | `agent-loop.ts`, [`core/session-manager.ts`](packages/coding-agent/src/core/session-manager.ts) |
+
+### Around the loop
+
+The picture follows one prompt. Between the steps, `AgentSession` does more work that the exercises do not touch but a long session depends on:
+
+- **Context window.** Every request sends the whole conversation, so it grows with each tool result. The footer shows how full the model's `contextWindow` is.
+- **Compaction.** When the context passes `contextWindow - reserveTokens` (16384 by default), the session asks the model to summarize the older messages and keeps about the last 20k tokens as they are. It checks before each prompt and between turns, after tool results are added. `/compact [instructions]` does it by hand.
+- **Overflow recovery.** If the provider still rejects the request as too long, or an answer is cut off early (`stopReason: "length"`), the session compacts once and retries.
+- **Retries.** Passing errors such as rate limits, overloaded servers or dropped connections are retried up to 3 times, after 2, 4 and 8 seconds.
+- **Truncated tool output.** The original tools cut their output at 2000 lines or 50 KB ([`core/tools/truncate.ts`](packages/coding-agent/src/core/tools/truncate.ts)) so that one large file cannot fill the context.
+
+With the workshop's 32k Gemma model, compaction starts at about 16k tokens, half the window. [education/architecture/core.md](education/architecture/core.md) maps the rest of `core/` and explains compaction in more detail.
+
 ## Architecture
 
 <p align="center"><img alt="Architecture: the interactive mode sends prompts to AgentSession, which drives the agent loop in pi-agent-core; the loop streams model requests through ModelRuntime and pi-ai to the LLM provider, and calls the tools your extensions registered through the ExtensionRunner." src="./assets/diagrams/architecture.svg" width="760"></p>
 
-`coding-agent` depends on `agent`, `ai` and `tui` (and on `mcp` and `codemode` for built-in extensions); `agent` depends on `ai`, whose `validateToolArguments` the loop uses. The loop does not choose a provider: `AgentSession`'s `streamFn` sends requests through `ModelRuntime`, which resolves auth and calls the pi-ai provider. Your extensions enter only through the extension API. See [education/architecture/](education/architecture/) for details.
+`coding-agent` depends on `agent`, `ai` and `tui` (and on `mcp` and `codemode` for built-in extensions); `agent` depends on `ai`, whose `validateToolArguments` the loop uses. The loop does not choose a provider: `AgentSession`'s `streamFn` sends requests through `ModelRuntime`, which resolves auth and calls the pi-ai provider. Your extensions enter only through the extension API. See [education/architecture/](education/architecture/) for details, and [core.md](education/architecture/core.md) for what each file in `coding-agent/src/core/` does.
 
 ## How a request becomes a tool call
 
