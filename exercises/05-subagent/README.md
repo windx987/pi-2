@@ -2,18 +2,25 @@
 
 A subagent is a tool whose `execute()` runs a whole second agent. The parent model calls `subagent` with a task. A new `AgentSession` with an empty conversation does the work with the same tools, and only its final answer comes back as the tool result.
 
-Like the tools in 01 to 04, it is an extension that registers one tool. What is new is what that tool does: it uses `ctx.session`, the running session, to reach the model, the runtime and the other tools.
+## What you learn
 
-## Why
+- That a tool can run a whole agent: its `execute()` starts a second `AgentSession` with the same model and tools.
+- Why the context grows: everything the agent reads stays in its messages and is sent with every later request.
+- How a tool reaches the running session through `ctx.session`, as every extension can.
 
-Everything the agent reads stays in its messages and is sent with every later request. Say you ask "what does each file in this project do?":
+## How it works
+
+Like the tools in 01 to 04, this is an extension that registers one tool. What is new is what the tool does. Say you ask "what does each file in this project do?":
 
 - **Without a subagent:** the parent reads 10 files. Their full text stays in its context for the rest of the conversation.
 - **With a subagent:** the subagent reads the 10 files in its own context and answers in one paragraph. The parent's context grows by that paragraph only.
 
-Compaction ([`/compact`](../../README.md#context-length-and-compaction)) is the other way to keep the context small: it summarizes after the fact, and the summary loses detail. A subagent keeps the files out of the parent's context from the start.
+1. The parent model calls `subagent({"task": "..."})`. For the parent this is step 7 of [the big picture](../../README.md#the-big-picture), like any tool.
+2. `execute()` gives a new `ExtensionAPI` the parent's tools, without `subagent`, and starts an `AgentSession` with the parent's runtime and model and no messages.
+3. `child.prompt(task)` runs steps 2 to 8 again, in the child's own context. Nothing listens to the child's events, so the terminal shows only the parent's `subagent` box while it works.
+4. The text of the child's last message becomes the tool result. The parent sees one result, not the files behind it.
 
-The subagent does not see the conversation, so the task it gets must be complete.
+The subagent does not see the conversation, so the task it gets must be complete. Compaction ([`/compact`](../../docs/compaction.md)) is the other way to keep the context small: it summarizes after the fact, and the summary loses detail. A subagent keeps the files out of the parent's context from the start.
 
 ## Steps
 
@@ -41,6 +48,21 @@ Each step of the list above has checks that call your `execute()` directly. A ch
 ```
 
 Ask: "Use a subagent to find out what each file in this directory does." Your read tool must work first: the subagent has only the tools you load. Compare the footer's context percentage with and without the subagent.
+
+## Expected result
+
+- A `subagent` box with the task stays grey while the subagent works, then turns green with its answer and your note, such as `[subagent: 6 tool calls, 9.4k input tokens]`.
+- The parent answers from that result, without calling `read` itself.
+- The footer's percentage grows by about the size of the answer. Ask the same question without "use a subagent" in a `/new` session and compare: `/context` shows the tool results the parent kept.
+- ctrl+c while the subagent works stops the subagent and the parent.
+
+## Where to look
+
+| File | What to look at |
+|---|---|
+| [pi2/session.py](../../pi2/session.py) | `AgentSession.__init__` and `prompt`: what the subagent runs |
+| [pi2/extensions.py](../../pi2/extensions.py) | `ToolContext`: `ctx.session`, the session running the tool |
+| [pi2/agent_loop.py](../../pi2/agent_loop.py) | `execute_tool_call`: ctrl+c inside a tool ends the parent's loop too |
 
 ## In Pi
 

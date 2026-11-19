@@ -18,6 +18,7 @@ w │   └── check.py -- checks your tools without a model
 w ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
 w ├── playground/ -- the small project the agent works on (copy it)
 w ├── pi2.sh -- starts Lobotomized from the clone
+w ├── docs/ -- connecting a model; context length and compaction
 o ├── tests/ -- unit tests, no model needed
 o ├── pyproject.toml -- pip install -e . gives a pi2 command
 o └── assets/ -- logo and diagrams

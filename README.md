@@ -14,45 +14,16 @@ Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follo
 
 Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `edit` and `bash` yourself, in [exercises/](exercises/).
 
-## The big picture
-
-What the original Pi does with one prompt, step by step, with the code that does each step. Lobotomized has the same steps in Python (see [the table below](#the-eight-steps-in-the-code)).
-
-<p align="center"><img alt="The original Pi: 1 interactive mode reads your input, 2 AgentSession starts the agent and declares the tools, 3 the agent loop asks the model, 4 streamFn and ModelRuntime route the request, 5 the provider calls the LLM, 6 the arguments are validated and extensions see the call, 7 the tool's execute runs, 8 the result goes back to the model and is saved; the loop repeats while the model calls tools." src="./assets/diagrams/big-picture.svg" width="900"></p>
-
 ## Getting started
 
-Requires Python 3.10 or newer and no packages, [Ollama](https://ollama.com) or [vLLM](#using-vllm-instead-of-ollama) for the model, and Docker for exercise 03.
+Requires Python 3.10 or newer and no packages, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and Docker for exercise 03.
 
 ```bash
 git clone -b python https://github.com/windx987/pi-2.git
 cd pi-2
 ```
 
-Pull the model and give it a 32k context (Ollama's default of 4096 tokens is too small and cuts requests without an error):
-
-```bash
-ollama pull gemma4:12b
-printf 'FROM gemma4:12b\nPARAMETER num_ctx 32768\n' > Modelfile
-ollama create gemma4-workshop:12b -f Modelfile
-```
-
-Add the endpoint to `~/.pi/agent/models.json`, the same file Pi uses. For a shared Ollama server, replace `localhost` with its address:
-
-```json
-{
-  "providers": {
-    "ollama": {
-      "baseUrl": "http://localhost:11434/v1",
-      "api": "openai-completions",
-      "apiKey": "ollama",
-      "models": [
-        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (32k)", "contextWindow": 32768, "maxTokens": 8192 }
-      ]
-    }
-  }
-}
-```
+Connect a model: run it with Ollama or vLLM, give it a context of at least 32k tokens, and add it to `~/.pi/agent/models.json`, the same file Pi uses. [docs/models.md](docs/models.md) has both setups, step by step.
 
 Then start it from the clone with the example tool, the way the TypeScript edition starts with `./pi-test.sh`:
 
@@ -70,38 +41,17 @@ Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works
 | ctrl+c | While the agent works: stop it. In the editor: clear it |
 | ctrl+d | Exit |
 | `/model` | List the models in `models.json`; `/model <number>` or `/model <provider/id>` switches |
-| `/compact [focus]` | Summarize the older messages now to free context; the optional text says what the summary must keep. See [Context length and compaction](#context-length-and-compaction) |
-| `/context` | Show how full the context window is, where compaction starts, and what fills it. See [Context length and compaction](#context-length-and-compaction) |
+| `/compact [focus]` | Summarize the older messages now to free context; the optional text says what the summary must keep. See [docs/compaction.md](docs/compaction.md) |
+| `/context` | Show how full the context window is, where compaction starts, and what fills it. See [docs/compaction.md](docs/compaction.md) |
 | `/new`, `/quit`, `/help` | New session, exit, list commands |
 
 Text you type while the agent works waits in the editor for the next message.
 
-### Using vLLM instead of Ollama
+## The big picture
 
-pi2 talks to any OpenAI-compatible server, and [vLLM](https://docs.vllm.ai) is one. Start it with tool calling on: without `--enable-auto-tool-choice` and a `--tool-call-parser`, vLLM answers in text and never calls a tool. The parser depends on the model family: `hermes` for Qwen, `llama3_json` for Llama 3.x, `mistral` for Mistral.
+What the original Pi does with one prompt, step by step, with the code that does each step. Lobotomized has the same steps in Python (see [the table below](#the-eight-steps-in-the-code)).
 
-```bash
-vllm serve Qwen/Qwen3-8B --max-model-len 32768 --enable-auto-tool-choice --tool-call-parser hermes
-```
-
-Add it to `~/.pi/agent/models.json` next to (or instead of) `ollama`. The `id` is the model name vLLM serves. `apiKey` matters only if you started vLLM with `--api-key`; it can also name an environment variable, such as `"VLLM_API_KEY"`:
-
-```json
-{
-  "providers": {
-    "vllm": {
-      "baseUrl": "http://localhost:8000/v1",
-      "api": "openai-completions",
-      "apiKey": "none",
-      "models": [
-        { "id": "Qwen/Qwen3-8B", "name": "Qwen3 8B (vLLM)", "contextWindow": 32768, "maxTokens": 8192 }
-      ]
-    }
-  }
-}
-```
-
-Then start with `./pi2.sh -e examples/hello.py --model vllm/Qwen/Qwen3-8B`, or switch with `/model` inside pi2.
+<p align="center"><img alt="The original Pi: 1 interactive mode reads your input, 2 AgentSession starts the agent and declares the tools, 3 the agent loop asks the model, 4 streamFn and ModelRuntime route the request, 5 the provider calls the LLM, 6 the arguments are validated and extensions see the call, 7 the tool's execute runs, 8 the result goes back to the model and is saved; the loop repeats while the model calls tools." src="./assets/diagrams/big-picture.svg" width="900"></p>
 
 ## The eight steps in the code
 
@@ -130,9 +80,15 @@ Each module knows only its neighbours. `tui.py` talks only to the session. `agen
 
 The numbers are the steps of [the big picture](#the-big-picture). The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
 
+## Context length and compaction
+
+Every request sends the whole conversation, so it grows with every tool result. When it nears the model's `contextWindow`, [compaction.py](pi2/compaction.py) asks the model to summarize the older messages and keeps only the summary and the newest ones, as Pi does. `/context` shows what fills the window, and `/compact [focus]` compacts by hand.
+
+[docs/compaction.md](docs/compaction.md) explains when it happens, what is kept, what you see, and the settings.
+
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 You work in red: your extensions, their instructions, and a copy of the [playground](playground/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). Grey parts are not needed for the workshop.
 
@@ -222,75 +178,6 @@ cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
 `REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
 
 Check a tool without a model before you try it: `python3 exercises/check.py 01` runs the checks of exercise 01 against its `starter.py` and shows PASS, FAIL or TODO for each step. `python3 exercises/check.py` checks all five, and `python3 exercises/check.py 01 path/to/read.py` checks another file.
-
-## Context length and compaction
-
-Every request sends the whole conversation: the system prompt, your messages, the model's answers and every tool result. The footer shows how much of the model's `contextWindow` from `models.json` that is. When it gets close, [compaction.py](pi2/compaction.py) makes room, as Pi does:
-
-<p align="center"><img alt="Compaction with a 32k model: before, the system prompt and twelve messages fill about 19k tokens, over the threshold of contextWindow minus reserveTokens, 16k. The older messages are summarized by compaction.summarize(); the newest, about keepRecentTokens, are kept word for word. After, the model sees the system prompt, the summary and the kept messages, about 11k tokens. The session file keeps every message." src="./assets/diagrams/compaction.svg" width="900"></p>
-
-1. **When.** Before each prompt and between turns, after the tool results are added, the session checks `context > contextWindow - reserveTokens`. The context is the model's last token count plus an estimate of the messages after it (four characters per token); before the model has counted, as at the start or right after a compaction, the system prompt and tool definitions are estimated too.
-2. **What it keeps.** About `keepRecentTokens` of the newest messages, word for word. The cut never separates a tool call from its result.
-3. **What it summarizes.** The older messages go to the model as plain text, with a request for a structured summary: goal, constraints, progress, key decisions, next steps, critical context. Files that `read`, `write` and `edit` touched are listed under it. A second compaction updates the first summary.
-4. **What the model sees next.** The system prompt, the summary as a user message, then the kept messages. The session file keeps every message.
-
-If the server still rejects a request as too long, the session compacts and retries once.
-
-### What you see
-
-When it compacts by itself, a dim line says why: "Context is filling up: summarizing older messages..." (or "Context too long" after a rejected request). Then a box shows what happened and the start of the summary:
-
-```
- Compacted 5 messages, 19k → about 11k tokens
-
- ## Goal
- Fix the failing test in math.js.
- ## Constraints & Preferences
- - Keep the public API of math.js unchanged.
- ... (18 more lines)
-```
-
-The footer's percentage drops to match. The agent goes on with its task: compaction happens between turns, not instead of one.
-
-### Looking inside: `/context`
-
-The footer gives one number. `/context` shows where it comes from:
-
-```
- Context about 15k of 33k tokens (46%) · compacts above 16k
- ██████████████████░░│░░░░░░░░░░░░░░░░░░░
-
- system prompt      310
- tools              640  (4)
- summary           1.3k  (1 message)
- your messages      120  (3 messages)
- answers           2.1k  (9 messages)
- tool results       10k  (8 messages)
-
- Parts are estimates (4 characters per token).
-```
-
-The bar is the window, and `│` marks where automatic compaction starts. The total is the same as the footer's: the model's last count plus an estimate of what came after it. The parts are estimates, so their sum is close to the total but not equal. Tool results are usually the largest part: that is what `/compact`, and exercise 05's subagent, make smaller.
-
-### Compacting by hand: `/compact`
-
-Type `/compact` in the editor to compact now, even below the threshold. Use it:
-
-- before you switch to another task in the same session, so the old details stop taking room;
-- after the agent has read large files it no longer needs;
-- when the footer is close to the threshold and the next step will read more.
-
-`/compact <focus>` adds your text to the request for the summary, so it keeps what matters to you: `/compact keep the exact error message of the failing test`. When the conversation is shorter than what is kept anyway, it says "Nothing to compact yet". ctrl+c stops a compaction and leaves the conversation as it was; so does a failed summary request, which shows its error.
-
-A summary loses detail: exact file contents, long outputs, earlier reasoning. The model can read a file again, but it cannot recover what you said only once. Put that in the focus, or say it again after compacting.
-
-| Setting in `~/.pi/agent/settings.json` | Default | Meaning |
-|---|---|---|
-| `compaction.enabled` | `true` | Compact automatically |
-| `compaction.reserveTokens` | 16384, at most half the window | Room left for the answer |
-| `compaction.keepRecentTokens` | 20000, at most a quarter of the window | Newest messages kept word for word |
-
-Pi uses 16384 and 20000 for every model. Lobotomized caps them for small windows, so that a 32k model compacts at 16k and keeps 8k: with Pi's numbers, the kept messages alone would be over the threshold and it would compact again on every turn.
 
 ## What Pi does that Lobotomized leaves out
 
