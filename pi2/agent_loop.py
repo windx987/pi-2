@@ -33,8 +33,10 @@ def stream_assistant_response(context, config, emit):
     """Stream one answer from the model, emitting each delta. Errors and ctrl+c end the answer early."""
     emit({"type": "message_start", "role": "assistant"})
     partial = {"role": "assistant", "content": [], "stop_reason": "stop", "usage": {"input": 0, "output": 0}}
+    stream = None
     try:
-        for event in config["stream_fn"](config["model"], context):
+        stream = config["stream_fn"](config["model"], context)
+        for event in stream:
             if event["type"] == "done":
                 message = event["message"]
                 break
@@ -50,6 +52,14 @@ def stream_assistant_response(context, config, emit):
         message = {**partial, "stop_reason": "aborted"}
     except Exception as error:  # the provider failed: report it as the answer, as Pi does
         message = {**partial, "stop_reason": "error", "error_message": str(error)}
+    finally:
+        # Closing the generator closes the HTTP response even when the user aborts mid-stream.
+        close = getattr(stream, "close", None)
+        if close:
+            try:
+                close()
+            except Exception:
+                pass
     if message["stop_reason"] == "length":
         # The answer was cut off, so its tool calls may carry truncated arguments: do not run them.
         message["content"] = [block for block in message["content"] if block["type"] != "toolCall"]

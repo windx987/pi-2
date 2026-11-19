@@ -6,16 +6,18 @@ and colors follow Pi's interactive mode and dark theme, drawn with plain ANSI es
 """
 
 import os
+import queue
+import select
 import shutil
+import signal
 import sys
 import textwrap
-from contextlib import contextmanager
+import threading
 
 try:
     import readline  # noqa: F401  (line editing and history for input())
-    import termios
 except ImportError:  # Windows
-    termios = None
+    pass
 
 from . import __version__
 
@@ -44,27 +46,6 @@ TOOL_BG = {"pending": bg(52, 54, 60), "success": bg(30, 70, 55), "error": bg(88,
 PREVIEW_LINES = 5
 
 
-@contextmanager
-def no_echo():
-    """Hide what is typed while the agent works. The keys stay buffered and appear in the next editor."""
-    if termios is None:
-        yield
-        return
-    try:
-        fd = sys.stdin.fileno()
-        saved = termios.tcgetattr(fd)
-    except (termios.error, ValueError):
-        yield
-        return
-    quiet = saved[:]
-    quiet[3] &= ~termios.ECHO
-    termios.tcsetattr(fd, termios.TCSANOW, quiet)
-    try:
-        yield
-    finally:
-        termios.tcsetattr(fd, termios.TCSANOW, saved)
-
-
 def write(text):
     sys.stdout.write(text)
     sys.stdout.flush()
@@ -80,35 +61,125 @@ class InteractiveMode:
         self.writer = None  # the streaming text block being written, if any
         self.working = False  # whether the "Working..." line is on screen
         self.tool_box_height = 0
+        self.pending = queue.Queue()  # messages typed while the agent is working
+        self.reader = None
+        self.reader_stop = threading.Event()
+        self.quit_requested = False
+        self.previous_sigint = None
         session.subscribe(self.on_event)
 
     def run(self):
         self.print_header()
-        while True:
-            text = self.read_input()
-            if text is None:
-                break
-            text = text.strip()
-            if not text:
-                continue
-            if text.startswith("/"):
-                if not self.command(text):
+        self.previous_sigint = signal.getsignal(signal.SIGINT)
+        signal.signal(signal.SIGINT, self.on_sigint)
+        try:
+            while not self.quit_requested:
+                try:
+                    text = self.next_input()
+                except KeyboardInterrupt:  # ctrl+c between turns: clear and keep going
+                    if self.quit_requested:
+                        break
+                    continue
+                if text is None:
                     break
+                text = text.strip()
+                if not text:
+                    continue
+                if text.startswith("/"):
+                    if not self.command(text):
+                        break
+                    continue
+                self.run_prompt(text)
+        finally:
+            self.stop_read_ahead()
+            signal.signal(signal.SIGINT, self.previous_sigint)
+        write("\n")
+
+    def next_input(self):
+        """Return a queued message first; only draw the editor when nothing is waiting."""
+        try:
+            return self.pending.get_nowait()
+        except queue.Empty:
+            return self.read_input()
+
+    def run_prompt(self, text):
+        """Run one turn while a reader thread queues anything typed after Enter."""
+        self.start_read_ahead()
+        try:
+            self.session.prompt(text)
+        except KeyboardInterrupt:
+            self.clear_working()
+            if not self.quit_requested:
+                write(f"\n {ERROR}Operation aborted{RESET}\n")
+        finally:
+            self.stop_read_ahead()
+
+    def on_sigint(self, signum, frame):
+        """Ctrl+c: clear queued messages first; stop the agent only when the queue is empty."""
+        if self.quit_requested or not self.drain_pending():
+            raise KeyboardInterrupt
+
+    def drain_pending(self):
+        """Discard queued messages. Returns whether anything was discarded."""
+        drained = False
+        while True:
+            try:
+                self.pending.get_nowait()
+            except queue.Empty:
+                return drained
+            drained = True
+
+    def start_read_ahead(self):
+        self.reader_stop.clear()
+        self.reader = threading.Thread(target=self.read_ahead, daemon=True)
+        self.reader.start()
+
+    def stop_read_ahead(self):
+        self.reader_stop.set()
+        if self.reader:
+            self.reader.join(timeout=1.0)
+            self.reader = None
+
+    def read_ahead(self):
+        """Read complete lines while the agent works. Enter queues them; /quit interrupts now."""
+        try:
+            fd = sys.stdin.fileno()
+        except (AttributeError, OSError, ValueError):
+            return
+        buffer = b""
+        while not self.reader_stop.is_set():
+            try:
+                ready, _, _ = select.select([fd], [], [], 0.1)
+            except (OSError, ValueError):
+                return
+            if not ready:
                 continue
             try:
-                with no_echo():
-                    self.session.prompt(text)
-            except KeyboardInterrupt:
-                self.clear_working()
-                write(f"\n {ERROR}Operation aborted{RESET}\n")
-        write("\n")
+                chunk = os.read(fd, 4096)
+            except OSError:
+                return
+            if not chunk:  # ctrl+d
+                self.quit_requested = True
+                os.kill(os.getpid(), signal.SIGINT)
+                return
+            buffer += chunk
+            while b"\n" in buffer:
+                raw, buffer = buffer.split(b"\n", 1)
+                line = raw.decode("utf-8", errors="replace").strip("\r").strip()
+                if not line:
+                    continue
+                if line in ("/quit", "/exit"):
+                    self.quit_requested = True
+                    os.kill(os.getpid(), signal.SIGINT)
+                    return
+                self.pending.put(line)
 
     # Header and editor -----------------------------------------------------------------------------
 
     def print_header(self):
         top = f"{fg(*CORAL)}{bg(*BLUE)}▀{RESET}{fg(*CORAL)}▀█{RESET}    {fg(*MINT)}▄▀{RESET} {fg(*CORAL)}▀▀█{RESET}"
         bottom = f"{fg(*BLUE)}█▀{RESET} {fg(*YELLOW)}█{RESET} {fg(*MINT)}▄▀{RESET}   {fg(*CORAL)}█▄▄{RESET}"
-        hints = " · ".join(["ctrl+c interrupt", "ctrl+d exit", "/help commands"])
+        hints = " · ".join(["enter send/queue", "ctrl+c interrupt", "ctrl+d exit", "/help commands"])
         write(f" {top} {DIM}v{__version__} (python){RESET}\n {bottom} {DIM}{hints}{RESET}\n\n")
         sources = self.session.extensions.sources
         if sources:
@@ -118,6 +189,7 @@ class InteractiveMode:
 
     def read_input(self):
         """Draw the editor (a line between two borders) and the footer, and read one line into it."""
+        write("\r\x1b[2K")
         w = width()
         border = f"{DIM}{'─' * w}{RESET}"
         cwd, stats = self.footer(w)

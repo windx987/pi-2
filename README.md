@@ -107,10 +107,10 @@ REPO=/path/to/pi-2
 
 | Key or command | Does |
 |---|---|
-| Enter | Send the message |
-| ctrl+c | While the agent works: stop it. In the editor: clear it |
+| Enter | Send the message; while the agent works, queue another message |
+| ctrl+c | While the agent works: clear queued messages; if none are queued, stop it. In the editor: clear it |
 | ctrl+d | Exit |
-| `/new`, `/quit`, `/help` | New session, exit, list commands |
+| `/new`, `/quit`, `/help` | New session, exit, list commands. `/quit` exits immediately, even while the agent works |
 
 ### Extensions
 
