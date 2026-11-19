@@ -2,9 +2,10 @@
 # Format: <role> <tree path> -- <explanation>. Roles: d directory, w workshop, c core, o other.
 d pi-2/
 w ├── education/ -- workshop material
-w │   ├── architecture/ -- what was removed from Pi and why
+w │   ├── architecture/ -- what was removed from Pi, what core/ does
 w │   ├── exercises/ -- 01-read, 02-write, 03-edit, 04-bash
 w │   │   └── 0N-name/ -- README.md + starter.ts: you implement execute()
+w │   ├── models.md -- connecting a model: Ollama, vLLM, other providers
 w │   ├── playground/ -- a tiny project with a bug for the agent to fix
 w │   └── typescript/ -- TypeScript primer and the official cheat sheets
 d ├── packages/

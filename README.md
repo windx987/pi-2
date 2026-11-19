@@ -79,7 +79,7 @@ By the end of stage 3 you can ask "run the tests and fix what fails", and watch 
 
 ## Getting started
 
-Requires Node.js 22.19 or newer, [Ollama](https://ollama.com) for the model, and Docker for exercise 04.
+Requires Node.js 22.19 or newer, a model ([Ollama](https://ollama.com), [vLLM](https://docs.vllm.ai) or a hosted provider), and Docker for exercise 04.
 
 ```bash
 git clone https://github.com/windx987/pi-2.git
@@ -88,51 +88,13 @@ npm install --ignore-scripts
 npm run build
 ```
 
-### Connect a model through Ollama
+### Connect a model
 
-The workshop runs Gemma 4 through Ollama's OpenAI-compatible endpoint. Pi only needs the endpoint's address, so the model can run on your machine or on a shared server.
-
-| Ollama runs on | `baseUrl` in `models.json` |
-|---|---|
-| Your machine | `http://localhost:11434/v1` |
-| A shared workshop server | `http://<server-ip>:11434/v1` |
-
-On the machine that runs Ollama, pull the model and give it a 32k context (Ollama's default of 4096 tokens is too small for Pi and cuts requests without an error):
+The workshop runs Gemma 4 through Ollama with a 32k context, on your machine or a shared server; vLLM and Pi's other providers work too. Set it up as described in [education/models.md](education/models.md), then start Pi from source with that model:
 
 ```bash
-ollama pull gemma4:12b                       # gemma4:31b needs about 20 GB of free memory
-printf 'FROM gemma4:12b\nPARAMETER num_ctx 32768\n' > Modelfile
-ollama create gemma4-workshop:12b -f Modelfile
-```
-
-For a shared server, start Ollama listening on all interfaces with `OLLAMA_HOST=0.0.0.0:11434 ollama serve`. Ollama has no authentication: anyone who can reach the port can use the model. Keep the server on the workshop network or behind a firewall that allows only participants' addresses, never open on the public internet.
-
-On each participant's machine, add the endpoint to `~/.pi/agent/models.json`, with `localhost` replaced by the server's address when you use a shared server:
-
-```json
-{
-  "providers": {
-    "ollama": {
-      "baseUrl": "http://localhost:11434/v1",
-      "api": "openai-completions",
-      "apiKey": "ollama",
-      "compat": { "supportsDeveloperRole": false },
-      "models": [
-        { "id": "gemma4-workshop:12b", "name": "Gemma 4 12B (32k)", "contextWindow": 32768, "maxTokens": 8192 }
-      ]
-    }
-  }
-}
-```
-
-Check the endpoint, then start Pi from source with that model:
-
-```bash
-curl http://localhost:11434/v1/models          # lists gemma4-workshop:12b
 ./pi-test.sh --model ollama/gemma4-workshop:12b
 ```
-
-Any other provider Pi supports works too: run `./pi-test.sh` and `/login`, or set an API key such as `ANTHROPIC_API_KEY`. Setup details are in [education/exercises/README.md](education/exercises/README.md).
 
 ## Building your first tool
 
@@ -172,21 +134,21 @@ Start with [education/exercises/README.md](education/exercises/README.md). The f
 
 ## Lobotomized: pi/2 in Python
 
-[Lobotomized](https://github.com/windx987/pi-2/tree/python) is pi/2 cut down to about 1,000 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, and providers other than OpenAI-compatible ones such as Ollama. It keeps a simpler compaction, with `/compact`. It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: a subagent, a tool that runs a second agent with its own context. Each exercise has checks you run without a model, which show PASS, FAIL or TODO for every step: `python3 exercises/check.py 01`.
+[Lobotomized](https://github.com/windx987/pi-2/tree/python) is pi/2 cut down to about 1,000 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, and providers other than OpenAI-compatible ones such as Ollama. It keeps a simpler compaction, with `/compact` and `/context`: see its [docs/compaction.md](https://github.com/windx987/pi-2/blob/python/docs/compaction.md). It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: a subagent, a tool that runs a second agent with its own context. Each exercise has checks you run without a model, which show PASS, FAIL or TODO for every step: `python3 exercises/check.py 01`.
 
-It uses the same `~/.pi/agent/models.json` as Pi and starts like `./pi-test.sh`:
+It uses the same `~/.pi/agent/models.json` as Pi ([its model setup](https://github.com/windx987/pi-2/blob/python/docs/models.md)) and starts like `./pi-test.sh`:
 
 ```bash
 git clone -b python https://github.com/windx987/pi-2.git pi-2-python
 cd pi-2-python
-./pi2.sh -e python/examples/hello.py
+./pi2.sh -e examples/hello.py
 ```
 
 Type `/model` inside it to list and switch models.
 
 ## Project structure
 
-<p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="./assets/diagrams/project-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, models.md on connecting a model, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="./assets/diagrams/project-structure.svg" width="760"></p>
 
 You work in red: [education/](education). The blue paths are the Pi code the exercises point to: start with [agent-session.ts](packages/coding-agent/src/core/agent-session.ts) and [agent-loop.ts](packages/agent/src/agent-loop.ts). Grey parts are Pi's other packages and apps, which the workshop does not need.
 

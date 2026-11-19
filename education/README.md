@@ -2,7 +2,7 @@
 
 This directory is the educational layer of Pi Workshop Edition. It adds material next to Pi's packages and does not change their structure.
 
-<p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="../assets/diagrams/project-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure: education/ holds the workshop material (architecture notes, exercises 01 to 04, models.md on connecting a model, playground). packages/coding-agent is the pi application (agent-session.ts, extensions/, tools/ contracts, session-manager.ts, model-runtime.ts, modes/interactive). packages/agent holds agent-loop.ts, packages/ai the providers and streaming, packages/tui the terminal rendering. mcp, codemode, durable, chord and apps/ are outside the workshop path." src="../assets/diagrams/project-structure.svg" width="760"></p>
 
 You work in red, in this directory. The blue paths are the Pi code the exercises point to. Grey parts are not needed for the workshop.
 
@@ -10,6 +10,7 @@ You work in red, in this directory. The blue paths are the Pi code the exercises
 |---|---|
 | [architecture/tool-removal.md](architecture/tool-removal.md) | What was removed from Pi, what was kept, and why |
 | [architecture/external-libraries.md](architecture/external-libraries.md) | The outside libraries Pi uses, and where |
+| [models.md](models.md) | Connecting a model: Ollama, vLLM or another provider, in `~/.pi/agent/models.json` |
 | [architecture/core.md](architecture/core.md) | What each file in `coding-agent/src/core/` does, and how compaction keeps the context in the window |
 | [exercises/](exercises/README.md) | The four tool exercises: README and starter extension each |
 | [playground/](playground/README.md) | A tiny project for the agent to work on, used from a copy |
