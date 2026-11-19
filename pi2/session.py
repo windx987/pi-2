@@ -68,10 +68,20 @@ class AgentSession:
         """Tokens the next request sends: the model's last count plus an estimate of what came after."""
         tokens = self.usage["context"] + sum(compaction.estimate_tokens(m) for m in self.messages[self.counted:])
         if self.counted == 0:  # no count from the model yet: estimate the system prompt and tools as well
-            tools = list(self.extensions.tools.values())
-            schemas = json.dumps([[t.name, t.description, t.parameters] for t in tools])
-            tokens += (len(self.system_prompt(tools)) + len(schemas)) // 4
+            system, tools = self.context_parts()[:2]
+            tokens += system[1] + tools[1]
         return tokens
+
+    def context_parts(self):
+        """What the next request is made of, for /context: (label, estimated tokens, how many)."""
+        tools = list(self.extensions.tools.values())
+        schemas = json.dumps([[t.name, t.description, t.parameters] for t in tools])
+        parts = [("system prompt", len(self.system_prompt(tools)) // 4, 1), ("tools", len(schemas) // 4, len(tools))]
+        for role, label in [("compaction", "summary"), ("user", "your messages"), ("assistant", "answers"),
+                            ("toolResult", "tool results")]:
+            messages = [m for m in self.messages if m["role"] == role]
+            parts.append((label, sum(compaction.estimate_tokens(m) for m in messages), len(messages)))
+        return parts
 
     def auto_compact(self, reason, force=False):
         """Compact when the context is over the threshold, or always with force. Returns whether it did."""

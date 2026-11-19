@@ -194,6 +194,21 @@ class CompactionTest(unittest.TestCase):
             session.prompt("hi")
             self.assertEqual(session.context_tokens(), 15)  # the model's count: 10 in, 5 out
 
+    def test_context_command_shows_the_parts_and_the_threshold(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            stream_fn, _ = fake_stream(answer(call("echo", {"text": "x"})), answer({"type": "text", "text": "ok"}))
+            session = session_with(stream_fn, agent_dir)
+            session.prompt("hi")
+            parts = {label: count for label, _, count in session.context_parts()}
+            self.assertEqual(parts, {"system prompt": 1, "tools": 1, "summary": 0, "your messages": 1,
+                                     "answers": 2, "tool results": 1})
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                tui.InteractiveMode(session).command("/context")
+            self.assertIn("compacts above 16k", out.getvalue())
+            self.assertIn("(2 messages)", out.getvalue())
+            self.assertNotIn("summary", out.getvalue())  # parts with nothing in them are left out
+
     def test_a_full_context_is_compacted_between_turns(self):
         with tempfile.TemporaryDirectory() as agent_dir:
             full = answer(call("echo", {"text": "x"}), stop_reason="tool_use")

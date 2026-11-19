@@ -170,10 +170,13 @@ class InteractiveMode:
             self.select_model(args)
         elif name == "/compact":
             self.compact(text[len(name):].strip() or None)
+        elif name == "/context":
+            self.context()
         elif name == "/help":
             write(
                 f"\n {DIM}/model         list models; /model <number> or <provider/id> switches\n"
                 f" /compact [focus] summarize older messages to free context\n"
+                f" /context       show how full the context window is, and with what\n"
                 f" /new           start a new session\n /quit          exit pi2{RESET}\n"
             )
         else:
@@ -192,6 +195,30 @@ class InteractiveMode:
         except RuntimeError as error:
             self.clear_working()
             write(f"\n {ERROR}{error}{RESET}\n")
+
+    def context(self):
+        """/context: how full the context window is, where compaction starts, and what fills the window."""
+        session = self.session
+        window, settings = session.model["context_window"], session.compaction_settings
+        used = session.context_tokens()
+        threshold = window - settings["reserve_tokens"]
+        when = f"compacts above {tokens(threshold)}" if settings["enabled"] else "automatic compaction is off"
+        # A bar of the window: the context so far, and a mark where compaction starts.
+        bar = ["█" if i < round(40 * used / window) else "░" for i in range(40)]
+        if settings["enabled"]:
+            bar[min(39, round(40 * threshold / window))] = "│"
+        rows = [f"{BOLD}Context{RESET} {DIM}about {tokens(used)} of {tokens(window)} tokens ({100 * used / window:.0f}%) · {when}{RESET}",
+                f"{ACCENT}{''.join(bar)}{RESET}", ""]
+        for label, n, count in session.context_parts():
+            if not count:
+                continue
+            if label in ("system prompt", "tools"):
+                unit = f"({count})" if label == "tools" else ""
+            else:
+                unit = f"({count} message{'s' if count > 1 else ''})"
+            rows.append(f"{label:<15}{tokens(n):>7}  {DIM}{unit}{RESET}")
+        rows += ["", f"{DIM}Parts are estimates (4 characters per token).{RESET}"]
+        self.print_box(TOOL_BG["pending"], rows)
 
     def select_model(self, args):
         """/model lists the models in models.json; /model <number or provider/id> switches to one."""

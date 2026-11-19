@@ -71,6 +71,7 @@ Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works
 | ctrl+d | Exit |
 | `/model` | List the models in `models.json`; `/model <number>` or `/model <provider/id>` switches |
 | `/compact [focus]` | Summarize the older messages now to free context; the optional text says what the summary must keep. See [Context length and compaction](#context-length-and-compaction) |
+| `/context` | Show how full the context window is, where compaction starts, and what fills it. See [Context length and compaction](#context-length-and-compaction) |
 | `/new`, `/quit`, `/help` | New session, exit, list commands |
 
 Text you type while the agent works waits in the editor for the next message.
@@ -250,6 +251,26 @@ When it compacts by itself, a dim line says why: "Context is filling up: summari
 ```
 
 The footer's percentage drops to match. The agent goes on with its task: compaction happens between turns, not instead of one.
+
+### Looking inside: `/context`
+
+The footer gives one number. `/context` shows where it comes from:
+
+```
+ Context about 15k of 33k tokens (46%) · compacts above 16k
+ ██████████████████░░│░░░░░░░░░░░░░░░░░░░
+
+ system prompt      310
+ tools              640  (4)
+ summary           1.3k  (1 message)
+ your messages      120  (3 messages)
+ answers           2.1k  (9 messages)
+ tool results       10k  (8 messages)
+
+ Parts are estimates (4 characters per token).
+```
+
+The bar is the window, and `│` marks where automatic compaction starts. The total is the same as the footer's: the model's last count plus an estimate of what came after it. The parts are estimates, so their sum is close to the total but not equal. Tool results are usually the largest part: that is what `/compact`, and exercise 05's subagent, make smaller.
 
 ### Compacting by hand: `/compact`
 
