@@ -114,7 +114,7 @@ class InteractiveMode:
         if sources:
             write(f"{WARNING}[Extensions]{RESET}\n" + "".join(f"{DIM}  {name}{RESET}\n" for name in sources))
         else:
-            write(f" {DIM}No tools loaded: the model cannot read or change files. Add tools with -e <file.py>.{RESET}\n")
+            write(f" {DIM}No tools loaded: the model cannot read or change files. Add tools with -e <file-or-folder>.{RESET}\n")
 
     def read_input(self):
         """Draw the editor (a line between two borders) and the footer, and read one line into it."""

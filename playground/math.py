@@ -1,5 +1,5 @@
 # The workshop playground: one small bug. Run it with `python3 math.py`.
-# The tools exercises change the return line and check the result through the agent.
+# The tools change the return line and check the result through the agent.
 
 def add(a, b):
     return a - b  # BUG: should be a + b

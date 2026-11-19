@@ -2,13 +2,14 @@
 
 ## What is this repo
 
-This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educational workshops. It is a small coding agent written in standard-library Python with a terminal UI. It has no built-in tools: they live in `python/exercises/tools.py`. `hello` and `bash` work; `read`, `write` and `edit` are the exercises. The TypeScript version of Pi is not included.
+This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educational workshops. It is a small coding agent written in standard-library Python with a terminal UI. It has no built-in tools: every tool comes from an extension in `tools/`, one file per tool. The TypeScript version of Pi is not included.
 
 | Path | What it is |
 |---|---|
-| `python/pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions |
-| `python/exercises/tools.py` | The tools file: `hello` and `bash` work; `read`, `write` and `edit` are the exercises |
-| `python/playground/math.py` | A disposable file with one bug, for the tools to work on |
+| `pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions |
+| `tools/` | One extension file per tool: `math.py`, `read.py`, `write.py`, `edit.py`, `bash.py` |
+| `tools/math.py` | The arithmetic tool, registered as `evaluate_equation` |
+| `playground/math.py` | A disposable file with one bug, for the tools to work on |
 
 ## Requirements
 
@@ -20,57 +21,83 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 Clone the repository. The shallow clone keeps the download small:
 
 ```bash
-git clone --depth 1 --single-branch -b lean https://github.com/windx987/pi-2.git
+git clone -b lean https://github.com/windx987/pi-2.git
 cd pi-2
 ```
 
-Set the endpoint. The quickest way is environment variables:
+Configure `settings.json`:
 
-```bash
-export PI_BASE_URL="https://XXX/v1"
-export PI_MODEL="XXX"
-export PI_API_KEY="XXX"
+```json
+{
+  "agentDir": "~/.pi/agent",
+  "provider": {
+    "baseUrl": "http://localhost:11434/v1",
+    "apiKey": "ollama",
+    "model": "llama3.1",
+    "contextWindow": 16384,
+    "maxTokens": 4096
+  }
+}
 ```
 
-`PI_API_KEY` can be empty if your endpoint does not need one. You can also pass these values as flags; see [How to use](#how-to-use). pi2 still reads `~/.pi/agent/models.json` if you prefer a file.
+Replace `baseUrl`, `apiKey`, `model` and the limits with your endpoint's values. The provider API defaults to `openai-completions`; the endpoint must accept `POST /chat/completions`.
 
-The endpoint must accept `POST /chat/completions`. The context window defaults to 32768; change it with `PI_CONTEXT_WINDOW` or `--context-window`.
+For private settings, copy the file and pass it with `--settings`:
+
+```bash
+cp settings.json settings.local.json
+# edit settings.local.json
+```
+
+`settings.local.json` is ignored by git.
 
 Check that the agent imports:
 
 ```bash
-cd python
 python3 -m pi2 --help
 ```
+
+There is no install step when you run from the repository root.
 
 ## How to use
 
 ### Run
 
-With the environment variables set:
+Load every tool in `tools/`:
 
 ```bash
-cd python
-python3 -m pi2 -e exercises/tools.py
+python3 -m pi2 -e tools
 ```
 
-Or in one command:
+Load one tool:
 
 ```bash
-python3 -m pi2 --base-url https://XXX/v1 --model XXX --api-key XXX -e exercises/tools.py
+python3 -m pi2 -e tools/math.py
 ```
 
-Ask "Greet Ada." The `hello` tool answers. The `read`, `write` and `edit` tools raise `NotImplementedError` until participants implement them.
-
-To run from a copy of the playground:
+Use a private settings file:
 
 ```bash
-cp -R python/playground ~/pi-workshop
+python3 -m pi2 --settings settings.local.json -e tools
+```
+
+Ask "What is 2 + 3?" The `math.py` extension registers the `evaluate_equation` tool. The other files register `read`, `write`, `edit` and `bash`.
+
+To work in a copy of the playground, so the agent does not change this repository:
+
+```bash
+cp -R playground ~/pi-workshop
 cd ~/pi-workshop
-PYTHONPATH="$REPO/python" python3 -m pi2 -e "$REPO/python/exercises/tools.py"
+PYTHONPATH="$REPO" python3 -m pi2 -e "$REPO/tools"
 ```
 
-`REPO` is the path to this clone. There is no install step; `PYTHONPATH` is enough.
+`REPO` is the path to this clone:
+
+```bash
+REPO=/path/to/pi-2
+```
+
+`PYTHONPATH` lets Python find the `pi2/` package from outside the repository. `-e` points at the tools folder in the repository. When you run from the repository root, neither is needed; use `python3 -m pi2 -e tools`.
 
 | Key or command | Does |
 |---|---|
@@ -93,22 +120,24 @@ def extension(pi):
     pi.on("tool_call", block)
 ```
 
+`-e` accepts a file or a folder. A folder loads every top-level `.py` file in sorted order and skips names that start with `_`. Load several files or folders by repeating `-e`.
+
 A tool is a `define_tool(...)` value: name, description, JSON Schema of its arguments, and `execute(params, ctx)`. Return a string; raise an exception for an error result. `ctx.cwd` is the working directory and `ctx.session` is the running session.
 
 ### Code map
 
 | Step | File |
 |---|---|
-| 1. Interactive mode | `python/pi2/tui.py` `InteractiveMode.run` |
-| 2. AgentSession | `python/pi2/session.py` `AgentSession.prompt` |
-| 3. Agent loop | `python/pi2/agent_loop.py` `run` |
-| 4. streamFn and ModelRuntime | `python/pi2/model_runtime.py` `stream_fn` |
-| 5. Provider to LLM | `python/pi2/ai.py` `stream` |
-| 6. Validate, then ask extensions | `python/pi2/schema.py`, `AgentSession.before_tool_call` |
-| 7. Tool runs | your `execute_*` in `python/exercises/tools.py` |
-| 8. Result back, saved | `python/pi2/agent_loop.py` `run`, `AgentSession.save` |
+| 1. Interactive mode | `pi2/tui.py` `InteractiveMode.run` |
+| 2. AgentSession | `pi2/session.py` `AgentSession.prompt` |
+| 3. Agent loop | `pi2/agent_loop.py` `run` |
+| 4. streamFn and ModelRuntime | `pi2/model_runtime.py` `stream_fn` |
+| 5. Provider to LLM | `pi2/ai.py` `stream` |
+| 6. Validate, then ask extensions | `pi2/schema.py`, `AgentSession.before_tool_call` |
+| 7. Tool runs | `execute_*` in `tools/*.py` |
+| 8. Result back, saved | `pi2/agent_loop.py` `run`, `AgentSession.save` |
 
-Read them in that order. `python/pi2/extensions.py` is how extensions get in, and `python/pi2/cli.py` starts everything.
+Read them in that order. `pi2/extensions.py` is how extensions get in, and `pi2/cli.py` starts everything.
 
 ### Notes
 
@@ -119,7 +148,7 @@ Read them in that order. `python/pi2/extensions.py` is how extensions get in, an
 
 ## Original Pi framework
 
-This edition is based on [earendil-works/pi](https://github.com/earendil-works/pi) at commit `cead615b4`. The original tool implementations are in git history there: `git show cead615b4:packages/coding-agent/src/core/tools/read.ts`. What was removed and why: [education/architecture/tool-removal.md](education/architecture/tool-removal.md). For Pi itself, see [pi.dev](https://pi.dev) and the [Pi documentation](https://pi.dev/docs/latest).
+This edition is based on [earendil-works/pi](https://github.com/earendil-works/pi) at commit `cead615b4`. The original tool implementations are in git history there: `git show cead615b4:packages/coding-agent/src/core/tools/read.ts`. For Pi itself, see [pi.dev](https://pi.dev) and the [Pi documentation](https://pi.dev/docs/latest).
 
 ## License
 

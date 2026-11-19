@@ -1,7 +1,7 @@
 """The command line: reads the settings, loads the extensions and starts interactive mode.
 
-    python3 -m pi2 -e exercises/tools.py
-    python3 -m pi2 --settings ../settings.local.json -e exercises/tools.py
+    python3 -m pi2 -e tools
+    python3 -m pi2 --settings settings.local.json -e tools
 """
 
 import argparse
@@ -20,7 +20,7 @@ DEFAULT_AGENT_DIR = Path.home() / ".pi" / "agent"
 
 def default_settings_path():
     """settings.json in the repository root, independent of the current directory."""
-    return Path(__file__).resolve().parents[2] / "settings.json"
+    return Path(__file__).resolve().parents[1] / "settings.json"
 
 
 def resolve_settings_path(value):
@@ -60,7 +60,13 @@ def resolve_agent_dir(settings, settings_path):
 def main():
     parser = argparse.ArgumentParser(prog="pi2", description="pi/2, the Pi Workshop Edition in Python")
     parser.add_argument("--settings", help="settings file (default: settings.json in the repository root)")
-    parser.add_argument("-e", "--extension", action="append", default=[], help="load an extension file (repeatable)")
+    parser.add_argument(
+        "-e",
+        "--extension",
+        action="append",
+        default=[],
+        help="load an extension file or folder (repeatable)",
+    )
     parser.add_argument("--version", action="version", version=__version__)
     args = parser.parse_args()
 

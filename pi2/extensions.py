@@ -1,8 +1,9 @@
 """Extensions: how tools get into pi2.
 
-An extension is a Python file with a function `extension(pi)`. pi2 loads each file passed with -e and
-calls that function with an ExtensionAPI, which the extension uses to register tools and listen to
-events. This mirrors Pi's `export default function (pi: ExtensionAPI)`.
+An extension is a Python file with a function `extension(pi)`. Pass a file or a folder with -e. A
+folder loads every top-level `.py` file in sorted order, skipping names that start with `_`. pi2
+calls each `extension(pi)` with an ExtensionAPI, which the extension uses to register tools and
+listen to events. This mirrors Pi's `export default function (pi: ExtensionAPI)`.
 """
 
 import importlib.util
@@ -48,10 +49,40 @@ class ExtensionAPI:
         self.handlers.setdefault(event, []).append(handler)
 
     def load(self, path):
+        """Load an extension file, or every top-level .py file in a folder."""
+        path = Path(path).expanduser().resolve()
+
+        if path.is_dir():
+            files = sorted(
+                file
+                for file in path.iterdir()
+                if file.is_file()
+                and file.suffix == ".py"
+                and not file.name.startswith("_")
+                and not file.name.startswith(".")
+            )
+            if not files:
+                raise SystemExit(f"No extension files found in {path}")
+            for file in files:
+                self.load_file(file)
+            return
+
+        if not path.is_file():
+            raise SystemExit(f"Extension path not found: {path}")
+        self.load_file(path)
+
+    def load_file(self, path):
         """Load one extension file and call its extension(pi) function."""
         path = Path(path).expanduser().resolve()
-        spec = importlib.util.spec_from_file_location(f"pi2_extension_{path.stem}", path)
+        module_name = f"pi2_extension_{path.stem}_{len(self.sources)}"
+        spec = importlib.util.spec_from_file_location(module_name, path)
+        if spec is None or spec.loader is None:
+            raise SystemExit(f"Cannot load extension: {path}")
+
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        module.extension(self)
+        extension = getattr(module, "extension", None)
+        if not callable(extension):
+            raise SystemExit(f'{path}: add a function named "extension(pi)".')
+        extension(self)
         self.sources.append(path.name)
