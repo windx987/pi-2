@@ -41,7 +41,8 @@ bash_tool = define_tool(
         "Execute a bash command in the working directory. Returns stdout and stderr combined. "
         "Optionally provide a timeout in seconds."
     ),
-    prompt_snippet="Execute bash commands (ls, grep, find, etc.)",
+    prompt_snippet="Execute bash commands for tests, git and other shell work",
+    prompt_guidelines=["Use bash for commands that need a shell; use lsdir, find_files and read to inspect files."],
     parameters={
         "type": "object",
         "properties": {

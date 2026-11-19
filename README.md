@@ -7,8 +7,10 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 | Path | What it is |
 |---|---|
 | `pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions |
-| `tools/` | One extension file per tool: `math.py`, `read.py`, `write.py`, `edit.py`, `bash.py` |
+| `tools/` | One extension file per tool: `math.py`, `lsdir.py`, `find.py`, `read.py`, `write.py`, `edit.py`, `bash.py` |
 | `tools/math.py` | The arithmetic tool, registered as `evaluate_equation` |
+| `tools/lsdir.py` | List a directory, defaulting to the working directory |
+| `tools/find.py` | Find files recursively by glob, defaulting to the working directory |
 | `playground/math.py` | A disposable file with one bug, for the tools to work on |
 
 ## Requirements
@@ -81,7 +83,7 @@ Use a private settings file:
 python3 -m pi2 --settings settings.local.json -e tools
 ```
 
-Ask "What is 2 + 3?" The `math.py` extension registers the `evaluate_equation` tool. The other files register `read`, `write`, `edit` and `bash`.
+Ask "What is 2 + 3?" The `math.py` extension registers the `evaluate_equation` tool. The other files register `lsdir`, `find_files`, `read`, `write`, `edit` and `bash`.
 
 To work in a copy of the playground, so the agent does not change this repository:
 
