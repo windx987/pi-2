@@ -1,3 +1,7 @@
+<p align="center">
+  <img alt="pi/2 logo" src="./assets/logo.svg" width="128">
+</p>
+
 # pi/2 Python Workshop
 
 ## What is this repo
