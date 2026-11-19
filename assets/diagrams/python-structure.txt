@@ -1,24 +1,30 @@
 # Source for python-structure.svg; render with: node render-tree.mjs python-structure
-# Format: <role> <tree path> -- <explanation>. Roles: d directory, w workshop, c core, o other.
+# Format: <role> <tree path> -- <explanation>. "## <label>" starts a section, drawn as a tinted band.
+# Roles: d directory; a app, l agent loop, m talks to the model (the package colors of the big picture);
+# w where you work; r read and run; o other.
 d pi-2/ (python branch) -- Lobotomized: pi/2 in Python
-c ├── pi2/ -- the agent, one file per step
-c │   ├── cli.py -- options, loads extensions (-e)
-c │   ├── tui.py -- 1 · interactive mode: editor, footer, tool boxes
-c │   ├── session.py -- 2 · AgentSession; 8 · saves messages
-c │   ├── agent_loop.py -- 3 · ask, run tool calls, repeat (6, 7, 8)
-c │   ├── model_runtime.py -- 4 · models.json, API key, stream_fn
-c │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
-c │   ├── schema.py -- 6 · checks tool arguments
-c │   ├── compaction.py -- summarizes old messages when the context fills up
-c │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
+## the agent
+a ├── pi2/ -- the agent, one file per step
+a │   ├── cli.py -- options, loads extensions (-e)
+a │   ├── tui.py -- 1 · interactive mode: editor, footer, tool boxes
+a │   ├── session.py -- 2 · AgentSession; 8 · saves messages
+l │   ├── agent_loop.py -- 3 · ask, run tool calls, repeat (6, 7, 8)
+a │   ├── model_runtime.py -- 4 · models.json, API key, stream_fn
+m │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
+m │   ├── schema.py -- 6 · checks tool arguments
+a │   ├── compaction.py -- summarizes old messages when the context fills up
+a │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
+## your work
 w ├── exercises/ -- your extensions, each with a README and checks
 w │   ├── 01-read/ … 04-edit/ -- you implement execute() in starter.py
 w │   ├── 05-subagent/ -- a tool that runs a second agent
 w │   └── check.py -- checks your tools without a model
-w ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
 w ├── playground/ -- the small project the agent works on (copy it)
-w ├── pi2.sh -- starts Lobotomized from the clone
-w ├── docs/ -- connecting a model; context length and compaction
+## read and run
+r ├── docs/ -- connecting a model; context length and compaction
+r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
+r ├── pi2.sh -- starts Lobotomized from the clone
+## outside the workshop
 o ├── tests/ -- unit tests, no model needed
 o ├── pyproject.toml -- pip install -e . gives a pi2 command
 o └── assets/ -- logo and diagrams
