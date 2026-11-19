@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="928" viewBox="0 0 1420 928" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40" y="48" fill="#1a2b45" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="700">exercises/02-write/starter.py, solved</text>
+<rect x="40" y="58" width="880" height="830" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="164" y="81" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"><tspan fill="#cf222e">from</tspan> pathlib <tspan fill="#cf222e">import</tspan> Path</text>
+<text x="164" y="103" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
+<text x="164" y="125" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"><tspan fill="#cf222e">from</tspan> pi2 <tspan fill="#cf222e">import</tspan> ExtensionAPI, define_tool</text>
+<text x="164" y="147" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
+<rect x="41" y="154" width="878" height="22" fill="#eaf5ef"/>
+<rect x="41" y="154" width="4" height="22" fill="#2f7d5b"/>
+<rect x="108.0" y="156.0" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="117.0" y="169.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<text x="164" y="169" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"><tspan fill="#cf222e">def</tspan> <tspan fill="#8250df">execute</tspan>(params, ctx):</text>
+<text x="164" y="191" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;cwd = Path(ctx.cwd).<tspan fill="#8250df">resolve</tspan>()</text>
+<text x="164" y="213" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;path = (cwd / params[<tspan fill="#0a3069">&quot;path&quot;</tspan>]).<tspan fill="#8250df">resolve</tspan>()</text>
+<text x="164" y="235" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#cf222e">if</tspan> <tspan fill="#cf222e">not</tspan> path.<tspan fill="#8250df">is_relative_to</tspan>(cwd):</text>
+<rect x="41" y="242" width="878" height="22" fill="#fdf5e4"/>
+<rect x="41" y="242" width="4" height="22" fill="#9a6700"/>
+<rect x="108.0" y="244.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="257.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
+<text x="164" y="257" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;raise PermissionError(<tspan fill="#0a3069">f&quot;Refusing to write outside the working directory: {params[&#x27;path&#x27;]}&quot;</tspan>)</text>
+<text x="164" y="279" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;path.parent.<tspan fill="#8250df">mkdir</tspan>(parents=True, exist_ok=True)</text>
+<text x="164" y="301" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;data = params[<tspan fill="#0a3069">&quot;content&quot;</tspan>].<tspan fill="#8250df">encode</tspan>(<tspan fill="#0a3069">&quot;utf-8&quot;</tspan>)</text>
+<text x="164" y="323" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;path.<tspan fill="#8250df">write_bytes</tspan>(data)</text>
+<text x="164" y="345" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#6e7781"># The model does not see the file unless it reads it, so say what happened.</tspan></text>
+<rect x="41" y="352" width="878" height="22" fill="#eaf5ef"/>
+<rect x="41" y="352" width="4" height="22" fill="#2f7d5b"/>
+<rect x="108.0" y="354.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="367.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
+<rect x="86.0" y="354.0" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="95.0" y="367.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<text x="164" y="367" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#cf222e">return</tspan> <tspan fill="#0a3069">f&quot;Wrote {len(data)} bytes to {params[&#x27;path&#x27;]}&quot;</tspan></text>
+<text x="164" y="389" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
+<text x="164" y="411" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">write_tool = <tspan fill="#8250df">define_tool</tspan>(</text>
+<rect x="41" y="418" width="878" height="22" fill="#eef3fa"/>
+<rect x="41" y="418" width="4" height="22" fill="#2f5a96"/>
+<rect x="108.0" y="420.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="117.0" y="433.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<text x="164" y="433" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;name=<tspan fill="#0a3069">&quot;write&quot;</tspan>,</text>
+<text x="164" y="455" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;label=<tspan fill="#0a3069">&quot;write&quot;</tspan>,</text>
+<rect x="41" y="462" width="878" height="22" fill="#eef3fa"/>
+<rect x="41" y="462" width="4" height="22" fill="#2f5a96"/>
+<rect x="108.0" y="464.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="117.0" y="477.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<text x="164" y="477" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;description=(</text>
+<text x="164" y="499" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;Write content to a file. Creates the file if it does not exist, overwrites it if it does, &quot;</tspan></text>
+<text x="164" y="521" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;and creates parent directories.&quot;</tspan></text>
+<text x="164" y="543" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;),</text>
+<text x="164" y="565" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;prompt_snippet=<tspan fill="#0a3069">&quot;Create or overwrite files&quot;</tspan>,</text>
+<text x="164" y="587" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;prompt_guidelines=[<tspan fill="#0a3069">&quot;Use write only for new files or complete rewrites.&quot;</tspan>],</text>
+<rect x="41" y="594" width="878" height="22" fill="#eef3fa"/>
+<rect x="41" y="594" width="4" height="22" fill="#2f5a96"/>
+<rect x="108.0" y="596.0" width="18.0" height="18" rx="9" fill="#6d4bb3"/><text x="117.0" y="609.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
+<rect x="86.0" y="596.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="95.0" y="609.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<text x="164" y="609" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;parameters={</text>
+<text x="164" y="631" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;type&quot;</tspan>: <tspan fill="#0a3069">&quot;object&quot;</tspan>,</text>
+<text x="164" y="653" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;properties&quot;</tspan>: {</text>
+<text x="164" y="675" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;path&quot;</tspan>: {<tspan fill="#0a3069">&quot;type&quot;</tspan>: <tspan fill="#0a3069">&quot;string&quot;</tspan>, <tspan fill="#0a3069">&quot;description&quot;</tspan>: <tspan fill="#0a3069">&quot;Path to the file, relative to the working di…&quot;</tspan>},</text>
+<text x="164" y="697" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;content&quot;</tspan>: {<tspan fill="#0a3069">&quot;type&quot;</tspan>: <tspan fill="#0a3069">&quot;string&quot;</tspan>, <tspan fill="#0a3069">&quot;description&quot;</tspan>: <tspan fill="#0a3069">&quot;Content to write to the file&quot;</tspan>},</text>
+<text x="164" y="719" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;},</text>
+<text x="164" y="741" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;required&quot;</tspan>: [<tspan fill="#0a3069">&quot;path&quot;</tspan>, <tspan fill="#0a3069">&quot;content&quot;</tspan>],</text>
+<text x="164" y="763" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;},</text>
+<text x="164" y="785" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;execute=execute,</text>
+<text x="164" y="807" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">)</text>
+<text x="164" y="829" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
+<rect x="41" y="836" width="878" height="22" fill="#fbeeee"/>
+<rect x="41" y="836" width="4" height="22" fill="#b03a37"/>
+<rect x="81.5" y="838.0" width="44.5" height="18" rx="9" fill="#b03a37"/><text x="103.8" y="851.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">start</text>
+<text x="164" y="851" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"><tspan fill="#cf222e">def</tspan> <tspan fill="#8250df">extension</tspan>(pi: ExtensionAPI):</text>
+<rect x="41" y="858" width="878" height="22" fill="#fbeeee"/>
+<rect x="41" y="858" width="4" height="22" fill="#b03a37"/>
+<rect x="81.5" y="860.0" width="44.5" height="18" rx="9" fill="#b03a37"/><text x="103.8" y="873.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">start</text>
+<text x="164" y="873" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;pi.<tspan fill="#8250df">register_tool</tspan>(write_tool)</text>
+<text x="950" y="38" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You ask: "Create notes/todo.md with three items."</text>
+<rect x="950" y="52" width="430" height="100" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<rect x="966.0" y="65" width="44.5" height="18" rx="9" fill="#b03a37"/><text x="988.2" y="78" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">start</text>
+<text x="1020.5" y="79" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You start pi2 with read and write</text>
+<text x="968" y="104" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">./pi2.sh -e exercises/01-read/starter.py \</text>
+<text x="968" y="123" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;-e exercises/02-write/starter.py</text>
+<text x="968" y="142" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Each extension(pi) registers its tool.</text>
+<rect x="950" y="162" width="430" height="62" rx="10" fill="#ffffff" stroke="#6b7280" stroke-width="1.5"/>
+<rect x="966.0" y="175" width="18.0" height="18" rx="9" fill="#6b7280"/><text x="975.0" y="188" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">1</text>
+<text x="994" y="189" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You type the request</text>
+<text x="968" y="214" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Interactive mode hands it to AgentSession.prompt.</text>
+<rect x="950" y="234" width="430" height="118" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<rect x="966.0" y="247" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="975.0" y="260" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<text x="994" y="261" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">pi2 offers read and write</text>
+<text x="968" y="286" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&quot;write&quot;: &quot;Write content to a file…&quot;</text>
+<text x="968" y="305" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">parameters: path, content (both required)</text>
+<text x="968" y="324" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">From define_tool: the model sees only this, never your</text>
+<text x="968" y="342" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">code.</text>
+<rect x="950" y="362" width="430" height="100" rx="10" fill="#ffffff" stroke="#6b7280" stroke-width="1.5"/>
+<rect x="966.0" y="375" width="31.5" height="18" rx="9" fill="#6b7280"/><text x="981.8" y="388" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">3–5</text>
+<text x="1007.5" y="389" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">The model answers with a tool call</text>
+<text x="968" y="414" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">write({&quot;path&quot;: &quot;notes/todo.md&quot;,</text>
+<text x="968" y="433" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&quot;content&quot;: &quot;- …\n- …\n- …\n&quot;})</text>
+<text x="968" y="452" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Agent loop, model runtime and provider.</text>
+<rect x="950" y="472" width="430" height="99" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
+<rect x="966.0" y="485" width="18.0" height="18" rx="9" fill="#6d4bb3"/><text x="975.0" y="498" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
+<text x="994" y="499" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">pi2 checks the arguments</text>
+<text x="968" y="524" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">path and content are strings: matches parameters</text>
+<text x="968" y="543" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">A missing content would be an error result here, before</text>
+<text x="968" y="561" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">execute.</text>
+<rect x="950" y="581" width="430" height="118" rx="10" fill="#eaf5ef" stroke="#2f7d5b" stroke-width="1.5"/>
+<rect x="966.0" y="594" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="975.0" y="607" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<text x="994" y="608" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Your execute runs</text>
+<text x="968" y="633" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">resolve → &lt;cwd&gt;/notes/todo.md, inside cwd</text>
+<text x="968" y="652" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">mkdir notes/, then write_bytes</text>
+<text x="968" y="671" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">notes/../../.bashrc would resolve outside cwd and be</text>
+<text x="968" y="689" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">refused.</text>
+<rect x="950" y="709" width="430" height="99" rx="10" fill="#fdf5e4" stroke="#9a6700" stroke-width="1.5"/>
+<rect x="966.0" y="722" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="975.0" y="735" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
+<text x="994" y="736" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">The result goes back to the model</text>
+<text x="968" y="761" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">tool result: &quot;Wrote &lt;n&gt; bytes to notes/todo.md&quot;</text>
+<text x="968" y="780" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">The model does not see the file; the confirmation says</text>
+<text x="968" y="798" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">it was written.</text>
+</svg>

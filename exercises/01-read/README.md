@@ -42,14 +42,16 @@ Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Pat
 
    ```python
    offset = int(params.get("offset") or 1)
-   end = len(lines) if params.get("limit") is None else min(len(lines), offset - 1 + int(params["limit"]))
+   end = len(lines)
+   if params.get("limit") is not None:
+       end = min(end, offset - 1 + int(params["limit"]))
    text = "\n".join(lines[offset - 1:end])
    if end < len(lines):
        text += f"\n\n[{len(lines) - end} more lines. Use offset={end + 1} to continue.]"
    return text
    ```
 
-   `offset` counts from 1, a Python list from 0, hence `offset - 1`. `int()` because the schema type is `number`, so the model may send `3.0`. The model cannot see what was left out; the note tells it the next call to make.
+   `offset` counts from 1, a Python list from 0, hence `offset - 1`. Without `limit`, read to the end; `min` stops at the end when `limit` reaches past it. `int()` because the schema type is `number`, so the model may send `3.0`. The model cannot see what was left out; the note tells it the next call to make.
 
 4. Raise an exception for a missing file or an offset past the end.
 
@@ -62,6 +64,10 @@ Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Pat
    ```
 
    pi2 turns the exception into an error result, and the model reads the message. Name the path the model sent, not the resolved one, so it recognizes its own call.
+
+The whole run, with the line of the solution each step uses:
+
+<p align="center"><img alt="The read starter, solved, with lines highlighted by step: define_tool's name, description and parameters (steps 2 and 6), execute (step 7), its return and raises (step 8), extension and register_tool (start). Right: what happens when you ask 'What is in package.json?', from loading the file to the tool result." src="../../assets/diagrams/exercise-01-read.svg" width="900"></p>
 
 <details>
 <summary>The whole function</summary>
@@ -79,7 +85,9 @@ def execute(params, ctx):
     offset = int(params.get("offset") or 1)
     if offset > len(lines):
         raise ValueError(f"Offset {offset} is beyond the end of the file ({len(lines)} lines).")
-    end = len(lines) if params.get("limit") is None else min(len(lines), offset - 1 + int(params["limit"]))
+    end = len(lines)
+    if params.get("limit") is not None:
+        end = min(end, offset - 1 + int(params["limit"]))
     text = "\n".join(lines[offset - 1:end])
     if end < len(lines):
         # Tell the model how to read on; it cannot see what was left out.

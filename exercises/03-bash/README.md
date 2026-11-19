@@ -82,6 +82,10 @@ Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `import subprocess` at t
        raise
    ```
 
+The whole run, with the line of the solution each step uses:
+
+<p align="center"><img alt="The bash starter, solved, with lines highlighted by step; docker_args is folded. Right: what happens when you ask 'Run the tests.': the model calls bash with npm test, execute runs it in a new container without network, the test fails with exit code 1, and the output goes back as an error result." src="../../assets/diagrams/exercise-03-bash.svg" width="900"></p>
+
 <details>
 <summary>The whole function</summary>
 

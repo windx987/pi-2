@@ -81,9 +81,10 @@ def badge(x, y, label):
     return shape + text
 
 
-def render_code(y):
+def render_code(y, panels):
+    """Code panels, each (title, rows), stacked from y. Returns the SVG parts and the bottom."""
     parts = []
-    for title, rows in code_rows():
+    for title, rows in panels:
         parts.append(f'<text x="{CODE_X}" y="{y}" fill="#1a2b45" font-family="{MONO}" font-size="13" font-weight="700">{title}</text>')
         top = y + 10
         height = len(rows) * LINE_H + 16
@@ -134,10 +135,11 @@ def wrap(text, width):
     return lines + [line]
 
 
-def render_run(y):
-    parts = [f'<text x="{RUN_X}" y="{y}" fill="#1a2b45" font-family="{SANS}" font-size="15" font-weight="700">What happens when you ask "Greet Ada."</text>']
+def render_run(y, heading, run):
+    """The step boxes of one run, under a heading. Returns the SVG parts and the bottom."""
+    parts = [f'<text x="{RUN_X}" y="{y}" fill="#1a2b45" font-family="{SANS}" font-size="15" font-weight="700">{html.escape(heading, quote=False)}</text>']
     y += 14
-    for label, title, code, note in RUN:
+    for label, title, code, note in run:
         notes = wrap(note, 56)
         height = 36 + len(code) * 19 + len(notes) * 18 + 8
         color = STEP_COLORS[label]
@@ -159,17 +161,22 @@ def render_run(y):
     return parts, y - 10
 
 
-def main():
-    code, code_bottom = render_code(48)
-    run, run_bottom = render_run(38)
+def write_svg(out, panels, heading, run):
+    """Write one example: code panels on the left, the run on the right."""
+    code, code_bottom = render_code(48, panels)
+    steps, run_bottom = render_run(38, heading, run)
     height = max(code_bottom, run_bottom) + 40
     width = RUN_X + RUN_W + 40
     head = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" font-family="{SANS}" font-size="14">',
         '<rect width="100%" height="100%" fill="#ffffff"/>',
     ]
-    OUT.write_text("\n".join(head + code + run + ["</svg>", ""]))
-    print(f"wrote {OUT.name} ({width}x{height})")
+    out.write_text("\n".join(head + code + steps + ["</svg>", ""]))
+    print(f"wrote {out.name} ({width}x{height})")
+
+
+def main():
+    write_svg(OUT, code_rows(), 'What happens when you ask "Greet Ada."', RUN)
 
 
 if __name__ == "__main__":

@@ -57,6 +57,10 @@ Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Pat
 
    The model does not see the file unless it reads it. The confirmation tells it the write happened.
 
+The whole run, with the line of the solution each step uses:
+
+<p align="center"><img alt="The write starter, solved, with lines highlighted by step. Right: what happens when you ask 'Create notes/todo.md with three items.': the model calls write, pi2 checks the arguments, execute resolves the path inside the working directory, creates notes/ and writes the file, and the confirmation goes back to the model." src="../../assets/diagrams/exercise-02-write.svg" width="900"></p>
+
 <details>
 <summary>The whole function</summary>
 
