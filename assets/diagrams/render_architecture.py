@@ -5,11 +5,11 @@ from pathlib import Path
 OUT = Path(__file__).with_name("architecture.svg")
 SANS = "-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace"
-WIDTH, HEIGHT = 1210, 820
+WIDTH, HEIGHT = 1210, 758
 
 # Columns: your code, start-up modules, the request path, what the request path uses.
 COL = {"yours": (30, 190), "start": (310, 190), "main": (600, 250), "side": (950, 230)}
-ROW = [180, 300, 420, 540, 660]
+ROW = [118, 238, 358, 478, 598]
 BOX_H = 74
 STYLE = {
     "pi2": ("#eef3fa", "#2f5a96"),
@@ -77,8 +77,6 @@ parts = [
     '<marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b03a37"/></marker>',
     "</defs>",
     '<rect width="100%" height="100%" fill="#ffffff"/>',
-    f'<text x="30" y="42" fill="#1a2b45" font-size="24" font-weight="700">Architecture of pi2</text>',
-    '<text x="30" y="68" fill="#4b5563">The request path runs top to bottom. Each module talks only to the boxes it has arrows to.</text>',
 ]
 
 # Column headings

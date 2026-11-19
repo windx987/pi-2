@@ -1,101 +1,99 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1210" height="820" viewBox="0 0 1210 820" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<svg xmlns="http://www.w3.org/2000/svg" width="1210" height="758" viewBox="0 0 1210 758" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker>
 <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b03a37"/></marker>
 </defs>
 <rect width="100%" height="100%" fill="#ffffff"/>
-<text x="30" y="42" fill="#1a2b45" font-size="24" font-weight="700">Architecture of pi2</text>
-<text x="30" y="68" fill="#4b5563">The request path runs top to bottom. Each module talks only to the boxes it has arrows to.</text>
-<text x="30" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">YOUR CODE</text>
-<text x="310" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">AT STARTUP</text>
-<text x="600" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">EVERY REQUEST</text>
-<text x="950" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">USED ON THE WAY</text>
-<rect x="675" y="114" width="100" height="30" rx="15" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
-<text x="725.0" y="134" text-anchor="middle" fill="#1f2328" font-weight="700">You</text>
-<line x1="725.0" y1="146" x2="725.0" y2="178" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
-<rect x="600" y="180" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="614" y="205" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">tui.py</text>
-<text x="614" y="227" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">InteractiveMode</text>
-<text x="614" y="246" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">reads input, prints events</text>
-<line x1="725.0" y1="256" x2="725.0" y2="298" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
-<text x="735.0" y="282.0" fill="#4b5563" font-size="12">prompt() / events</text>
-<rect x="600" y="300" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="614" y="325" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">session.py</text>
-<text x="614" y="347" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">AgentSession</text>
-<text x="614" y="366" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">history, tools, saving</text>
-<line x1="725.0" y1="376" x2="725.0" y2="418" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
-<text x="735.0" y="402.0" fill="#4b5563" font-size="12">run() / events</text>
-<rect x="600" y="420" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="614" y="445" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">agent_loop.py</text>
-<text x="614" y="467" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">run, execute_tool_call</text>
-<text x="614" y="486" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ask the model, run its tools</text>
-<line x1="725.0" y1="496" x2="725.0" y2="538" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="735.0" y="522.0" fill="#4b5563" font-size="12">stream_fn</text>
-<rect x="600" y="540" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="614" y="565" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">model_runtime.py</text>
-<text x="614" y="587" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ModelRuntime</text>
-<text x="614" y="606" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">model → provider, URL, key</text>
-<line x1="725.0" y1="616" x2="725.0" y2="658" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="735.0" y="642.0" fill="#4b5563" font-size="12">stream()</text>
-<rect x="600" y="660" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="614" y="685" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">ai.py</text>
-<text x="614" y="707" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">stream()</text>
-<text x="614" y="726" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">OpenAI-compatible HTTP</text>
-<rect x="310" y="180" width="190" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="324" y="205" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">cli.py</text>
-<text x="324" y="227" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">main()</text>
-<text x="324" y="246" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">reads options, builds all</text>
-<line x1="500" y1="217.0" x2="600" y2="217.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="550.0" y="210.0" text-anchor="middle" fill="#4b5563" font-size="12">starts</text>
-<rect x="310" y="300" width="190" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="324" y="325" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">extensions.py</text>
-<text x="324" y="347" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ExtensionAPI</text>
-<text x="324" y="366" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">pi.tools, pi.handlers</text>
-<line x1="405.0" y1="256" x2="405.0" y2="298" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="415.0" y="282.0" fill="#4b5563" font-size="12">load(path) per -e</text>
-<line x1="500" y1="337.0" x2="600" y2="337.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="550.0" y="330.0" text-anchor="middle" fill="#4b5563" font-size="12">tools, handlers</text>
-<rect x="30" y="300" width="190" height="194" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
-<text x="44" y="325" fill="#b03a37" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Your extensions</text>
-<text x="44" y="347" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">exercises/, examples/</text>
-<text x="44" y="366" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13"></text>
-<text x="44" y="385" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">def extension(pi):</text>
-<text x="44" y="404" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">  register_tool(...)</text>
-<text x="44" y="423" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">  on("tool_call", h)</text>
-<text x="44" y="442" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13"></text>
-<text x="44" y="461" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">loaded with -e</text>
-<line x1="220" y1="337.0" x2="310" y2="337.0" stroke="#b03a37" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-<text x="265.0" y="330.0" text-anchor="middle" fill="#4b5563" font-size="12">extension(pi)</text>
-<line x1="600" y1="457.0" x2="220" y2="457.0" stroke="#b03a37" stroke-width="1.5" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
-<text x="410.0" y="450.0" text-anchor="middle" fill="#4b5563" font-size="12">execute(params, ctx) / result</text>
-<rect x="950" y="300" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
-<text x="964" y="325" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Session files</text>
-<text x="964" y="347" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">~/.pi/agent/</text>
-<text x="964" y="366" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">python-sessions/*.jsonl</text>
-<line x1="850" y1="337.0" x2="950" y2="337.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="900.0" y="330.0" text-anchor="middle" fill="#4b5563" font-size="12">save()</text>
-<rect x="950" y="420" width="230" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="964" y="445" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">schema.py</text>
-<text x="964" y="467" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">validate_tool_arguments</text>
-<text x="964" y="486" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">checks them against the schema</text>
-<line x1="850" y1="457.0" x2="950" y2="457.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="900.0" y="450.0" text-anchor="middle" fill="#4b5563" font-size="12">arguments</text>
-<rect x="950" y="540" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
-<text x="964" y="565" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Model list</text>
-<text x="964" y="587" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">~/.pi/agent/</text>
-<text x="964" y="606" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">models.json</text>
-<line x1="850" y1="577.0" x2="950" y2="577.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="900.0" y="570.0" text-anchor="middle" fill="#4b5563" font-size="12">reads</text>
-<rect x="950" y="660" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
-<text x="964" y="685" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">LLM server</text>
-<text x="964" y="707" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">e.g. Ollama /v1</text>
-<text x="964" y="726" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">streams the answer</text>
-<line x1="850" y1="697.0" x2="950" y2="697.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
-<text x="900.0" y="690.0" text-anchor="middle" fill="#4b5563" font-size="12">HTTP</text>
-<rect x="30" y="777" width="22" height="16" rx="4" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="60" y="790" fill="#4b5563" font-size="13">module in pi2/</text>
-<rect x="220" y="777" width="22" height="16" rx="4" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
-<text x="250" y="790" fill="#4b5563" font-size="13">your code</text>
-<rect x="410" y="777" width="22" height="16" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
-<text x="440" y="790" fill="#4b5563" font-size="13">outside pi2</text>
+<text x="30" y="34" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">YOUR CODE</text>
+<text x="310" y="34" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">AT STARTUP</text>
+<text x="600" y="34" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">EVERY REQUEST</text>
+<text x="950" y="34" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">USED ON THE WAY</text>
+<rect x="675" y="52" width="100" height="30" rx="15" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="725.0" y="72" text-anchor="middle" fill="#1f2328" font-weight="700">You</text>
+<line x1="725.0" y1="84" x2="725.0" y2="116" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<rect x="600" y="118" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="614" y="143" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">tui.py</text>
+<text x="614" y="165" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">InteractiveMode</text>
+<text x="614" y="184" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">reads input, prints events</text>
+<line x1="725.0" y1="194" x2="725.0" y2="236" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="735.0" y="220.0" fill="#4b5563" font-size="12">prompt() / events</text>
+<rect x="600" y="238" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="614" y="263" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">session.py</text>
+<text x="614" y="285" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">AgentSession</text>
+<text x="614" y="304" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">history, tools, saving</text>
+<line x1="725.0" y1="314" x2="725.0" y2="356" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="735.0" y="340.0" fill="#4b5563" font-size="12">run() / events</text>
+<rect x="600" y="358" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="614" y="383" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">agent_loop.py</text>
+<text x="614" y="405" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">run, execute_tool_call</text>
+<text x="614" y="424" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ask the model, run its tools</text>
+<line x1="725.0" y1="434" x2="725.0" y2="476" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="735.0" y="460.0" fill="#4b5563" font-size="12">stream_fn</text>
+<rect x="600" y="478" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="614" y="503" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">model_runtime.py</text>
+<text x="614" y="525" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ModelRuntime</text>
+<text x="614" y="544" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">model → provider, URL, key</text>
+<line x1="725.0" y1="554" x2="725.0" y2="596" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="735.0" y="580.0" fill="#4b5563" font-size="12">stream()</text>
+<rect x="600" y="598" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="614" y="623" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">ai.py</text>
+<text x="614" y="645" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">stream()</text>
+<text x="614" y="664" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">OpenAI-compatible HTTP</text>
+<rect x="310" y="118" width="190" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="324" y="143" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">cli.py</text>
+<text x="324" y="165" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">main()</text>
+<text x="324" y="184" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">reads options, builds all</text>
+<line x1="500" y1="155.0" x2="600" y2="155.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="550.0" y="148.0" text-anchor="middle" fill="#4b5563" font-size="12">starts</text>
+<rect x="310" y="238" width="190" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="324" y="263" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">extensions.py</text>
+<text x="324" y="285" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ExtensionAPI</text>
+<text x="324" y="304" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">pi.tools, pi.handlers</text>
+<line x1="405.0" y1="194" x2="405.0" y2="236" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="415.0" y="220.0" fill="#4b5563" font-size="12">load(path) per -e</text>
+<line x1="500" y1="275.0" x2="600" y2="275.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="550.0" y="268.0" text-anchor="middle" fill="#4b5563" font-size="12">tools, handlers</text>
+<rect x="30" y="238" width="190" height="194" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<text x="44" y="263" fill="#b03a37" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Your extensions</text>
+<text x="44" y="285" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">exercises/, examples/</text>
+<text x="44" y="304" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13"></text>
+<text x="44" y="323" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">def extension(pi):</text>
+<text x="44" y="342" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">  register_tool(...)</text>
+<text x="44" y="361" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">  on("tool_call", h)</text>
+<text x="44" y="380" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13"></text>
+<text x="44" y="399" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">loaded with -e</text>
+<line x1="220" y1="275.0" x2="310" y2="275.0" stroke="#b03a37" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+<text x="265.0" y="268.0" text-anchor="middle" fill="#4b5563" font-size="12">extension(pi)</text>
+<line x1="600" y1="395.0" x2="220" y2="395.0" stroke="#b03a37" stroke-width="1.5" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
+<text x="410.0" y="388.0" text-anchor="middle" fill="#4b5563" font-size="12">execute(params, ctx) / result</text>
+<rect x="950" y="238" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="964" y="263" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Session files</text>
+<text x="964" y="285" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">~/.pi/agent/</text>
+<text x="964" y="304" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">python-sessions/*.jsonl</text>
+<line x1="850" y1="275.0" x2="950" y2="275.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="900.0" y="268.0" text-anchor="middle" fill="#4b5563" font-size="12">save()</text>
+<rect x="950" y="358" width="230" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="964" y="383" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">schema.py</text>
+<text x="964" y="405" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">validate_tool_arguments</text>
+<text x="964" y="424" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">checks them against the schema</text>
+<line x1="850" y1="395.0" x2="950" y2="395.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="900.0" y="388.0" text-anchor="middle" fill="#4b5563" font-size="12">arguments</text>
+<rect x="950" y="478" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="964" y="503" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Model list</text>
+<text x="964" y="525" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">~/.pi/agent/</text>
+<text x="964" y="544" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">models.json</text>
+<line x1="850" y1="515.0" x2="950" y2="515.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="900.0" y="508.0" text-anchor="middle" fill="#4b5563" font-size="12">reads</text>
+<rect x="950" y="598" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="964" y="623" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">LLM server</text>
+<text x="964" y="645" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">e.g. Ollama /v1</text>
+<text x="964" y="664" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">streams the answer</text>
+<line x1="850" y1="635.0" x2="950" y2="635.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="900.0" y="628.0" text-anchor="middle" fill="#4b5563" font-size="12">HTTP</text>
+<rect x="30" y="715" width="22" height="16" rx="4" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="60" y="728" fill="#4b5563" font-size="13">module in pi2/</text>
+<rect x="220" y="715" width="22" height="16" rx="4" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<text x="250" y="728" fill="#4b5563" font-size="13">your code</text>
+<rect x="410" y="715" width="22" height="16" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="440" y="728" fill="#4b5563" font-size="13">outside pi2</text>
 </svg>

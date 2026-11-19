@@ -160,15 +160,13 @@ def render_run(y):
 
 
 def main():
-    code, code_bottom = render_code(118)
-    run, run_bottom = render_run(108)
+    code, code_bottom = render_code(48)
+    run, run_bottom = render_run(38)
     height = max(code_bottom, run_bottom) + 40
     width = RUN_X + RUN_W + 40
     head = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" font-family="{SANS}" font-size="14">',
         '<rect width="100%" height="100%" fill="#ffffff"/>',
-        f'<text x="40" y="44" fill="#1a2b45" font-size="24" font-weight="700">One example, step by step: the code each step uses</text>',
-        f'<text x="40" y="70" fill="#4b5563">Left: two extensions from examples/. Right: what happens when you ask "Greet Ada.". Each step is highlighted in the code it uses.</text>',
     ]
     OUT.write_text("\n".join(head + code + run + ["</svg>", ""]))
     print(f"wrote {OUT.name} ({width}x{height})")

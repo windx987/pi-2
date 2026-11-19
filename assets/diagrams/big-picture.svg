@@ -1,11 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1305" height="2102" viewBox="0 0 1305 2102" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5">
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1305" height="2022" viewBox="0 80 1305 2022" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5">
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker>
 <marker id="arrowLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6d4bb3"/></marker>
 </defs>
-<rect width="100%" height="100%" fill="#ffffff"/>
-<text x="76" y="54" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="24" font-weight="700">The original Pi: one prompt, from your keyboard to a tool and back</text>
-<text x="76" y="80" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">Each step on the left is a part of Pi; on the right, the code that does it.</text>
+<rect y="80" width="100%" height="100%" fill="#ffffff"/>
 <rect x="76" y="110" width="360" height="129" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <circle cx="102" cy="136" r="13" fill="#2f5a96"/>
 <text x="102" y="141" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700">1</text>
