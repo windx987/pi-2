@@ -10,7 +10,7 @@
 
 # Lobotomized: pi/2 in Python
 
-Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follows the same eight steps as Pi, one file per step, in about 800 lines of standard-library Python. Its terminal looks and behaves like Pi's: the logo header, the editor between two borders, thinking in dim italics, tool calls in colored boxes, and the footer with tokens and model.
+Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follows the same eight steps as Pi, one file per step, in about 1,000 lines of standard-library Python. Its terminal looks and behaves like Pi's: the logo header, the editor between two borders, thinking in dim italics, tool calls in colored boxes, and the footer with tokens and model.
 
 Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `edit` and `bash` yourself, in [exercises/](exercises/).
 
@@ -130,7 +130,7 @@ The numbers are the steps of [the big picture](#the-big-picture). The loop box r
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 You work in red: your extensions, their instructions, and a copy of the [playground](playground/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). Grey parts are not needed for the workshop.
 
@@ -219,9 +219,28 @@ cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
 
 `REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
 
+## Context length and compaction
+
+Every request sends the whole conversation: the system prompt, your messages, the model's answers and every tool result. The footer shows how much of the model's `contextWindow` from `models.json` that is. When it gets close, [compaction.py](pi2/compaction.py) makes room, as Pi does:
+
+1. **When.** Before each prompt and between turns, after the tool results are added, the session checks `context > contextWindow - reserveTokens`. The context is the model's last token count plus an estimate of the messages after it (four characters per token); before the model has counted, as at the start or right after a compaction, the system prompt and tool definitions are estimated too.
+2. **What it keeps.** About `keepRecentTokens` of the newest messages, word for word. The cut never separates a tool call from its result.
+3. **What it summarizes.** The older messages go to the model as plain text, with a request for a structured summary: goal, constraints, progress, key decisions, next steps, critical context. Files that `read`, `write` and `edit` touched are listed under it. A second compaction updates the first summary.
+4. **What the model sees next.** The system prompt, the summary as a user message, then the kept messages. The session file keeps every message.
+
+If the server still rejects a request as too long, the session compacts and retries once. Type `/compact` to compact now, or `/compact <focus>` to say what the summary must keep.
+
+| Setting in `~/.pi/agent/settings.json` | Default | Meaning |
+|---|---|---|
+| `compaction.enabled` | `true` | Compact automatically |
+| `compaction.reserveTokens` | 16384, at most half the window | Room left for the answer |
+| `compaction.keepRecentTokens` | 20000, at most a quarter of the window | Newest messages kept word for word |
+
+Pi uses 16384 and 20000 for every model. Lobotomized caps them for small windows, so that a 32k model compacts at 16k and keeps 8k: with Pi's numbers, the kept messages alone would be over the threshold and it would compact again on every turn.
+
 ## What Pi does that Lobotomized leaves out
 
-It keeps the path of one prompt and drops the rest: one provider API (`openai-completions`, which covers Ollama and vLLM), no Markdown rendering, no session resume, no compaction, no skills or slash-command extensions, no parallel tool calls, no image input. Sessions are saved to `~/.pi/agent/python-sessions/` but not loaded again.
+It keeps the path of one prompt and drops the rest: one provider API (`openai-completions`, which covers Ollama and vLLM), no Markdown rendering, no session resume, simpler compaction (no split turns, no branch summaries, no extension hooks), no skills or slash-command extensions, no parallel tool calls, no image input. Sessions are saved to `~/.pi/agent/python-sessions/` but not loaded again.
 
 ## Tests
 

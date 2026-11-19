@@ -119,7 +119,7 @@ class InteractiveMode:
     def print_header(self):
         top = f"{fg(*CORAL)}{bg(*BLUE)}▀{RESET}{fg(*CORAL)}▀█{RESET}    {fg(*MINT)}▄▀{RESET} {fg(*CORAL)}▀▀█{RESET}"
         bottom = f"{fg(*BLUE)}█▀{RESET} {fg(*YELLOW)}█{RESET} {fg(*MINT)}▄▀{RESET}   {fg(*CORAL)}█▄▄{RESET}"
-        hints = " · ".join(["ctrl+c interrupt", "ctrl+d exit", "/model models", "/help commands"])
+        hints = " · ".join(["ctrl+c interrupt", "ctrl+d exit", "/model models", "/compact", "/help commands"])
         write(f" {top} {DIM}v{__version__} (python){RESET}\n {bottom} {DIM}{hints}{RESET}\n\n")
         sources = self.session.extensions.sources
         if sources:
@@ -151,7 +151,7 @@ class InteractiveMode:
         if cwd.startswith(home):
             cwd = "~" + cwd[len(home):]
         usage, model = self.session.usage, self.session.model
-        percent = 100 * usage["context"] / model["context_window"]
+        percent = 100 * self.session.context_tokens() / model["context_window"]
         left = f"{percent:.1f}%/{tokens(model['context_window'])}"
         if usage["input"]:
             left = f"↑{tokens(usage['input'])} ↓{tokens(usage['output'])} {left}"
@@ -168,14 +168,30 @@ class InteractiveMode:
             write(f"\n {DIM}New session started{RESET}\n")
         elif name == "/model":
             self.select_model(args)
+        elif name == "/compact":
+            self.compact(text[len(name):].strip() or None)
         elif name == "/help":
             write(
                 f"\n {DIM}/model         list models; /model <number> or <provider/id> switches\n"
+                f" /compact [focus] summarize older messages to free context\n"
                 f" /new           start a new session\n /quit          exit pi2{RESET}\n"
             )
         else:
             write(f"\n {ERROR}Unknown command {name}. Try /help.{RESET}\n")
         return True
+
+    def compact(self, instructions):
+        """/compact: summarize the older messages now, optionally focused on what the user names."""
+        try:
+            with no_echo():
+                if self.session.compact(instructions) is None:
+                    write(f"\n {DIM}Nothing to compact yet: the conversation is shorter than what is kept.{RESET}\n")
+        except KeyboardInterrupt:
+            self.clear_working()
+            write(f"\n {ERROR}Compaction aborted{RESET}\n")
+        except RuntimeError as error:
+            self.clear_working()
+            write(f"\n {ERROR}{error}{RESET}\n")
 
     def select_model(self, args):
         """/model lists the models in models.json; /model <number or provider/id> switches to one."""
@@ -231,6 +247,23 @@ class InteractiveMode:
                              for block in message["content"]):
                     # Pi shows nothing here; small models sometimes end a turn empty, which looks like a hang.
                     write(f"\n {DIM}The model ended its turn without a reply. Type \"go on\" to continue.{RESET}\n")
+        elif kind == "compaction_start":
+            why = {"manual": "Compacting", "threshold": "Context is filling up", "overflow": "Context too long"}
+            write(f"\n {DIM}⠋ {why[event['reason']]}: summarizing older messages...{RESET}")
+            self.working = True
+        elif kind == "compaction_end":
+            self.clear_working()
+            if "error" in event:
+                write(f"\n {ERROR}{event['error']}{RESET}\n")
+            else:
+                before, after = event["message"]["tokens_before"], event["tokens_after"]
+                summary = event["message"]["summary"].splitlines()
+                preview = [f"{MUTED}{line}" for line in summary[:PREVIEW_LINES]]
+                if len(summary) > PREVIEW_LINES:
+                    preview.append(f"{DIM}... ({len(summary) - PREVIEW_LINES} more lines)")
+                count = f"{event['summarized']} message{'s' if event['summarized'] > 1 else ''}"
+                title = f"{BOLD}Compacted{RESET} {DIM}{count}, {tokens(before)} → about {tokens(after)} tokens{RESET}"
+                self.print_box(TOOL_BG["pending"], [title, "", *preview])
         elif kind == "tool_execution_start":
             self.clear_working()
             self.tool_box_height = self.print_box(TOOL_BG["pending"], [tool_title(event["tool_call"])])

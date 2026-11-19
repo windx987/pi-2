@@ -9,12 +9,16 @@ import json
 import urllib.error
 import urllib.request
 
+from . import __version__
+from .compaction import SUMMARY_PREFIX, SUMMARY_SUFFIX
+
 # Message shapes used everywhere in pi2 (the same roles as Pi):
 #   {"role": "user", "content": "text"}
 #   {"role": "assistant", "content": [blocks], "stop_reason": ..., "usage": {"input": n, "output": n}}
 #       blocks: {"type": "thinking", "text"}, {"type": "text", "text"},
 #               {"type": "toolCall", "id", "name", "arguments": {...}}
 #   {"role": "toolResult", "tool_call_id", "tool_name", "content": "text", "is_error": bool}
+#   {"role": "compaction", "summary": "text", "tokens_before": n}  (sent as a user message)
 
 
 def stream(model, context, api_key):
@@ -33,7 +37,12 @@ def stream(model, context, api_key):
     request = urllib.request.Request(
         f"{model['base_url'].rstrip('/')}/chat/completions",
         data=json.dumps(body).encode(),
-        headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+        # Like Pi, name the client: some servers behind Cloudflare refuse Python's default User-Agent.
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": f"pi2/{__version__}",
+        },
     )
     message = {"role": "assistant", "content": [], "stop_reason": "stop", "usage": {"input": 0, "output": 0}}
     calls = {}  # the provider streams each tool call in pieces, keyed by its index
@@ -110,6 +119,8 @@ def convert_messages(system_prompt, messages):
     for message in messages:
         if message["role"] == "user":
             result.append({"role": "user", "content": message["content"]})
+        elif message["role"] == "compaction":  # the summary of older messages, see compaction.py
+            result.append({"role": "user", "content": SUMMARY_PREFIX + message["summary"] + SUMMARY_SUFFIX})
         elif message["role"] == "assistant":
             text = "".join(block["text"] for block in message["content"] if block["type"] == "text")
             entry = {"role": "assistant", "content": text}

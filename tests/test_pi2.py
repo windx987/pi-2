@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 from pi2 import ExtensionAPI, define_tool
-from pi2 import agent_loop, ai, tui
+from pi2 import agent_loop, ai, compaction, tui
 from pi2.extensions import ToolContext
 from pi2.model_runtime import ModelRuntime
 from pi2.session import AgentSession
@@ -141,6 +141,81 @@ class SessionTest(unittest.TestCase):
         extensions = ExtensionAPI()
         extensions.load(Path(__file__).parent.parent / "examples" / "hello.py")
         self.assertEqual(extensions.tools["hello"].execute({"name": "Ada"}, None), "Hello, Ada!")
+
+
+def session_with(stream_fn, agent_dir, keep_recent_tokens=1, reserve_tokens=16384):
+    extensions = ExtensionAPI()
+    extensions.register_tool(ECHO)
+    runtime = ModelRuntime(agent_dir)
+    runtime.stream_fn = stream_fn
+    session = AgentSession(runtime, {"id": "fake", "context_window": 32768}, extensions, "/work", agent_dir)
+    session.compaction_settings.update(keep_recent_tokens=keep_recent_tokens, reserve_tokens=reserve_tokens)
+    return session
+
+
+class CompactionTest(unittest.TestCase):
+    def test_the_cut_keeps_recent_messages_and_never_splits_a_tool_call_from_its_result(self):
+        messages = [{"role": "user", "content": "a" * 400}, answer(call("echo", {"text": "x"})),
+                    {"role": "toolResult", "tool_call_id": "call_1", "tool_name": "echo", "content": "b" * 400}]
+        self.assertEqual(compaction.find_cut(messages, 50), 1)  # at the call, not at its result
+        self.assertEqual(compaction.find_cut(messages, 10_000), 0)  # all fits: nothing to summarize
+
+    def test_defaults_shrink_for_a_small_window_and_settings_json_overrides_them(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            settings = compaction.load_settings(agent_dir, 32768)
+            self.assertEqual((settings["reserve_tokens"], settings["keep_recent_tokens"]), (16384, 8192))
+            Path(agent_dir, "settings.json").write_text(json.dumps({"compaction": {"keepRecentTokens": 500}}))
+            self.assertEqual(compaction.load_settings(agent_dir, 32768)["keep_recent_tokens"], 500)
+
+    def test_compact_replaces_old_messages_with_a_summary_the_model_sees_next(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            stream_fn, seen = fake_stream(answer({"type": "text", "text": "first answer"}),
+                                          answer({"type": "text", "text": "## Goal\nsay hi"}),
+                                          answer({"type": "text", "text": "second answer"}))
+            session = session_with(stream_fn, agent_dir)
+            session.prompt("hi")
+            session.compact("keep the greeting")
+            self.assertEqual([m["role"] for m in session.messages], ["compaction", "assistant"])
+            request = seen[1][0]["content"]
+            self.assertIn("[User]: hi", request)
+            self.assertIn("Additional focus: keep the greeting", request)
+            session.prompt("again")
+            sent = ai.convert_messages("sys", seen[2])
+            self.assertIn("<summary>\n## Goal\nsay hi", sent[1]["content"])
+            self.assertEqual(sent[1]["role"], "user")
+
+    def test_context_tokens_count_system_prompt_and_tools_until_the_model_counts(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            stream_fn, _ = fake_stream(answer({"type": "text", "text": "ok"}))
+            session = session_with(stream_fn, agent_dir)
+            self.assertGreater(session.context_tokens(), 50)  # the system prompt and the echo tool
+            session.prompt("hi")
+            self.assertEqual(session.context_tokens(), 15)  # the model's count: 10 in, 5 out
+
+    def test_a_full_context_is_compacted_between_turns(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            full = answer(call("echo", {"text": "x"}), stop_reason="tool_use")
+            full["usage"] = {"input": 20000, "output": 100}  # over 32768 - 16384
+            stream_fn, seen = fake_stream(full, answer({"type": "text", "text": "summary"}),
+                                          answer({"type": "text", "text": "done"}))
+            session = session_with(stream_fn, agent_dir)
+            session.prompt("hi")
+            self.assertIn("<conversation>", seen[1][0]["content"])  # the summary request
+            self.assertEqual([m["role"] for m in seen[2]], ["compaction", "assistant", "toolResult"])
+            self.assertEqual(session.messages[-1]["content"][0]["text"], "done")
+
+    def test_an_overflow_error_compacts_and_retries_once(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            overflow = answer(stop_reason="error")
+            overflow["error_message"] = "400 This model's maximum context length is 32768 tokens."
+            stream_fn, seen = fake_stream(answer({"type": "text", "text": "ok"}), overflow,
+                                          answer({"type": "text", "text": "summary"}),
+                                          answer({"type": "text", "text": "retried"}))
+            session = session_with(stream_fn, agent_dir)
+            session.prompt("hi")
+            session.prompt("go on")
+            self.assertEqual([m["role"] for m in seen[3]], ["compaction", "user"])
+            self.assertEqual(session.messages[-1]["content"][0]["text"], "retried")
 
 
 class ModelRuntimeTest(unittest.TestCase):

@@ -27,6 +27,8 @@ def run(context, config, emit):
             if result.get("aborted"):
                 emit({"type": "agent_end"})
                 return
+        if config.get("prepare_next_turn"):
+            config["prepare_next_turn"]()
 
 
 def stream_assistant_response(context, config, emit):

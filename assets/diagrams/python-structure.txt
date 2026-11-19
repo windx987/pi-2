@@ -9,6 +9,7 @@ c │   ├── agent_loop.py -- 3 · ask, run tool calls, repeat (6, 7, 8)
 c │   ├── model_runtime.py -- 4 · models.json, API key, stream_fn
 c │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
 c │   ├── schema.py -- 6 · checks tool arguments
+c │   ├── compaction.py -- summarizes old messages when the context fills up
 c │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
 w ├── exercises/ -- your extensions, each with a README
 w │   ├── 01-read/ … 04-edit/ -- you implement execute() in starter.py
