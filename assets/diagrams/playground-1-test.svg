@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="404" viewBox="0 0 1100 404" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="30" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">WHAT THE AGENT DOES</text>
+<rect x="30.0" y="42" width="240.5" height="84" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<rect x="42.0" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
+<text x="66.0" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
+<text x="42.0" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Run the tests</text>
+<text x="42.0" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">npm test: 1 failing</text>
+<rect x="296.5" y="42" width="240.5" height="84" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<rect x="308.5" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
+<text x="332.5" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
+<text x="308.5" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Read the code</text>
+<text x="308.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">math.js and math.test.js</text>
+<line x1="273.5" y1="84" x2="293.5" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="563.0" y="42" width="240.5" height="84" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<rect x="575.0" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
+<text x="599.0" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">edit</text>
+<text x="575.0" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Fix the bug</text>
+<text x="575.0" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">one line in average()</text>
+<line x1="540.0" y1="84" x2="560.0" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="829.5" y="42" width="240.5" height="84" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
+<rect x="841.5" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
+<text x="865.5" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
+<text x="841.5" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Run them again</text>
+<text x="841.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">npm test: all pass</text>
+<line x1="806.5" y1="84" x2="826.5" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="30" y="168" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">THE PROJECT</text>
+<rect x="30" y="180" width="520" height="118" rx="8" fill="#f6f8fa" stroke="#d1d5db"/>
+<text x="46" y="204" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">export function average(values) {</text>
+<text x="46" y="224" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">  let total = 0;</text>
+<text x="46" y="244" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">  for (const value of values) total = add(total, value);</text>
+<text x="46" y="264" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">  return total / (values.length - 1);</text>
+<text x="46" y="284" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">}</text>
+<text x="566" y="204" fill="#374151" font-size="13" font-weight="400" text-anchor="start">math.js: two small functions</text>
+<text x="566" y="226" fill="#374151" font-size="13" font-weight="400" text-anchor="start">math.test.js: two tests, one fails</text>
+<text x="566" y="248" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Small enough to read whole:</text>
+<text x="566" y="264" fill="#1f2328" font-size="13" font-weight="600" text-anchor="start"></text>
+<rect x="566" y="272" width="500" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
+<rect x="566" y="272" width="22.88818359375" height="12" rx="6" fill="#2f7d5b" opacity="0.8"/>
+<line x1="816.0" y1="267" x2="816.0" y2="289" stroke="#1f2328" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="566" y="302" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">the whole task uses a few thousand tokens</text>
+<rect x="30" y="322" width="1040" height="62" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
+<text x="48" y="348" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
+<text x="96" y="348" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">Ask for the goal, not the steps: "Run the tests and fix what fails." The agent picks the tools itself. Read the bug line yourself first: which</text>
+<text x="96" y="368" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">number should the sum be divided by? If the agent edits without running the tests again, ask it to check.</text>
+</svg>

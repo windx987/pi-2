@@ -15,7 +15,16 @@ cd ~/pi-workshop
 
 ## 1. A failing test
 
+<p align="center"><img alt="Scenario 1, a failing test: the agent runs npm test with bash, reads math.js and math.test.js, edits one line of average(), and runs the tests again. The whole task uses a few thousand tokens. Hint: ask for the goal, not the steps; if the agent edits without running the tests again, ask it to check." src="../assets/diagrams/playground-1-test.svg" width="900"></p>
+
 `math.js` has one bug; `npm test` shows it. This is the scenario of exercises 01 to 04.
+
+Why these tools:
+
+- **bash** runs the tests: the only way to learn which one fails, and later to prove the fix works.
+- **read** shows the exact code and test. The agent should not change what it has not read.
+- **edit** fixes one line without rewriting the file, and refuses if the text to replace is not unique.
+- **write** is not needed for the fix. The agent uses it if it adds a new test.
 
 Ask: "Run the tests and fix what fails."
 
@@ -23,7 +32,16 @@ The agent runs `npm test`, reads `math.js` and the test, edits the bug, and runs
 
 ## 2. One bug in 1000 files
 
+<p align="center"><img alt="Scenario 2, one bug in 1000 files: the agent reads the rule in prices/README.md, writes one test that loops over all 1000 files, runs it with node --test, and names the only failing file. Reading every file would take about 38k tokens, more than the 32k window; the test needs a few thousand. Hint: point the agent at the rule and ask for a test; stop it if it reads the files one by one." src="../assets/diagrams/playground-2-prices.svg" width="900"></p>
+
 [prices/](prices/) has 1000 files, `item-0001.js` to `item-1000.js`. Each exports a net price and a function `gross()` that adds 7% VAT. One of them is wrong, and they are written in four different ways, so you cannot spot it by looking. [prices/README.md](prices/README.md) says what every file must do.
+
+Why these tools:
+
+- **read** for the rule in `prices/README.md` and one or two files to see their shape, not for all 1000: together they are more than the context holds.
+- **write** creates the test, a new file.
+- **bash** runs it. The 1000 checks happen inside Node, outside the model's context, and only the result comes back: one failing file instead of 38k tokens of code.
+- Not **subagent**: splitting the files between subagents would still read every one of them. A checkable rule is a job for code.
 
 Load read, write and bash, and ask:
 
@@ -37,7 +55,15 @@ What to look for:
 
 ## 3. Thirty incident reports
 
+<p align="center"><img alt="Scenario 3, thirty incident reports: three subagents each read 10 reports in their own context and return a short list; the parent combines the three lists. Read by the parent alone, the reports take about 34k tokens and the session compacts; with subagents the parent holds only the lists. Hint: give each subagent a complete task with its files, what to look for and what to return; read the root cause, not the logs, which show database timeouts even when the database was fine." src="../assets/diagrams/playground-3-incidents.svg" width="900"></p>
+
 [incidents/](incidents/) has 30 incident reports, `INC-2601.md` to `INC-2630.md`. Each has a timeline, a page of logs, and the root cause at the end. Together they are about 34k tokens: more than a 32k model can hold at once. Some logs show database timeouts although the database was fine, so the agent has to read each root cause, not search for "database".
+
+Why these tools:
+
+- **subagent** splits the reading. Each report needs judging, which code cannot do, but 30 reports do not fit one context. Each subagent reads 10 in its own context and returns a few lines.
+- **read**, inside each subagent, loads its reports. The subagent has only the tools you load, so read must work first.
+- Not **bash** with grep: searching for "database" finds the decoys, and the real cause is a sentence that needs reading.
 
 Load read and subagent, and ask:
 
