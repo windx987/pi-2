@@ -19,7 +19,7 @@ w ├── exercises/ -- your extensions, each with a README and checks
 w │   ├── 01-read/ … 04-edit/ -- you implement execute() in starter.py
 w │   ├── 05-subagent/ -- a tool that runs a second agent
 w │   └── check.py -- checks your tools without a model
-w ├── playground/ -- the small project the agent works on (copy it)
+w ├── playground/ -- for the agent: a failing test, 1000 files, 30 reports
 ## read and run
 r ├── docs/ -- connecting a model; context length and compaction
 r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
@@ -27,4 +27,4 @@ r ├── pi2.sh -- starts Lobotomized from the clone
 ## outside the workshop
 o ├── tests/ -- unit tests, no model needed
 o ├── pyproject.toml -- pip install -e . gives a pi2 command
-o └── assets/ -- logo and diagrams
+o └── assets/ -- logo, diagrams, the playground's generator

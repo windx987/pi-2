@@ -43,17 +43,24 @@ Each step of the list above has checks that call your `execute()` directly. A ch
 
 ## Try it
 
+From your playground copy, load your read tool and the subagent (your read tool must work first: the subagent has only the tools you load):
+
 ```bash
-./pi2.sh -e exercises/01-read/starter.py -e exercises/05-subagent/starter.py
+cd ~/pi-workshop
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/05-subagent/starter.py"
 ```
 
-Ask: "Use a subagent to find out what each file in this directory does." Your read tool must work first: the subagent has only the tools you load. Compare the footer's context percentage with and without the subagent.
+The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 34k tokens: more than a 32k model holds at once. Ask:
+
+"Use three subagents, each reading 10 of the reports in incidents/, to find which incidents the database caused. List the incident number, the date and the cause."
+
+Then type `/new` and ask the same without subagents. See [scenario 3 of the playground](../../playground/README.md#3-thirty-incident-reports) for what to look for.
 
 ## Expected result
 
-- A `subagent` box with the task stays grey while the subagent works, then turns green with its answer and your note, such as `[subagent: 6 tool calls, 9.4k input tokens]`.
-- The parent answers from that result, without calling `read` itself.
-- The footer's percentage grows by about the size of the answer. Ask the same question without "use a subagent" in a `/new` session and compare: `/context` shows the tool results the parent kept.
+- Three `subagent` boxes, each grey while its subagent works, then green with its list and your note, such as `[subagent: 10 tool calls, 48.2k input tokens]`.
+- The parent answers from those results, without calling `read` itself.
+- The footer's percentage grows by about the size of the three lists. Without subagents, the context fills up and the session compacts: `/context` shows the tool results the parent kept.
 - ctrl+c while the subagent works stops the subagent and the parent.
 
 ## Where to look

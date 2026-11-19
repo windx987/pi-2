@@ -88,7 +88,7 @@ Every request sends the whole conversation, so it grows with every tool result. 
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test, 1000 price files with one bug, and 30 incident reports; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages in [the big picture](#the-big-picture): blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). The numbers are the big picture's steps: start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
 
@@ -176,6 +176,8 @@ cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
 ```
 
 `REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
+
+The [playground](playground/README.md) has three scenarios to try your tools on: the failing test of exercises 01 to 04, one bug in 1000 files (the agent writes a test to find it), and 30 incident reports that are too long for one context (exercise 05's subagents).
 
 Check a tool without a model before you try it: `python3 exercises/check.py 01` runs the checks of exercise 01 against its `starter.py` and shows PASS, FAIL or TODO for each step. `python3 exercises/check.py` checks all five, and `python3 exercises/check.py 01 path/to/read.py` checks another file.
 

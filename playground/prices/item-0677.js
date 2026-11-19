@@ -1,0 +1,7 @@
+// oak desk lamp: price in cents, with 7% VAT.
+
+export const net = 51157;
+
+export function gross() {
+	return Math.round(net * 1.07);
+}
