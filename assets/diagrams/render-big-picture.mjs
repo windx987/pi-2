@@ -197,7 +197,7 @@ const highlight = (line) => {
 const codeHeight = (code) => code.reduce((h, line) => h + (line.startsWith("@@ ") ? fileLine : codeLine), 0) + 20;
 const boxHeight = (step) => 58 + (step.badge ? 26 : 0) + wrap(step.text).length * textLine + 14;
 
-let y = pad + 78;
+let y = pad;
 const out = [];
 const boxes = [];
 steps.forEach((step, i) => {
@@ -305,8 +305,6 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width=
 <marker id="arrowLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6d4bb3"/></marker>
 </defs>
 <rect width="100%" height="100%" fill="#ffffff"/>
-<text x="${boxX}" y="${pad + 22}" fill="#1a2b45" font-family="${sans}" font-size="24" font-weight="700">The original Pi: one prompt, from your keyboard to a tool and back</text>
-<text x="${boxX}" y="${pad + 48}" fill="#4b5563" font-family="${sans}" font-size="14">Each step on the left is a part of Pi; on the right, the code that does it.</text>
 ${out.join("\n")}
 ${legend.join("\n")}
 </svg>
