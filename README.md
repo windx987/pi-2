@@ -140,7 +140,7 @@ A tool is a `define_tool(...)` value: name, description, JSON Schema of its argu
 | 4. streamFn and ModelRuntime | `pi2/model_runtime.py` `stream_fn` |
 | 5. Provider to LLM | `pi2/ai.py` `stream` |
 | 6. Validate, then ask extensions | `pi2/schema.py`, `AgentSession.before_tool_call` |
-| 7. Tool runs | `execute_*` in `tools/*.py` |
+| 7. Tool runs | `execute` in `tools/*.py` |
 | 8. Result back, saved | `pi2/agent_loop.py` `run`, `AgentSession.save` |
 
 Read them in that order. `pi2/extensions.py` is how extensions get in, and `pi2/cli.py` starts everything.

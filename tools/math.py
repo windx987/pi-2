@@ -1,82 +1,44 @@
-# The arithmetic tool: evaluate_equation.
-#
-# Load all tools:  python3 -m pi2 -e tools
-# Load only this:   python3 -m pi2 -e tools/math.py
+# The math tool: evaluate_equation.
 
 import ast
+import operator
 
 from pi2 import ExtensionAPI, define_tool
 
-MAX_EXPRESSION_LENGTH = 200
-INF = float("inf")
-NEG_INF = float("-inf")
+OPS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+}
 
 
-def evaluate_ast(node):
-    """Evaluate a safe arithmetic AST: numbers, +, -, *, /, unary signs and parentheses."""
-    if isinstance(node, ast.Constant):
-        if isinstance(node.value, bool) or not isinstance(node.value, (int, float)):
-            raise ValueError("Only numbers are allowed in an expression.")
+def evaluate(node):
+    if isinstance(node, ast.Constant) and type(node.value) in (int, float):
         return node.value
-
-    if isinstance(node, ast.BinOp):
-        left = evaluate_ast(node.left)
-        right = evaluate_ast(node.right)
-        if isinstance(node.op, ast.Add):
-            return left + right
-        if isinstance(node.op, ast.Sub):
-            return left - right
-        if isinstance(node.op, ast.Mult):
-            return left * right
-        if isinstance(node.op, ast.Div):
-            return left / right
-        raise ValueError("Only +, -, * and / are allowed in an expression.")
-
     if isinstance(node, ast.UnaryOp):
-        value = evaluate_ast(node.operand)
+        value = evaluate(node.operand)
         if isinstance(node.op, ast.UAdd):
-            return +value
+            return value
         if isinstance(node.op, ast.USub):
             return -value
-        raise ValueError("Only unary + and - are allowed in an expression.")
-
-    raise ValueError("Only numbers, parentheses and +, -, *, / are allowed in an expression.")
-
-
-def format_number(value):
-    if isinstance(value, float) and value.is_integer():
-        return str(int(value))
-    return str(value)
+        raise ValueError("Only unary + and - are allowed.")
+    if isinstance(node, ast.BinOp) and type(node.op) in OPS:
+        return OPS[type(node.op)](evaluate(node.left), evaluate(node.right))
+    raise ValueError("Only numbers, parentheses and +, -, *, / are allowed.")
 
 
-def is_finite(value):
-    """True for a real number, false for NaN and infinities."""
-    return value == value and value not in (INF, NEG_INF)
-
-
-def execute_evaluate_equation(params, ctx):
+def execute(params, ctx):
     expression = params["expression"].strip()
     if not expression:
         raise ValueError("expression is empty.")
-    if len(expression) > MAX_EXPRESSION_LENGTH:
-        raise ValueError(f"expression is too long (limit {MAX_EXPRESSION_LENGTH} characters).")
-
     try:
-        tree = ast.parse(expression, mode="eval")
-    except (SyntaxError, ValueError) as error:
-        message = getattr(error, "msg", str(error))
-        raise ValueError(f"Invalid expression: {message}.") from error
-
-    try:
-        result = evaluate_ast(tree.body)
+        result = evaluate(ast.parse(expression, mode="eval").body)
+    except SyntaxError as error:
+        raise ValueError(f"Invalid expression: {error.msg}") from error
     except ZeroDivisionError as error:
         raise ValueError("Cannot divide by zero.") from error
-    except OverflowError as error:
-        raise ValueError("The result is too large to compute.") from error
-
-    if isinstance(result, float) and not is_finite(result):
-        raise ValueError("The result is not a finite number.")
-    return f"{expression} = {format_number(result)}"
+    return f"{expression} = {result:g}"
 
 
 evaluate_equation_tool = define_tool(
@@ -95,7 +57,7 @@ evaluate_equation_tool = define_tool(
         },
         "required": ["expression"],
     },
-    execute=execute_evaluate_equation,
+    execute=execute,
 )
 
 
