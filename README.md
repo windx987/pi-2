@@ -6,7 +6,6 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 
 | Path | What it is |
 |---|---|
-| `settings.json` | The one config file: endpoint, model, key and agent directory |
 | `python/pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions |
 | `python/exercises/tools.py` | The tools file: `hello` and `bash` work; `read`, `write` and `edit` are the exercises |
 | `python/playground/math.py` | A disposable file with one bug, for the tools to work on |
@@ -18,44 +17,24 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 
 ## Get started
 
-Clone the repository:
+Clone the repository. The shallow clone keeps the download small:
 
 ```bash
-git clone -b lean https://github.com/windx987/pi-2.git
+git clone --depth 1 --single-branch -b lean https://github.com/windx987/pi-2.git
 cd pi-2
 ```
 
-Edit `settings.json` in the repository root. Replace the endpoint, model id and key with yours:
-
-```json
-{
-  "agentDir": "~/.pi/agent",
-  "provider": {
-    "baseUrl": "http://localhost:8000/v1",
-    "api": "openai-completions",
-    "apiKey": "local",
-    "model": "local-model",
-    "name": "Local model",
-    "contextWindow": 32768,
-    "maxTokens": 8192
-  }
-}
-```
-
-- `baseUrl` must accept `POST /chat/completions`.
-- `model` is the model id sent to the endpoint.
-- `apiKey` can be `local` for a local server that ignores it. Use `""` if the server does not want an `Authorization` header.
-- `agentDir` is where sessions are written. Relative paths are resolved from the directory containing `settings.json`.
-- `contextWindow` defaults to 32768. `maxTokens` is optional.
-
-The repository copy uses a dummy local key. For a real key, keep it out of git:
+Set the endpoint. The quickest way is environment variables:
 
 ```bash
-cp settings.json settings.local.json
-# edit settings.local.json
+export PI_BASE_URL="https://XXX/v1"
+export PI_MODEL="XXX"
+export PI_API_KEY="XXX"
 ```
 
-`settings.local.json` is ignored by git.
+`PI_API_KEY` can be empty if your endpoint does not need one. You can also pass these values as flags; see [How to use](#how-to-use). pi2 still reads `~/.pi/agent/models.json` if you prefer a file.
+
+The endpoint must accept `POST /chat/completions`. The context window defaults to 32768; change it with `PI_CONTEXT_WINDOW` or `--context-window`.
 
 Check that the agent imports:
 
@@ -68,22 +47,18 @@ python3 -m pi2 --help
 
 ### Run
 
-From `python/`:
-
-```bash
-python3 -m pi2 -e exercises/tools.py
-```
-
-The default settings file is `settings.json` in the repository root, independent of the current directory.
-
-Use a private settings file:
+With the environment variables set:
 
 ```bash
 cd python
-python3 -m pi2 --settings ../settings.local.json -e exercises/tools.py
+python3 -m pi2 -e exercises/tools.py
 ```
 
-`--settings` accepts a path relative to the current directory or an absolute path.
+Or in one command:
+
+```bash
+python3 -m pi2 --base-url https://XXX/v1 --model XXX --api-key XXX -e exercises/tools.py
+```
 
 Ask "Greet Ada." The `hello` tool answers. The `read`, `write` and `edit` tools raise `NotImplementedError` until participants implement them.
 
@@ -95,7 +70,7 @@ cd ~/pi-workshop
 PYTHONPATH="$REPO/python" python3 -m pi2 -e "$REPO/python/exercises/tools.py"
 ```
 
-`REPO` is the path to this clone. Add `--settings "$REPO/settings.local.json"` to use a private settings file.
+`REPO` is the path to this clone. There is no install step; `PYTHONPATH` is enough.
 
 | Key or command | Does |
 |---|---|
@@ -106,7 +81,7 @@ PYTHONPATH="$REPO/python" python3 -m pi2 -e "$REPO/python/exercises/tools.py"
 
 ### Extensions
 
-An extension is any Python file loaded with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. `-e` is repeatable, and an extension can register tools and listen to tool calls:
+An extension is any Python file loaded with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. An extension can register tools and listen to tool calls:
 
 ```python
 def extension(pi):
@@ -119,8 +94,6 @@ def extension(pi):
 ```
 
 A tool is a `define_tool(...)` value: name, description, JSON Schema of its arguments, and `execute(params, ctx)`. Return a string; raise an exception for an error result. `ctx.cwd` is the working directory and `ctx.session` is the running session.
-
-Without `-e`, no tools are loaded: the model cannot read, write or run anything. `python/exercises/tools.py` registers `hello`, `read`, `write`, `edit` and `bash`.
 
 ### Code map
 
@@ -139,10 +112,15 @@ Read them in that order. `python/pi2/extensions.py` is how extensions get in, an
 
 ### Notes
 
-- Sessions are written to `<agentDir>/python-sessions/`; the default is `~/.pi/agent/python-sessions/`. They are not resumed.
+- Sessions are written to `~/.pi/agent/python-sessions/` but are not resumed.
 - The `bash` tool runs commands directly on the host as your user. There is no sandbox; work in a copy of the playground.
 - This branch has no tests and no packaging. Check the import path with `python3 -m pi2 --help`.
-- One provider and one model are configured at a time. Edit `settings.json`, or pass a different `--settings` file.
 - One provider API is supported: `openai-completions`.
+
+## Original Pi framework
+
+This edition is based on [earendil-works/pi](https://github.com/earendil-works/pi) at commit `cead615b4`. The original tool implementations are in git history there: `git show cead615b4:packages/coding-agent/src/core/tools/read.ts`. What was removed and why: [education/architecture/tool-removal.md](education/architecture/tool-removal.md). For Pi itself, see [pi.dev](https://pi.dev) and the [Pi documentation](https://pi.dev/docs/latest).
+
+## License
 
 MIT, as the original Pi.
