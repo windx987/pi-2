@@ -1,4 +1,4 @@
-# Writes architecture.svg: the pi2 modules in step order, with what each one calls.
+# Writes architecture.svg: the pi2 modules in request order, with what each one calls.
 # Run from anywhere: python3 assets/diagrams/render_architecture.py
 from pathlib import Path
 
@@ -22,7 +22,7 @@ def esc(text):
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def box(col, top, title, lines, kind="pi2", steps=None, height=BOX_H, mono_title=True):
+def box(col, top, title, lines, kind="pi2", height=BOX_H, mono_title=True):
     x, w = COL[col]
     fill, stroke = STYLE[kind]
     family = MONO if mono_title else SANS
@@ -35,10 +35,6 @@ def box(col, top, title, lines, kind="pi2", steps=None, height=BOX_H, mono_title
         text = line.strip("`")
         family = MONO if mono else SANS
         out.append(f'<text x="{x + 14}" y="{top + 47 + i * 19}" fill="#374151" font-family="{family}" font-size="13">{esc(text)}</text>')
-    if steps:
-        pill_w = 16 + 8 * len(steps)
-        out.append(f'<rect x="{x + w - pill_w - 10}" y="{top + 10}" width="{pill_w}" height="22" rx="11" fill="#2f5a96"/>')
-        out.append(f'<text x="{x + w - pill_w / 2 - 10}" y="{top + 25}" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">{esc(steps)}</text>')
     return out
 
 
@@ -82,7 +78,7 @@ parts = [
     "</defs>",
     '<rect width="100%" height="100%" fill="#ffffff"/>',
     f'<text x="30" y="42" fill="#1a2b45" font-size="24" font-weight="700">Architecture of pi2</text>',
-    '<text x="30" y="68" fill="#4b5563">The request path runs top to bottom in step order. Each module talks only to the boxes it has arrows to.</text>',
+    '<text x="30" y="68" fill="#4b5563">The request path runs top to bottom. Each module talks only to the boxes it has arrows to.</text>',
 ]
 
 # Column headings
@@ -97,16 +93,16 @@ parts += [
     f'<line x1="{x + w / 2}" y1="{ROW[0] - 34}" x2="{x + w / 2}" y2="{ROW[0] - 2}" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>',
 ]
 
-# The request path, steps 1 to 5 (8 is the session saving the result)
-parts += box("main", ROW[0], "tui.py", ["InteractiveMode", "reads input, prints events"], steps="1")
+# The request path
+parts += box("main", ROW[0], "tui.py", ["InteractiveMode", "reads input, prints events"])
 parts += down(0, "prompt() / events")
-parts += box("main", ROW[1], "session.py", ["AgentSession", "history, tools, saving"], steps="2 · 8")
+parts += box("main", ROW[1], "session.py", ["AgentSession", "history, tools, saving"])
 parts += down(1, "run() / events")
-parts += box("main", ROW[2], "agent_loop.py", ["`run, execute_tool_call", "ask the model, run its tools"], steps="3 · 6 · 7")
+parts += box("main", ROW[2], "agent_loop.py", ["`run, execute_tool_call", "ask the model, run its tools"])
 parts += down(2, "stream_fn", both=False)
-parts += box("main", ROW[3], "model_runtime.py", ["ModelRuntime", "model → provider, URL, key"], steps="4")
+parts += box("main", ROW[3], "model_runtime.py", ["ModelRuntime", "model → provider, URL, key"])
 parts += down(3, "stream()", both=False)
-parts += box("main", ROW[4], "ai.py", ["`stream()", "OpenAI-compatible HTTP"], steps="5")
+parts += box("main", ROW[4], "ai.py", ["`stream()", "OpenAI-compatible HTTP"])
 
 # At startup
 parts += box("start", ROW[0], "cli.py", ["`main()", "reads options, builds all"])
@@ -119,7 +115,7 @@ parts += [
 ]
 parts += across(right("start"), left("main"), mid(1), "tools, handlers")
 
-# Your code: loaded at startup, called at step 7
+# Your code: loaded at startup, called for each tool call
 top = ROW[1]
 parts += box("yours", top, "Your extensions", ["`exercises/, examples/", "", "`def extension(pi):", "`\u00a0\u00a0register_tool(...)", "`\u00a0\u00a0on(\"tool_call\", h)", "", "loaded with -e"],
              kind="yours", height=ROW[2] + BOX_H - top, mono_title=False)
@@ -129,7 +125,7 @@ parts += across(left("main"), right("yours"), mid(2), "execute(params, ctx) / re
 # Used on the way
 parts += box("side", ROW[1], "Session files", ["`~/.pi/agent/", "`python-sessions/*.jsonl"], kind="outside", mono_title=False)
 parts += across(right("main"), left("side"), mid(1), "save()")
-parts += box("side", ROW[2], "schema.py", ["`validate_tool_arguments", "checks them against the schema"], steps="6")
+parts += box("side", ROW[2], "schema.py", ["`validate_tool_arguments", "checks them against the schema"])
 parts += across(right("main"), left("side"), mid(2), "arguments")
 parts += box("side", ROW[3], "Model list", ["`~/.pi/agent/", "`models.json"], kind="outside", mono_title=False)
 parts += across(right("main"), left("side"), mid(3), "reads")
@@ -143,10 +139,6 @@ for i, (kind, label) in enumerate([("pi2", "module in pi2/"), ("yours", "your co
     lx = 30 + i * 190
     parts.append(f'<rect x="{lx}" y="{y - 13}" width="22" height="16" rx="4" fill="{fill}" stroke="{stroke}" stroke-width="1.5"/>')
     parts.append(f'<text x="{lx + 30}" y="{y}" fill="#4b5563" font-size="13">{label}</text>')
-lx = 30 + 3 * 190
-parts.append(f'<rect x="{lx}" y="{y - 14}" width="34" height="18" rx="9" fill="#2f5a96"/>')
-parts.append(f'<text x="{lx + 17}" y="{y}" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>')
-parts.append(f'<text x="{lx + 42}" y="{y}" fill="#4b5563" font-size="13">step of the big picture</text>')
 
 parts.append("</svg>")
 OUT.write_text("\n".join(parts) + "\n")

@@ -5,7 +5,7 @@
 </defs>
 <rect width="100%" height="100%" fill="#ffffff"/>
 <text x="30" y="42" fill="#1a2b45" font-size="24" font-weight="700">Architecture of pi2</text>
-<text x="30" y="68" fill="#4b5563">The request path runs top to bottom in step order. Each module talks only to the boxes it has arrows to.</text>
+<text x="30" y="68" fill="#4b5563">The request path runs top to bottom. Each module talks only to the boxes it has arrows to.</text>
 <text x="30" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">YOUR CODE</text>
 <text x="310" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">AT STARTUP</text>
 <text x="600" y="96" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">EVERY REQUEST</text>
@@ -17,40 +17,30 @@
 <text x="614" y="205" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">tui.py</text>
 <text x="614" y="227" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">InteractiveMode</text>
 <text x="614" y="246" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">reads input, prints events</text>
-<rect x="816" y="190" width="24" height="22" rx="11" fill="#2f5a96"/>
-<text x="828.0" y="205" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>
 <line x1="725.0" y1="256" x2="725.0" y2="298" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
 <text x="735.0" y="282.0" fill="#4b5563" font-size="12">prompt() / events</text>
 <rect x="600" y="300" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="614" y="325" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">session.py</text>
 <text x="614" y="347" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">AgentSession</text>
 <text x="614" y="366" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">history, tools, saving</text>
-<rect x="784" y="310" width="56" height="22" rx="11" fill="#2f5a96"/>
-<text x="812.0" y="325" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2 · 8</text>
 <line x1="725.0" y1="376" x2="725.0" y2="418" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
 <text x="735.0" y="402.0" fill="#4b5563" font-size="12">run() / events</text>
 <rect x="600" y="420" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="614" y="445" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">agent_loop.py</text>
 <text x="614" y="467" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">run, execute_tool_call</text>
 <text x="614" y="486" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ask the model, run its tools</text>
-<rect x="752" y="430" width="88" height="22" rx="11" fill="#2f5a96"/>
-<text x="796.0" y="445" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3 · 6 · 7</text>
 <line x1="725.0" y1="496" x2="725.0" y2="538" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="735.0" y="522.0" fill="#4b5563" font-size="12">stream_fn</text>
 <rect x="600" y="540" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="614" y="565" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">model_runtime.py</text>
 <text x="614" y="587" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">ModelRuntime</text>
 <text x="614" y="606" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">model → provider, URL, key</text>
-<rect x="816" y="550" width="24" height="22" rx="11" fill="#2f5a96"/>
-<text x="828.0" y="565" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">4</text>
 <line x1="725.0" y1="616" x2="725.0" y2="658" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="735.0" y="642.0" fill="#4b5563" font-size="12">stream()</text>
 <rect x="600" y="660" width="250" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="614" y="685" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">ai.py</text>
 <text x="614" y="707" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">stream()</text>
 <text x="614" y="726" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">OpenAI-compatible HTTP</text>
-<rect x="816" y="670" width="24" height="22" rx="11" fill="#2f5a96"/>
-<text x="828.0" y="685" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">5</text>
 <rect x="310" y="180" width="190" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="324" y="205" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">cli.py</text>
 <text x="324" y="227" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">main()</text>
@@ -88,8 +78,6 @@
 <text x="964" y="445" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">schema.py</text>
 <text x="964" y="467" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">validate_tool_arguments</text>
 <text x="964" y="486" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">checks them against the schema</text>
-<rect x="1146" y="430" width="24" height="22" rx="11" fill="#2f5a96"/>
-<text x="1158.0" y="445" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">6</text>
 <line x1="850" y1="457.0" x2="950" y2="457.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="900.0" y="450.0" text-anchor="middle" fill="#4b5563" font-size="12">arguments</text>
 <rect x="950" y="540" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
@@ -110,7 +98,4 @@
 <text x="250" y="790" fill="#4b5563" font-size="13">your code</text>
 <rect x="410" y="777" width="22" height="16" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
 <text x="440" y="790" fill="#4b5563" font-size="13">outside pi2</text>
-<rect x="600" y="776" width="34" height="18" rx="9" fill="#2f5a96"/>
-<text x="617" y="790" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>
-<text x="642" y="790" fill="#4b5563" font-size="13">step of the big picture</text>
 </svg>
