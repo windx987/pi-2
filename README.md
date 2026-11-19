@@ -22,7 +22,7 @@ What the original Pi does with one prompt, step by step, with the code that does
 
 ## Getting started
 
-Requires Python 3.10 or newer and no packages, [Ollama](https://ollama.com) for the model, and Docker for exercise 04.
+Requires Python 3.10 or newer and no packages, [Ollama](https://ollama.com) or [vLLM](#using-vllm-instead-of-ollama) for the model, and Docker for exercise 04.
 
 ```bash
 git clone -b python https://github.com/windx987/pi-2.git
@@ -73,6 +73,33 @@ Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works
 | `/new`, `/quit`, `/help` | New session, exit, list commands |
 
 Text you type while the agent works waits in the editor for the next message.
+
+### Using vLLM instead of Ollama
+
+pi2 talks to any OpenAI-compatible server, and [vLLM](https://docs.vllm.ai) is one. Start it with tool calling on: without `--enable-auto-tool-choice` and a `--tool-call-parser`, vLLM answers in text and never calls a tool. The parser depends on the model family: `hermes` for Qwen, `llama3_json` for Llama 3.x, `mistral` for Mistral.
+
+```bash
+vllm serve Qwen/Qwen3-8B --max-model-len 32768 --enable-auto-tool-choice --tool-call-parser hermes
+```
+
+Add it to `~/.pi/agent/models.json` next to (or instead of) `ollama`. The `id` is the model name vLLM serves. `apiKey` matters only if you started vLLM with `--api-key`; it can also name an environment variable, such as `"VLLM_API_KEY"`:
+
+```json
+{
+  "providers": {
+    "vllm": {
+      "baseUrl": "http://localhost:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "none",
+      "models": [
+        { "id": "Qwen/Qwen3-8B", "name": "Qwen3 8B (vLLM)", "contextWindow": 32768, "maxTokens": 8192 }
+      ]
+    }
+  }
+}
+```
+
+Then start with `./pi2.sh -e examples/hello.py --model vllm/Qwen/Qwen3-8B`, or switch with `/model` inside pi2.
 
 ## The eight steps in the code
 
@@ -194,7 +221,7 @@ cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
 
 ## What Pi does that Lobotomized leaves out
 
-It keeps the path of one prompt and drops the rest: one provider API (`openai-completions`, which covers Ollama), no Markdown rendering, no session resume, no compaction, no skills or slash-command extensions, no parallel tool calls, no image input. Sessions are saved to `~/.pi/agent/python-sessions/` but not loaded again.
+It keeps the path of one prompt and drops the rest: one provider API (`openai-completions`, which covers Ollama and vLLM), no Markdown rendering, no session resume, no compaction, no skills or slash-command extensions, no parallel tool calls, no image input. Sessions are saved to `~/.pi/agent/python-sessions/` but not loaded again.
 
 ## Tests
 
