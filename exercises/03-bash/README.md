@@ -26,12 +26,95 @@ Why SIGTERM: `docker run` passes SIGTERM on to the container, whose init process
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py):
+Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `import subprocess` at the top.
 
 1. Start the process with `subprocess.Popen`; a missing Docker raises `FileNotFoundError`.
+
+   ```python
+   try:
+       proc = subprocess.Popen(
+           ["docker", *docker_args(params["command"], ctx.cwd)],
+           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+       )
+   except FileNotFoundError:
+       raise RuntimeError("Docker is not installed or not on PATH.") from None
+   ```
+
+   `Popen` starts the process without waiting for it. The arguments are a list, so no shell runs on your machine: the model's command reaches `bash` only inside the container. `from None` keeps the error message short for the model.
+
 2. Collect stdout and stderr as one text with `communicate()`.
+
+   ```python
+   output, _ = proc.communicate()
+   ```
+
+   `stderr=subprocess.STDOUT` in step 1 sends errors into the same pipe, so the output arrives in order, as a terminal shows it. `text=True` makes it a `str`. `communicate()` waits for the end and reads everything.
+
 3. Return the output, or raise with `Command exited with code N`.
-4. Pass the timeout to `communicate()`; on `TimeoutExpired`, call `terminate()` and `communicate()` again.
+
+   ```python
+   if proc.returncode != 0:
+       raise RuntimeError(f"{output}\nCommand exited with code {proc.returncode}.")
+   return output or "(no output)"
+   ```
+
+   A failing command becomes an error result that still has its output, so the model sees what failed. `"(no output)"` tells it an empty result is not a broken tool.
+
+4. Pass the timeout to `communicate()`; on `TimeoutExpired`, call `terminate()` and `communicate()` again. This replaces the line from step 2:
+
+   ```python
+   try:
+       output, _ = proc.communicate(timeout=params.get("timeout"))
+   except subprocess.TimeoutExpired:
+       proc.terminate()
+       output, _ = proc.communicate()
+       raise RuntimeError(f"{output}\nCommand stopped after {params['timeout']} seconds.") from None
+   ```
+
+   Without a timeout `params.get` gives `None`, and `communicate()` waits forever. `terminate()` sends SIGTERM, which stops the container (see "Why SIGTERM" above). The second `communicate()` waits until it has stopped and collects the output so far.
+
+   ctrl+c needs the same treatment, or the container keeps running after you stop the agent. Add a second `except` to the same `try`:
+
+   ```python
+   except KeyboardInterrupt:
+       proc.terminate()
+       proc.communicate()
+       raise
+   ```
+
+<details>
+<summary>The whole function</summary>
+
+```python
+import subprocess
+
+
+def execute(params, ctx):
+    try:
+        proc = subprocess.Popen(
+            ["docker", *docker_args(params["command"], ctx.cwd)],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+        )
+    except FileNotFoundError:
+        raise RuntimeError("Docker is not installed or not on PATH.") from None
+    try:
+        output, _ = proc.communicate(timeout=params.get("timeout"))
+    except subprocess.TimeoutExpired:
+        # SIGTERM, not kill(): docker run passes SIGTERM on to the container, SIGKILL leaves it running.
+        proc.terminate()
+        output, _ = proc.communicate()
+        raise RuntimeError(f"{output}\nCommand stopped after {params['timeout']} seconds.") from None
+    except KeyboardInterrupt:
+        # ctrl+c in pi2: stop the container too, then let pi2 handle the interrupt.
+        proc.terminate()
+        proc.communicate()
+        raise
+    if proc.returncode != 0:
+        raise RuntimeError(f"{output}\nCommand exited with code {proc.returncode}.")
+    return output or "(no output)"
+```
+
+</details>
 
 Then check the timeout:
 

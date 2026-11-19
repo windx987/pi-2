@@ -20,12 +20,74 @@ The model cannot touch your machine. It can only answer with text or with a tool
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py):
+Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Path` at the top.
 
 1. Resolve `params["path"]` against `ctx.cwd`.
+
+   ```python
+   path = Path(ctx.cwd) / params["path"]
+   ```
+
+   `ctx.cwd` is the directory the agent works in. `/` joins it with a relative path; an absolute path replaces it, so both kinds work.
+
 2. Read the file as UTF-8 text.
+
+   ```python
+   lines = path.read_text(encoding="utf-8").split("\n")
+   ```
+
+   Name the encoding: the default depends on the machine. Split into lines now, because step 3 counts lines.
+
 3. Apply `offset` and `limit`, and say how to read on when lines are left.
+
+   ```python
+   offset = int(params.get("offset") or 1)
+   end = len(lines) if params.get("limit") is None else min(len(lines), offset - 1 + int(params["limit"]))
+   text = "\n".join(lines[offset - 1:end])
+   if end < len(lines):
+       text += f"\n\n[{len(lines) - end} more lines. Use offset={end + 1} to continue.]"
+   return text
+   ```
+
+   `offset` counts from 1, a Python list from 0, hence `offset - 1`. `int()` because the schema type is `number`, so the model may send `3.0`. The model cannot see what was left out; the note tells it the next call to make.
+
 4. Raise an exception for a missing file or an offset past the end.
+
+   ```python
+   if not path.is_file():                 # before read_text
+       raise FileNotFoundError(f"File not found: {params['path']}")
+
+   if offset > len(lines):                # after offset is known
+       raise ValueError(f"Offset {offset} is beyond the end of the file ({len(lines)} lines).")
+   ```
+
+   pi2 turns the exception into an error result, and the model reads the message. Name the path the model sent, not the resolved one, so it recognizes its own call.
+
+<details>
+<summary>The whole function</summary>
+
+```python
+from pathlib import Path
+
+
+def execute(params, ctx):
+    path = Path(ctx.cwd) / params["path"]
+    if not path.is_file():
+        raise FileNotFoundError(f"File not found: {params['path']}")
+    lines = path.read_text(encoding="utf-8").split("\n")
+
+    offset = int(params.get("offset") or 1)
+    if offset > len(lines):
+        raise ValueError(f"Offset {offset} is beyond the end of the file ({len(lines)} lines).")
+    end = len(lines) if params.get("limit") is None else min(len(lines), offset - 1 + int(params["limit"]))
+    text = "\n".join(lines[offset - 1:end])
+    if end < len(lines):
+        # Tell the model how to read on; it cannot see what was left out.
+        text += f"\n\n[{len(lines) - end} more lines. Use offset={end + 1} to continue.]"
+    return text
+```
+
+</details>
 
 ## Try it
 

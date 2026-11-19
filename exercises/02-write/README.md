@@ -19,12 +19,64 @@ pi2 checks the model's arguments against `parameters` before `execute` runs. A m
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py):
+Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Path` at the top.
 
 1. Resolve `params["path"]` against `ctx.cwd`.
-2. Refuse paths outside `ctx.cwd`: `Path.resolve()`, then `is_relative_to(cwd)`.
+
+   ```python
+   cwd = Path(ctx.cwd).resolve()
+   path = (cwd / params["path"]).resolve()
+   ```
+
+   `resolve()` makes the path absolute and removes `..` and symlinks, so step 2 compares real locations.
+
+2. Refuse paths outside `ctx.cwd`.
+
+   ```python
+   if not path.is_relative_to(cwd):
+       raise PermissionError(f"Refusing to write outside the working directory: {params['path']}")
+   ```
+
+   `notes/../../.bashrc` looks harmless but resolves outside `cwd`. The message says why, so the model picks another path instead of retrying the same one.
+
 3. Create the parent directories, then write the content as UTF-8.
-4. Return a short confirmation, such as `Wrote 120 bytes to notes/todo.md`.
+
+   ```python
+   path.parent.mkdir(parents=True, exist_ok=True)
+   data = params["content"].encode("utf-8")
+   path.write_bytes(data)
+   ```
+
+   `parents=True` creates `notes/` and anything above it; `exist_ok=True` makes an existing folder no error. Encoding first gives the byte count for step 4.
+
+4. Return a short confirmation.
+
+   ```python
+   return f"Wrote {len(data)} bytes to {params['path']}"
+   ```
+
+   The model does not see the file unless it reads it. The confirmation tells it the write happened.
+
+<details>
+<summary>The whole function</summary>
+
+```python
+from pathlib import Path
+
+
+def execute(params, ctx):
+    cwd = Path(ctx.cwd).resolve()
+    path = (cwd / params["path"]).resolve()
+    if not path.is_relative_to(cwd):
+        raise PermissionError(f"Refusing to write outside the working directory: {params['path']}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = params["content"].encode("utf-8")
+    path.write_bytes(data)
+    # The model does not see the file unless it reads it, so say what happened.
+    return f"Wrote {len(data)} bytes to {params['path']}"
+```
+
+</details>
 
 ## Try it
 

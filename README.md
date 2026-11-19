@@ -130,7 +130,7 @@ The numbers are the steps of [the big picture](#the-big-picture). The loop box r
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README; examples/ has hello.py, permission_gate.py and solutions to exercises 01 to 03; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 You work in red: your extensions, their instructions, and a copy of the [playground](playground/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). Grey parts are not needed for the workshop.
 
@@ -153,8 +153,7 @@ So one file can add a tool, put a rule on other files' tools, or both. These are
 |---|---|---|
 | [examples/hello.py](examples/hello.py) | tool | The smallest tool |
 | [examples/permission_gate.py](examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
-| [examples/read.py](examples/read.py), [write.py](examples/write.py), [bash.py](examples/bash.py) | tool | Solutions to exercises 01 to 03, to compare with yours or to load while you work on 04 |
-| [exercises/01-read](exercises/01-read/starter.py) to [04-edit](exercises/04-edit/starter.py) | tool | The four coding tools, which you write |
+| [exercises/01-read](exercises/01-read/starter.py) to [04-edit](exercises/04-edit/starter.py) | tool | The four coding tools, which you write; 01 to 03 show the solution in the Steps of their README |
 | [exercises/05-subagent](exercises/05-subagent/starter.py) | tool | A tool that runs a second agent through `ctx.session` |
 
 A tool extension:
