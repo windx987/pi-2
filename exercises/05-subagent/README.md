@@ -11,6 +11,7 @@ Everything the agent reads stays in its messages and is sent with every later re
 - **Without a subagent:** the parent reads 10 files. Their full text stays in its context for the rest of the conversation.
 - **With a subagent:** the subagent reads the 10 files in its own context and answers in one paragraph. The parent's context grows by that paragraph only.
 
+
 The subagent does not see the conversation, so the task it gets must be complete.
 
 ## Steps
@@ -21,6 +22,16 @@ Follow the comments in [starter.py](starter.py):
 2. Create the child `AgentSession` and call `prompt(task)`.
 3. Return the text of its last message, with a note on what it cost.
 4. Turn a failed or aborted subagent into an error, or into ctrl+c for the parent.
+
+## Check your tool
+
+Before you try it with the model, check it without one:
+
+```bash
+python3 exercises/check.py 05
+```
+
+Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. A fake model plays the subagent, so no model is needed. Whether the model uses the tool well is what the next section shows.
 
 ## Try it
 

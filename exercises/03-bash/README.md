@@ -128,6 +128,16 @@ python3 "$REPO/exercises/03-bash/check_timeout.py"
 
 It runs `sleep 30` with a 2 second timeout and checks that the result is an error saying the command was stopped, and that no container is left running.
 
+## Check your tool
+
+Before you try it with the model, check it without one:
+
+```bash
+python3 "$REPO/exercises/check.py" 03
+```
+
+Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. These checks need no Docker: a stand-in `docker` runs the command on your machine, so they test how you handle the process, not the container. With Docker running, `check_timeout.py` checks that the timeout also stops the real container. Whether the model uses the tool well is what the next section shows.
+
 ## Try it
 
 Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Load it with your read and write tools, from your playground copy:

@@ -82,6 +82,16 @@ def execute(params, ctx):
 
 </details>
 
+## Check your tool
+
+Before you try it with the model, check it without one:
+
+```bash
+python3 "$REPO/exercises/check.py" 02
+```
+
+Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. Whether the model uses the tool well is what the next section shows.
+
 ## Try it
 
 Load it together with your read tool, from your playground copy:

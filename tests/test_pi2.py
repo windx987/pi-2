@@ -5,6 +5,8 @@ provider. Run from the repository root:  python3 -m unittest discover tests
 import contextlib
 import io
 import json
+import subprocess
+import sys
 import tempfile
 import threading
 import unittest
@@ -300,6 +302,15 @@ class InteractiveModeTest(unittest.TestCase):
     def test_a_truncated_answer_says_so(self):
         self.assertIn("truncated", self.render_end(answer({"type": "text", "text": "cut"}, stop_reason="length")))
 
+
+
+class ExerciseChecksTest(unittest.TestCase):
+    def test_every_check_is_todo_on_the_starters(self):
+        """exercises/check.py runs, and shows TODO, not FAIL, while execute() raises NotImplementedError."""
+        script = Path(__file__).parent.parent / "exercises" / "check.py"
+        run = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, timeout=120)
+        self.assertNotIn("FAIL", run.stdout, run.stdout + run.stderr)
+        self.assertIn("0 of 44 checks pass.", run.stdout, run.stdout + run.stderr)
 
 if __name__ == "__main__":
     unittest.main()

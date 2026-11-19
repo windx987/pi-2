@@ -11,9 +11,10 @@ c │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
 c │   ├── schema.py -- 6 · checks tool arguments
 c │   ├── compaction.py -- summarizes old messages when the context fills up
 c │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
-w ├── exercises/ -- your extensions, each with a README
+w ├── exercises/ -- your extensions, each with a README and checks
 w │   ├── 01-read/ … 04-edit/ -- you implement execute() in starter.py
-w │   └── 05-subagent/ -- a tool that runs a second agent
+w │   ├── 05-subagent/ -- a tool that runs a second agent
+w │   └── check.py -- checks your tools without a model
 w ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
 w ├── playground/ -- the small project the agent works on (copy it)
 w ├── pi2.sh -- starts Lobotomized from the clone
