@@ -121,8 +121,16 @@ parts += across(right("yours"), left("start"), mid(1), "extension(pi)", color="#
 parts += across(left("main"), right("yours"), mid(2), "execute(params, ctx) / result", both=True, color="#b03a37", marker="arrowRed")
 
 # Used on the way
-parts += box("side", ROW[1], "Session files", ["`~/.pi/agent/", "`python-sessions/*.jsonl"], kind="outside", mono_title=False)
-parts += across(right("main"), left("side"), mid(1), "save()")
+parts += box("side", ROW[0], "Session files", ["`~/.pi/agent/", "`python-sessions/*.jsonl"], kind="outside", mono_title=False)
+# save(): from the session's right side, along and up into the session files above.
+x = left("side") + COL["side"][1] / 2
+y = ROW[1] + 18
+parts += [
+    f'<path d="M {right("main")} {y} H {x} V {ROW[0] + BOX_H + 2}" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>',
+    f'<text x="{x + 10}" y="{(ROW[0] + BOX_H + y) / 2 + 5}" fill="#4b5563" font-size="12">save()</text>',
+]
+parts += box("side", ROW[1] + 30, "compaction.py", ["`summarize(), find_cut()", "summary of old messages"], height=BOX_H)
+parts += across(right("main"), left("side"), ROW[1] + 56, "compact()", both=True)
 parts += box("side", ROW[2], "schema.py", ["`validate_tool_arguments", "checks them against the schema"])
 parts += across(right("main"), left("side"), mid(2), "arguments")
 parts += box("side", ROW[3], "Model list", ["`~/.pi/agent/", "`models.json"], kind="outside", mono_title=False)

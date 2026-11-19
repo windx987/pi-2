@@ -4,6 +4,7 @@ sequenceDiagram
     actor You
     participant TUI as tui.py (InteractiveMode)
     participant Session as session.py (AgentSession)
+    participant Compaction as compaction.py
     participant AgentLoop as agent_loop.py
     participant Model as model_runtime.py and ai.py
     participant LLM as LLM server
@@ -11,6 +12,7 @@ sequenceDiagram
 
     You->>TUI: 1 · Fix the failing test
     TUI->>Session: prompt(text)
+    Note over Session: auto_compact(): compact first if needed
     Note over Session: 2 · the tools come from pi.tools (your extensions)
     Session->>AgentLoop: run(context, config, emit)
     loop until an answer has no tool calls
@@ -29,6 +31,15 @@ sequenceDiagram
         AgentLoop-->>Session: emit(tool_execution_end, the result message)
         Session-->>TUI: the tool box turns green or red
         Note over AgentLoop: 8 · the result joins the messages for the next request
+        AgentLoop->>Session: prepare_next_turn()
+        opt context > contextWindow - reserveTokens
+            Session->>Compaction: find_cut(), summarize(older messages)
+            Compaction->>Model: stream_fn(summary request, no tools)
+            Model-->>Compaction: the summary
+            Compaction-->>Session: summary
+            Note over Session: messages = [summary, newest messages]
+            Session-->>TUI: the "Compacted" box
+        end
     end
     AgentLoop-->>Session: emit(agent_end)
     Session-->>TUI: events

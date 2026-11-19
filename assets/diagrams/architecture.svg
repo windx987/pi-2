@@ -66,12 +66,18 @@
 <text x="265.0" y="268.0" text-anchor="middle" fill="#4b5563" font-size="12">extension(pi)</text>
 <line x1="600" y1="395.0" x2="220" y2="395.0" stroke="#b03a37" stroke-width="1.5" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
 <text x="410.0" y="388.0" text-anchor="middle" fill="#4b5563" font-size="12">execute(params, ctx) / result</text>
-<rect x="950" y="238" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
-<text x="964" y="263" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Session files</text>
-<text x="964" y="285" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">~/.pi/agent/</text>
-<text x="964" y="304" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">python-sessions/*.jsonl</text>
-<line x1="850" y1="275.0" x2="950" y2="275.0" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="900.0" y="268.0" text-anchor="middle" fill="#4b5563" font-size="12">save()</text>
+<rect x="950" y="118" width="230" height="74" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="964" y="143" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Session files</text>
+<text x="964" y="165" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">~/.pi/agent/</text>
+<text x="964" y="184" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">python-sessions/*.jsonl</text>
+<path d="M 850 256 H 1065.0 V 194" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1075.0" y="229.0" fill="#4b5563" font-size="12">save()</text>
+<rect x="950" y="268" width="230" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="964" y="293" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">compaction.py</text>
+<text x="964" y="315" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">summarize(), find_cut()</text>
+<text x="964" y="334" fill="#374151" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">summary of old messages</text>
+<line x1="850" y1="294" x2="950" y2="294" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="900.0" y="287" text-anchor="middle" fill="#4b5563" font-size="12">compact()</text>
 <rect x="950" y="358" width="230" height="74" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="964" y="383" fill="#2f5a96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700">schema.py</text>
 <text x="964" y="405" fill="#374151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">validate_tool_arguments</text>

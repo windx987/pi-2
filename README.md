@@ -70,6 +70,7 @@ Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works
 | ctrl+c | While the agent works: stop it. In the editor: clear it |
 | ctrl+d | Exit |
 | `/model` | List the models in `models.json`; `/model <number>` or `/model <provider/id>` switches |
+| `/compact [focus]` | Summarize the older messages now to free context; the optional text says what the summary must keep. See [Context length and compaction](#context-length-and-compaction) |
 | `/new`, `/quit`, `/help` | New session, exit, list commands |
 
 Text you type while the agent works waits in the editor for the next message.
@@ -118,13 +119,13 @@ Read them in that order. [pi2/extensions.py](pi2/extensions.py) is how [extensio
 
 ## Architecture
 
-<p align="center"><img alt="Architecture of pi2: you talk to tui.py, which calls prompt() on session.py (AgentSession) and gets events back. The session runs agent_loop.py, which checks arguments with schema.py, calls your extensions' execute(params, ctx), and asks the model through model_runtime.py and ai.py, which streams from the LLM server. cli.py loads your extension files into extensions.py, whose tools and handlers the session uses. The session saves messages and the runtime reads models.json, both in ~/.pi/agent." src="./assets/diagrams/architecture.svg" width="900"></p>
+<p align="center"><img alt="Architecture of pi2: you talk to tui.py, which calls prompt() on session.py (AgentSession) and gets events back. The session runs agent_loop.py, which checks arguments with schema.py, calls your extensions' execute(params, ctx), and asks the model through model_runtime.py and ai.py, which streams from the LLM server. When the context fills up, the session has compaction.py summarize the older messages. cli.py loads your extension files into extensions.py, whose tools and handlers the session uses. The session saves messages and the runtime reads models.json, both in ~/.pi/agent." src="./assets/diagrams/architecture.svg" width="900"></p>
 
 Each module knows only its neighbours. `tui.py` talks only to the session. `agent_loop.py` knows no terminal and no provider: it gets `stream_fn` and `before_tool_call` from the session, and reports everything through `emit(event)`. `model_runtime.py` turns a model from `models.json` into a request for `ai.py`, the only module that speaks HTTP. Your extensions come in through `extensions.py` only. Pi has the same split across its packages: see [its architecture](https://github.com/windx987/pi-2#architecture) on `main`.
 
 ## How a request becomes a tool call
 
-<p align="center"><img alt="Sequence of one request: you type in tui.py, which calls AgentSession.prompt; the session runs agent_loop.run. In a loop until an answer has no tool calls: the loop calls stream_fn, model_runtime.py and ai.py send POST /chat/completions to the LLM server and stream back text, thinking and tool calls; events go to the session, which saves finished messages, and on to tui.py, which draws them. Then the loop validates the arguments (step 6), calls before_tool_call so every tool_call listener can block the call (step 6), calls your tool's execute(params, ctx) (step 7), and emits the result, which joins the messages for the next request (step 8). At the end the session gets agent_end and you see the answer." src="./assets/diagrams/request-sequence.svg" width="900"></p>
+<p align="center"><img alt="Sequence of one request: you type in tui.py, which calls AgentSession.prompt; the session runs agent_loop.run. In a loop until an answer has no tool calls: the loop calls stream_fn, model_runtime.py and ai.py send POST /chat/completions to the LLM server and stream back text, thinking and tool calls; events go to the session, which saves finished messages, and on to tui.py, which draws them. Then the loop validates the arguments (step 6), calls before_tool_call so every tool_call listener can block the call (step 6), calls your tool's execute(params, ctx) (step 7), and emits the result, which joins the messages for the next request (step 8). After the tool results, prepare_next_turn() lets the session compact if the context is over the threshold: compaction.py asks the model for a summary of the older messages, and the messages become the summary plus the newest ones. The session checks the same before the prompt. At the end the session gets agent_end and you see the answer." src="./assets/diagrams/request-sequence.svg" width="900"></p>
 
 The numbers are the steps of [the big picture](#the-big-picture). The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
 
@@ -225,12 +226,42 @@ Check a tool without a model before you try it: `python3 exercises/check.py 01` 
 
 Every request sends the whole conversation: the system prompt, your messages, the model's answers and every tool result. The footer shows how much of the model's `contextWindow` from `models.json` that is. When it gets close, [compaction.py](pi2/compaction.py) makes room, as Pi does:
 
+<p align="center"><img alt="Compaction with a 32k model: before, the system prompt and twelve messages fill about 19k tokens, over the threshold of contextWindow minus reserveTokens, 16k. The older messages are summarized by compaction.summarize(); the newest, about keepRecentTokens, are kept word for word. After, the model sees the system prompt, the summary and the kept messages, about 11k tokens. The session file keeps every message." src="./assets/diagrams/compaction.svg" width="900"></p>
+
 1. **When.** Before each prompt and between turns, after the tool results are added, the session checks `context > contextWindow - reserveTokens`. The context is the model's last token count plus an estimate of the messages after it (four characters per token); before the model has counted, as at the start or right after a compaction, the system prompt and tool definitions are estimated too.
 2. **What it keeps.** About `keepRecentTokens` of the newest messages, word for word. The cut never separates a tool call from its result.
 3. **What it summarizes.** The older messages go to the model as plain text, with a request for a structured summary: goal, constraints, progress, key decisions, next steps, critical context. Files that `read`, `write` and `edit` touched are listed under it. A second compaction updates the first summary.
 4. **What the model sees next.** The system prompt, the summary as a user message, then the kept messages. The session file keeps every message.
 
-If the server still rejects a request as too long, the session compacts and retries once. Type `/compact` to compact now, or `/compact <focus>` to say what the summary must keep.
+If the server still rejects a request as too long, the session compacts and retries once.
+
+### What you see
+
+When it compacts by itself, a dim line says why: "Context is filling up: summarizing older messages..." (or "Context too long" after a rejected request). Then a box shows what happened and the start of the summary:
+
+```
+ Compacted 5 messages, 19k → about 11k tokens
+
+ ## Goal
+ Fix the failing test in math.js.
+ ## Constraints & Preferences
+ - Keep the public API of math.js unchanged.
+ ... (18 more lines)
+```
+
+The footer's percentage drops to match. The agent goes on with its task: compaction happens between turns, not instead of one.
+
+### Compacting by hand: `/compact`
+
+Type `/compact` in the editor to compact now, even below the threshold. Use it:
+
+- before you switch to another task in the same session, so the old details stop taking room;
+- after the agent has read large files it no longer needs;
+- when the footer is close to the threshold and the next step will read more.
+
+`/compact <focus>` adds your text to the request for the summary, so it keeps what matters to you: `/compact keep the exact error message of the failing test`. When the conversation is shorter than what is kept anyway, it says "Nothing to compact yet". ctrl+c stops a compaction and leaves the conversation as it was; so does a failed summary request, which shows its error.
+
+A summary loses detail: exact file contents, long outputs, earlier reasoning. The model can read a file again, but it cannot recover what you said only once. Put that in the focus, or say it again after compacting.
 
 | Setting in `~/.pi/agent/settings.json` | Default | Meaning |
 |---|---|---|

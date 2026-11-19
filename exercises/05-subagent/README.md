@@ -11,6 +11,7 @@ Everything the agent reads stays in its messages and is sent with every later re
 - **Without a subagent:** the parent reads 10 files. Their full text stays in its context for the rest of the conversation.
 - **With a subagent:** the subagent reads the 10 files in its own context and answers in one paragraph. The parent's context grows by that paragraph only.
 
+Compaction ([`/compact`](../../README.md#context-length-and-compaction)) is the other way to keep the context small: it summarizes after the fact, and the summary loses detail. A subagent keeps the files out of the parent's context from the start.
 
 The subagent does not see the conversation, so the task it gets must be complete.
 
