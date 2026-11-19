@@ -93,4 +93,4 @@ Two more cases:
 
 Extensions can replace the summary or start a compaction: see [`custom-compaction.ts`](../../packages/coding-agent/examples/extensions/custom-compaction.ts) and [`trigger-compact.ts`](../../packages/coding-agent/examples/extensions/trigger-compact.ts). The full reference is [docs/compaction.md](../../packages/coding-agent/docs/compaction.md).
 
-The Python version on the `python` branch has none of this: it shows how full the context is, and a request that does not fit ends the run with an error.
+The Python version on the `python` branch has a smaller copy in [pi2/compaction.py](https://github.com/windx987/pi-2/blob/python/pi2/compaction.py): the same trigger, summary format, overflow retry and `/compact`, without split turns, branch summaries or extension hooks.
