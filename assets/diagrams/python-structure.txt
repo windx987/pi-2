@@ -11,9 +11,9 @@ c │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
 c │   ├── schema.py -- 6 · checks tool arguments
 c │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
 w ├── exercises/ -- your extensions, each with a README
-w │   ├── 01-read/ … 04-bash/ -- you implement execute() in starter.py
+w │   ├── 01-read/ … 04-edit/ -- you implement execute() in starter.py
 w │   └── 05-subagent/ -- a tool that runs a second agent
-w ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
+w ├── examples/ -- hello.py, permission_gate.py; solutions to 01 to 03
 w ├── playground/ -- the small project the agent works on (copy it)
 w ├── pi2.sh -- starts Lobotomized from the clone
 o ├── tests/ -- unit tests, no model needed

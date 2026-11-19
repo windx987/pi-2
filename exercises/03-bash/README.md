@@ -1,4 +1,4 @@
-# Exercise 04: bash
+# Exercise 03: bash
 
 The agent can run commands, each one in a new Docker container.
 
@@ -36,25 +36,25 @@ Follow EXERCISE 1 to 4 in [starter.py](starter.py):
 Then check the timeout:
 
 ```bash
-python3 "$REPO/exercises/04-bash/check_timeout.py"
+python3 "$REPO/exercises/03-bash/check_timeout.py"
 ```
 
 It runs `sleep 30` with a 2 second timeout and checks that the result is an error saying the command was stopped, and that no container is left running.
 
 ## Try it
 
-Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Load all four tools from your playground copy:
+Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Load it with your read and write tools, from your playground copy:
 
 ```bash
 cd ~/pi-workshop
 "$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/02-write/starter.py" \
-  -e "$REPO/exercises/03-edit/starter.py" -e "$REPO/exercises/04-bash/starter.py"
+  -e "$REPO/exercises/03-bash/starter.py"
 ```
 
 Ask:
 
 - "Run the tests." The result shows a failing test and exit code 1.
-- "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again.
+- "Why does the test fail?" The agent reads `math.js` and the test, and explains. Fixing it with a small change is exercise 04.
 - "Run `sleep 30` with a 2 second timeout."
 - "Run `getent hosts example.com`." It fails: the container has no network.
 
@@ -78,7 +78,7 @@ Status: verified on 2026-11-19 with Colima (macOS, arm64) by running the Python 
 | Cleanup after errors | a failing command, then `docker ps -a` on the host | No leftover container (`--rm`) |
 | No escape through symlinks | `ln -s / host-root && ls host-root/` | Lists the container's root, not the host's |
 
-SAFETY: the symlink check covers commands. Your `read`, `write` and `edit` tools run on the host: a symlink in the workspace that points outside it makes them reach the host. Resolve paths with `Path.resolve()` before the containment check if that matters for your setup.
+SAFETY: the symlink check covers commands. Your `read` and `write` tools, and later `edit`, run on the host: a symlink in the workspace that points outside it makes them reach the host. Resolve paths with `Path.resolve()` before the containment check if that matters for your setup.
 
 SAFETY: the isolation depends on the mount. Mounting a home directory or the Docker socket gives the agent the host back.
 

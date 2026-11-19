@@ -1,10 +1,9 @@
-# Exercise 04: the bash tool. Lets the agent run commands, inside a Docker container.
+# Exercise 03: the bash tool. Lets the agent run commands, inside a Docker container.
 #
 # Needs Docker running and the image pulled once:  docker pull node:22-bookworm-slim
 # Load it with the earlier tools, from a playground copy under your home directory:
-#   "$REPO/pi2.sh" -e .../01-read/starter.py -e .../02-write/starter.py -e .../03-edit/starter.py \
-#     -e .../04-bash/starter.py
-# Then ask: "Run the tests and fix what fails."
+#   "$REPO/pi2.sh" -e .../01-read/starter.py -e .../02-write/starter.py -e .../03-bash/starter.py
+# Then ask: "Run the tests and tell me what fails."
 #
 # LEARN:
 # A command is a child process: output arrives on stdout and stderr, it ends with an exit code, and it
@@ -62,7 +61,7 @@ def execute(params, ctx):
     # again to wait for it. Say in the result that the command was stopped.
     # Use terminate() (SIGTERM), not kill() and not subprocess.run(timeout=...): docker run passes
     # SIGTERM on to the container, but SIGKILL ends only the docker client and leaves the container
-    # running. Check your tool with:  python3 exercises/04-bash/check_timeout.py
+    # running. Check your tool with:  python3 exercises/03-bash/check_timeout.py
     #
     # CHALLENGE: Long output. Keep the last 2000 lines for the model and say how much was left out.
     raise NotImplementedError(f"bash is not implemented yet (asked to run {params['command']} in {ctx.cwd}).")

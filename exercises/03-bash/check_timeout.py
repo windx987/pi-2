@@ -2,8 +2,8 @@
 # as an error result that says the command was stopped, and leave no container running.
 #
 # Needs Docker running. From the repository root:
-#   python3 exercises/04-bash/check_timeout.py                  # checks starter.py
-#   python3 exercises/04-bash/check_timeout.py path/to/bash.py  # checks another file
+#   python3 exercises/03-bash/check_timeout.py                  # checks starter.py
+#   python3 exercises/03-bash/check_timeout.py path/to/bash.py  # checks another file
 
 import shutil
 import subprocess

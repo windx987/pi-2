@@ -1,4 +1,4 @@
-# Exercise 03: edit
+# Exercise 04: edit
 
 The agent can change part of a file without rewriting all of it.
 
@@ -30,18 +30,19 @@ Follow EXERCISE 1 to 4 in [starter.py](starter.py):
 
 ## Try it
 
-Load it with your read and write tools, from your playground copy:
+Start Docker as in exercise 03, and load it with your read, write and bash tools, from your playground copy:
 
 ```bash
 cd ~/pi-workshop
 "$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/02-write/starter.py" \
-  -e "$REPO/exercises/03-edit/starter.py"
+  -e "$REPO/exercises/03-bash/starter.py" -e "$REPO/exercises/04-edit/starter.py"
 ```
 
-Ask: "Rename add to sum in math.js and update its callers." Then copy the line `return a + b;` once more into `math.js` yourself and ask: "In math.js, replace `return a + b;` with `return a - b;`."
+Ask: "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again: all four tools in one task. Then ask: "Rename add to sum in math.js and update its callers." Then copy the line `return a + b;` once more into `math.js` yourself and ask: "In math.js, replace `return a + b;` with `return a - b;`."
 
 ## Expected result
 
+- `npm test` fails, then a green `edit math.js` box, then `npm test` passes.
 - A green `edit math.js` box with your confirmation and the start of the diff. `grep -n sum math.js` shows the renamed function and its caller.
 - The ambiguous edit turns red with your message naming the edit. The agent reads the file and retries with more context, or asks you which one you mean.
 - The file on disk has exactly the requested changes.

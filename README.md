@@ -22,7 +22,7 @@ What the original Pi does with one prompt, step by step, with the code that does
 
 ## Getting started
 
-Requires Python 3.10 or newer and no packages, [Ollama](https://ollama.com) or [vLLM](#using-vllm-instead-of-ollama) for the model, and Docker for exercise 04.
+Requires Python 3.10 or newer and no packages, [Ollama](https://ollama.com) or [vLLM](#using-vllm-instead-of-ollama) for the model, and Docker for exercise 03.
 
 ```bash
 git clone -b python https://github.com/windx987/pi-2.git
@@ -130,7 +130,7 @@ The numbers are the steps of [the big picture](#the-big-picture). The loop box r
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). exercises/ holds your extensions 01-read to 04-bash and 05-subagent, each with a README; examples/ has hello.py and permission_gate.py; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch: pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README; examples/ has hello.py, permission_gate.py and solutions to exercises 01 to 03; playground/ is the project the agent works on; pi2.sh starts it. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 You work in red: your extensions, their instructions, and a copy of the [playground](playground/). The blue files are pi2, numbered by the steps of [the big picture](#the-big-picture): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). Grey parts are not needed for the workshop.
 
@@ -153,7 +153,8 @@ So one file can add a tool, put a rule on other files' tools, or both. These are
 |---|---|---|
 | [examples/hello.py](examples/hello.py) | tool | The smallest tool |
 | [examples/permission_gate.py](examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
-| [exercises/01-read](exercises/01-read/starter.py) to [04-bash](exercises/04-bash/starter.py) | tool | The four coding tools, which you write |
+| [examples/read.py](examples/read.py), [write.py](examples/write.py), [bash.py](examples/bash.py) | tool | Solutions to exercises 01 to 03, to compare with yours or to load while you work on 04 |
+| [exercises/01-read](exercises/01-read/starter.py) to [04-edit](exercises/04-edit/starter.py) | tool | The four coding tools, which you write |
 | [exercises/05-subagent](exercises/05-subagent/starter.py) | tool | A tool that runs a second agent through `ctx.session` |
 
 A tool extension:
@@ -206,8 +207,8 @@ In Pi it is the same idea in TypeScript: `export default function (pi: Extension
 |---|---|---|
 | [01-read](exercises/01-read/starter.py) | `read` | [README](exercises/01-read/README.md) |
 | [02-write](exercises/02-write/starter.py) | `write` | [README](exercises/02-write/README.md) |
-| [03-edit](exercises/03-edit/starter.py) | `edit` | [README](exercises/03-edit/README.md) |
-| [04-bash](exercises/04-bash/starter.py) | `bash` | [README](exercises/04-bash/README.md); test the timeout with [check_timeout.py](exercises/04-bash/check_timeout.py) |
+| [03-bash](exercises/03-bash/starter.py) | `bash` | [README](exercises/03-bash/README.md); test the timeout with [check_timeout.py](exercises/03-bash/check_timeout.py) |
+| [04-edit](exercises/04-edit/starter.py) | `edit` | [README](exercises/04-edit/README.md) |
 | [05-subagent](exercises/05-subagent/starter.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
 
 Each README says what the tool does, the steps, what to ask the agent and what you should see; the starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
