@@ -213,7 +213,7 @@ class InteractiveMode:
             cwd = "~" + cwd[len(home):]
         usage, model = self.session.usage, self.session.model
         percent = 100 * usage["context"] / model["context_window"]
-        left = f"{percent:.1f}%/{tokens(model['context_window'])}"
+        left = f"{usage['context']} / {tokens(model['context_window'])} ({percent:.1f}%)"
         if usage["input"]:
             left = f"↑{tokens(usage['input'])} ↓{tokens(usage['output'])} {left}"
         right = model["id"]
