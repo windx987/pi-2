@@ -1,8 +1,8 @@
 // Exercise 03: the edit tool. Lets the agent change part of a file without rewriting all of it.
 //
 // Load it with the earlier tools:
-//   ./pi-test.sh -e education/exercises/01-read/starter.ts -e education/exercises/02-write/starter.ts \
-//     -e education/exercises/03-edit/starter.ts
+//   ./pi-test.sh -e education/exercises/01-read/read.ts -e education/exercises/02-write/write.ts \
+//     -e education/exercises/03-edit/edit.ts
 // Then ask: "Rename the function add to sum in math.js."
 //
 // LEARN:

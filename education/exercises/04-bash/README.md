@@ -8,7 +8,7 @@
 
 ## Concept
 
-With `bash` the agent can do anything a shell can, so where the shell runs matters. This exercise runs every command in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `dockerArgs` in `starter.ts` builds that command line for you; your job is the process handling around it.
+With `bash` the agent can do anything a shell can, so where the shell runs matters. This exercise runs every command in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `dockerArgs` in `bash.ts` builds that command line for you; your job is the process handling around it.
 
 The container reduces what a command can reach; it is not a proven sandbox. Run the checks in [Isolation checks](#isolation-checks) on your machine before relying on it.
 
@@ -32,7 +32,7 @@ A command result has three parts the model needs: the output (stdout and stderr 
 
 ## Hands-on exercise
 
-Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Work in a playground copy under your home directory (see [the exercises README](../README.md)). Implement `execute()` in `starter.ts` (EXERCISE 1 to 4). Load all four tools from the playground copy and ask:
+Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Work in a playground copy under your home directory (see [the exercises README](../README.md)). Implement `execute()` in `bash.ts` (EXERCISE 1 to 4). Load all four tools from the playground copy and ask:
 
 - "Run the tests." The result shows a failing test and exit code 1.
 - "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again.
@@ -65,4 +65,4 @@ SAFETY: the symlink check covers commands. Your `read`, `write` and `edit` tools
 
 - The original tool: `git show cead615b4:packages/coding-agent/src/core/tools/bash.ts`.
 - SAFETY: the isolation depends on the mount. Mounting a home directory or the Docker socket gives the agent the host back.
-- CHALLENGE in `starter.ts`: streaming updates and output truncation.
+- CHALLENGE in `bash.ts`: streaming updates and output truncation.

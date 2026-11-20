@@ -42,7 +42,7 @@ The three libraries in red are the ones the exercises touch.
 | Library | What it does | Where Pi uses it |
 |---|---|---|
 | `typebox` | Builds JSON Schemas in TypeScript with matching types (`Type.Object`, `Static<typeof schema>`) | Tool parameters in extensions, including the exercise starters; settings and keybinding schemas |
-| `jiti` | Loads TypeScript files at runtime without a build step | `src/core/extensions/loader.ts`: this is how `-e starter.ts` runs your extension directly |
+| `jiti` | Loads TypeScript files at runtime without a build step | `src/core/extensions/loader.ts`: this is how `-e read.ts` runs your extension directly |
 | `undici` | Node's HTTP client, configured once for all requests | `src/core/http-dispatcher.ts`: proxies and timeouts for provider requests |
 | `diff` | Computes line diffs | `src/core/tools/edit-diff.ts` and the diff view in the TUI; the edit exercise uses it for its result |
 | `cross-spawn` | Starts child processes the same way on every OS | `src/utils/child-process.ts`, used for the `!` shell and package commands |

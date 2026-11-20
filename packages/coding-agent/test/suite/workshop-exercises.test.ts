@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fauxAssistantMessage, fauxToolCall } from "@earendil-works/pi-ai";
 import { afterEach, describe, expect, it } from "vitest";
-import { dockerArgs } from "../../../../education/exercises/04-bash/starter.ts";
+import { dockerArgs } from "../../../../education/exercises/04-bash/bash.ts";
 import { DefaultResourceLoader } from "../../src/core/resource-loader.ts";
 import { SettingsManager } from "../../src/core/settings-manager.ts";
 import { createHarness, getToolResult, type Harness } from "./harness.ts";
@@ -11,10 +11,10 @@ import { createHarness, getToolResult, type Harness } from "./harness.ts";
 const exercisesDir = join(import.meta.dirname, "../../../../education/exercises");
 
 const starters = [
-	{ name: "read", path: "01-read/starter.ts", args: { path: "math.js" } },
-	{ name: "write", path: "02-write/starter.ts", args: { path: "notes.md", content: "hi" } },
-	{ name: "edit", path: "03-edit/starter.ts", args: { path: "math.js", edits: [{ oldText: "a", newText: "b" }] } },
-	{ name: "bash", path: "04-bash/starter.ts", args: { command: "npm test" } },
+	{ name: "read", path: "01-read/read.ts", args: { path: "math.js" } },
+	{ name: "write", path: "02-write/write.ts", args: { path: "notes.md", content: "hi" } },
+	{ name: "edit", path: "03-edit/edit.ts", args: { path: "math.js", edits: [{ oldText: "a", newText: "b" }] } },
+	{ name: "bash", path: "04-bash/bash.ts", args: { command: "npm test" } },
 ] as const;
 
 // The starters load through Pi's extension loader, as `pi -e` loads them, and their tools go through
@@ -68,7 +68,7 @@ describe("workshop exercise starters", () => {
 	});
 
 	it("keeps the edit tool's self-rendered frame", async () => {
-		const harness = await loadStarters(["03-edit/starter.ts"]);
+		const harness = await loadStarters(["03-edit/edit.ts"]);
 		expect(harness.session.getToolDefinition("edit")?.renderShell).toBe("self");
 	});
 

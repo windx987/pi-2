@@ -27,10 +27,10 @@ Pi validates the model's arguments against `parameters` before `execute` runs. A
 
 ## Hands-on exercise
 
-Implement `execute()` in `starter.ts` (EXERCISE 1 to 4). Load it together with your read tool:
+Implement `execute()` in `write.ts` (EXERCISE 1 to 4). Load it together with your read tool:
 
 ```bash
-"$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/starter.ts" -e "$REPO/education/exercises/02-write/starter.ts"
+"$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/read.ts" -e "$REPO/education/exercises/02-write/write.ts"
 ```
 
 Ask: "Create notes/todo.md with three workshop goals, then read it back." Then: "Write a file to /tmp/outside.txt."
@@ -43,4 +43,4 @@ Ask: "Create notes/todo.md with three workshop goals, then read it back." Then: 
 ## Further exploration
 
 - The original tool: `git show cead615b4:packages/coding-agent/src/core/tools/write.ts`.
-- CHALLENGE in `starter.ts`: `withFileMutationQueue`.
+- CHALLENGE in `write.ts`: `withFileMutationQueue`.

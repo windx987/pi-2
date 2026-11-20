@@ -183,7 +183,7 @@ Pi already supports two ways:
 - Flag: `pi -e education/exercises/01-read/read.ts` (`--extension`, repeatable).
 - Discovery: put the file in the project's `.pi/extensions/` directory.
 
-Each exercise directory contains a README and a starter extension (`starter.ts`) with the tool defined, its schema written and the registration done; participants implement `execute()`. Until they do, it returns an error result that says the tool is not implemented, so every starter loads and runs. See [exercises/README.md](../exercises/README.md).
+Each exercise directory contains a README and a starter extension named after its tool (`read.ts`, `write.ts`, `edit.ts`, `bash.ts`) with the tool defined, its schema written and the registration done; participants implement `execute()`. Until they do, it returns an error result that says the tool is not implemented, so every starter loads and runs. See [exercises/README.md](../exercises/README.md).
 
 Instructor solutions (`solution.ts` in each exercise directory) live on the `workshop-solutions` branch (decision 3), with `packages/coding-agent/test/suite/workshop-solutions.test.ts`.
 
