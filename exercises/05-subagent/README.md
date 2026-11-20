@@ -52,7 +52,9 @@ cd ~/pi-workshop
 
 The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 34k tokens: more than a 32k model holds at once. Ask:
 
-"Use three subagents, each reading 10 of the reports in incidents/, to find which incidents the database caused. List the incident number, the date and the cause."
+"The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents: the first reads INC-2601.md to INC-2610.md, the second INC-2611.md to INC-2620.md, the third INC-2621.md to INC-2630.md. Each one reads the Root cause section of its reports, not the logs, and returns the incidents the database caused, with the incident number, the date and the cause. Then combine the three lists."
+
+Name the files and what to return: neither tool can list a folder, and a subagent sees only its task, not your conversation. Without the names the model guesses, such as `incidents/1.txt`.
 
 Then type `/new` and ask the same without subagents. See [scenario 3 of the playground](../../playground/README.md#3-thirty-incident-reports) for what to look for.
 

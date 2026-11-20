@@ -67,14 +67,16 @@ Why these tools:
 
 Load read and subagent, and ask:
 
-"Use three subagents, each reading 10 of the reports in incidents/, to find which incidents the database caused. List the incident number, the date and the cause."
+"The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents: the first reads INC-2601.md to INC-2610.md, the second INC-2611.md to INC-2620.md, the third INC-2621.md to INC-2630.md. Each one reads the Root cause section of its reports, not the logs, and returns the incidents the database caused, with the incident number, the date and the cause. Then combine the three lists."
+
+Name the files and what to return: neither tool can list a folder, and a subagent sees only its task, not your conversation. Without the names the model guesses, such as `incidents/1.txt`.
 
 What to look for:
 
 - Three `subagent` boxes, each returning a short list. Each subagent reads its 10 reports in its own context.
 - The parent's context grows only by those three lists: compare `/context` before and after.
 
-Then start a new session with `/new` and ask the same without subagents: "Read every report in incidents/ and tell me which incidents the database caused." The context fills up, the session compacts (see [docs/compaction.md](../docs/compaction.md)), and findings from the early reports may be lost in the summary.
+Then start a new session with `/new` and ask the same without subagents: "Read every report in incidents/, INC-2601.md to INC-2630.md, and tell me which incidents the database caused." The context fills up, the session compacts (see [docs/compaction.md](../docs/compaction.md)), and findings from the early reports may be lost in the summary.
 
 ## Making the scenarios again
 

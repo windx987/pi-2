@@ -165,7 +165,7 @@ def incidents(rng):
             answers.append(f"{number} ({when:%Y-%m-%d}): {cause}")
     (folder / "README.md").write_text(f"""# Incidents
 
-{REPORTS} incident reports, one per file. Each has a date, the service, a timeline, the logs and, at the end, the root cause. The logs of one report fill several screens.
+{REPORTS} incident reports, one per file: `INC-2601.md` to `INC-{2600 + REPORTS}.md`. Each has a date, the service, a timeline, the logs and, at the end, the root cause. The logs of one report fill several screens.
 """)
     return answers
 
