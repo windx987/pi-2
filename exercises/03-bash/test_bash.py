@@ -1,8 +1,8 @@
 # Checks for exercise 03, one or more per step of README.md. Run: python3 exercises/check.py 03
 #
 # They need no Docker: a stand-in `docker` on PATH runs the command with bash in the mounted workspace.
-# That checks your process handling, not the container. For the real container and its timeout, run
-# python3 exercises/03-bash/check_timeout.py with Docker running.
+# That checks your process handling, not the container. test_docker.py checks the real container and
+# its timeout when Docker is running.
 
 import os
 import shutil

@@ -120,14 +120,6 @@ def execute(params, ctx):
 
 </details>
 
-Then check the timeout:
-
-```bash
-python3 "$REPO/exercises/03-bash/check_timeout.py"
-```
-
-It runs `sleep 30` with a 2 second timeout and checks that the result is an error saying the command was stopped, and that no container is left running.
-
 ## Check your tool
 
 Before you try it with the model, check it without one:
@@ -136,7 +128,7 @@ Before you try it with the model, check it without one:
 python3 "$REPO/exercises/check.py" 03
 ```
 
-Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. These checks need no Docker: a stand-in `docker` runs the command on your machine, so they test how you handle the process, not the container. With Docker running, `check_timeout.py` checks that the timeout also stops the real container. Whether the model uses the tool well is what the next section shows.
+Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. The checks in `test_bash.py` need no Docker: a stand-in `docker` runs the command on your machine, so they test how you handle the process. With Docker running, the checks in `test_docker.py` run as well, in a real container: the container sees your working directory, and `sleep 30` with a 2 second timeout comes back as an error and leaves no container running. Without Docker they are skipped and not counted. Whether the model uses the tool well is what the next section shows.
 
 ## Try it
 
@@ -171,7 +163,7 @@ Status: verified on 2026-11-19 with Colima (macOS, arm64) by running the Python 
 | No host files outside the workspace | `ls /Users /home; cat /etc/hostname` | No host home directories; the hostname is the container's |
 | Memory limit | `node -e "const a=[]; for(;;) a.push(Buffer.alloc(1e8, 1))"` | Killed (exit code 137) at about 1 GB |
 | Process limit | `cat /sys/fs/cgroup/pids.max`, then start 400 processes | `256`; the shell cannot start them all and fails (exit code 254) |
-| Timeout stops the container | `check_timeout.py`, or `sleep 300` with `timeout: 2`, then `docker ps` on the host | No container left running |
+| Timeout stops the container | `check.py 03` with Docker running, or `sleep 300` with `timeout: 2`, then `docker ps` on the host | No container left running |
 | Cleanup after errors | a failing command, then `docker ps -a` on the host | No leftover container (`--rm`) |
 | No escape through symlinks | `ln -s / host-root && ls host-root/` | Lists the container's root, not the host's |
 

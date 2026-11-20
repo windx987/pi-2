@@ -164,7 +164,7 @@ In Pi it is the same idea in TypeScript: `export default function (pi: Extension
 |---|---|---|
 | [01-read](exercises/01-read/read.py) | `read` | [README](exercises/01-read/README.md) |
 | [02-write](exercises/02-write/write.py) | `write` | [README](exercises/02-write/README.md) |
-| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); test the timeout with [check_timeout.py](exercises/03-bash/check_timeout.py) |
+| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); with Docker running, the checks also use a real container |
 | [04-edit](exercises/04-edit/edit.py) | `edit` | [README](exercises/04-edit/README.md) |
 | [05-subagent](exercises/05-subagent/subagent.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
 

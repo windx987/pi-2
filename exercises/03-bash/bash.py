@@ -61,7 +61,7 @@ def execute(params, ctx):
     # again to wait for it. Say in the result that the command was stopped.
     # Use terminate() (SIGTERM), not kill() and not subprocess.run(timeout=...): docker run passes
     # SIGTERM on to the container, but SIGKILL ends only the docker client and leaves the container
-    # running. Check your tool with:  python3 exercises/03-bash/check_timeout.py
+    # running. With Docker running, python3 exercises/check.py 03 checks that too.
     #
     # CHALLENGE: Long output. Keep the last 2000 lines for the model and say how much was left out.
     raise NotImplementedError(f"bash is not implemented yet (asked to run {params['command']} in {ctx.cwd}).")

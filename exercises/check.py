@@ -11,6 +11,7 @@
 import importlib.util
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -107,16 +108,27 @@ def describe(test):
     return (test.shortDescription() or test.id().rsplit(".", 1)[-1]).rstrip(".")
 
 
+def docker_running():
+    try:
+        return subprocess.run(["docker", "info"], capture_output=True, timeout=30).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
 def check(folder, path):
     """Run test_*.py of one exercise folder against the tool file at path. Returns (passed, total)."""
     os.environ["PI2_CHECK_FILE"] = str(path)
     suite = unittest.TestSuite()
+    print(f"\n{folder.name}  {DIM}{path}{RESET}")
     for test_file in sorted(folder.glob("test_*.py")):
         spec = importlib.util.spec_from_file_location(f"{folder.name}.{test_file.stem}", test_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        if getattr(module, "NEEDS_DOCKER", False) and not docker_running():
+            # Not counted: the other checks still say whether the tool is right.
+            print(f"  {DIM}SKIP  {test_file.name}: Docker is not running; start it to check the real container{RESET}")
+            continue
         suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(module))
-    print(f"\n{folder.name}  {DIM}{path}{RESET}")
     result = Result()
     suite.run(result)
     return result.passed, result.testsRun
