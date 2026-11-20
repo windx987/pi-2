@@ -1,6 +1,6 @@
-// Solution for exercise 01: the read tool. Lets the agent look at files in its working directory. Instructor reference; participants get starter.ts.
+// Solution for exercise 01: the read tool. Lets the agent look at files in its working directory. Instructor reference; participants get read.ts.
 //
-// Load it:  ./pi-test.sh -e education/exercises/01-read/starter.ts
+// Load it:  ./pi-test.sh -e education/exercises/01-read/read.ts
 // Then ask: "What is in package.json?"
 //
 // LEARN:

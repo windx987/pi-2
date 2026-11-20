@@ -1,9 +1,9 @@
-// Solution for exercise 04: the bash tool. Lets the agent run commands, inside a Docker container. Instructor reference; participants get starter.ts.
+// Solution for exercise 04: the bash tool. Lets the agent run commands, inside a Docker container. Instructor reference; participants get bash.ts.
 //
 // Needs Docker running and the image pulled once:  docker pull node:22-bookworm-slim
 // Load it with the earlier tools, from the playground copy (see ../README.md):
-//   ./pi-test.sh -e .../01-read/starter.ts -e .../02-write/starter.ts -e .../03-edit/starter.ts \
-//     -e .../04-bash/starter.ts
+//   ./pi-test.sh -e .../01-read/read.ts -e .../02-write/write.ts -e .../03-edit/edit.ts \
+//     -e .../04-bash/bash.ts
 // Then ask: "Run the tests and fix what fails."
 //
 // LEARN:
