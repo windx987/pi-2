@@ -221,6 +221,34 @@ class CompactionTest(unittest.TestCase):
             self.assertEqual([m["role"] for m in seen[2]], ["compaction", "assistant", "toolResult"])
             self.assertEqual(session.messages[-1]["content"][0]["text"], "done")
 
+    def test_the_models_count_scales_the_estimates(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            stream_fn, _ = fake_stream(answer({"type": "text", "text": "ok"}), answer({"type": "text", "text": "ok"}))
+            session = session_with(stream_fn, agent_dir)
+            system, schemas, _ = session.fixed_parts()
+            dense = answer({"type": "text", "text": "ok"})
+            dense["usage"] = {"input": 2 * (system + schemas + 2), "output": 5}  # twice the estimate, like logs
+            stream_fn, _ = fake_stream(dense)
+            session.runtime.stream_fn = stream_fn
+            session.prompt("hi")
+            self.assertAlmostEqual(session.ratio, 2.0, delta=0.1)
+            later = {"role": "user", "content": "x" * 400}
+            self.assertAlmostEqual(session.estimate([later]), 202, delta=10)  # 101 estimated, times 2
+
+    def test_compaction_keeps_model_tokens_so_it_does_not_compact_again_at_once(self):
+        with tempfile.TemporaryDirectory() as agent_dir:
+            stream_fn, _ = fake_stream(answer({"type": "text", "text": "## Goal\nread the logs"}))
+            session = session_with(stream_fn, agent_dir, keep_recent_tokens=400)
+            session.messages = [{"role": "user", "content": "read the logs"}]
+            for i in range(6):  # six tool results of 100 estimated tokens each
+                session.messages += [answer(call("echo", {"text": str(i)}, id=f"call_{i}"), stop_reason="tool_use"),
+                                     {"role": "toolResult", "tool_call_id": f"call_{i}", "tool_name": "echo",
+                                      "content": "log " * 100}]
+            session.ratio = 2.0  # the model counted twice as many tokens as four characters each
+            session.compact()
+            results = [m for m in session.messages if m["role"] == "toolResult"]
+            self.assertEqual(len(results), 2)  # 400 model tokens: two results, not the four 400 estimated ones are
+
     def test_an_overflow_error_compacts_and_retries_once(self):
         with tempfile.TemporaryDirectory() as agent_dir:
             overflow = answer(stop_reason="error")

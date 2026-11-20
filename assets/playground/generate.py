@@ -15,6 +15,9 @@ from pathlib import Path
 PLAYGROUND = Path(__file__).resolve().parents[2] / "playground"
 FILES = 1000
 REPORTS = 30
+# Log lines per report: about 900 tokens a report, so 10 fit one subagent well below compaction (16k of
+# 32k) and all 30 do not.
+LOG_LENGTH = 25
 
 # --- prices ------------------------------------------------------------------------------------------
 
@@ -125,9 +128,9 @@ def incidents(rng):
         number = f"INC-{2600 + i}"
         log = []
         t = when - timedelta(minutes=10)
-        for n in range(70):
+        for n in range(LOG_LENGTH):
             t += timedelta(seconds=rng.randrange(5, 25))
-            if n > 25 and n % 8 == 0:
+            if n > 8 and n % 4 == 0:
                 line = f"ERROR {symptom}"
             else:
                 line = "INFO " + rng.choice(LOG_LINES).format(svc=svc, ms=rng.randrange(8, 400), n=rng.randrange(10, 99))

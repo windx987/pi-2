@@ -31,6 +31,9 @@ class AgentSession:
         self.messages = []
         self.usage = {"input": 0, "output": 0, "context": 0}
         self.counted = 0  # messages[:counted] are in usage["context"]; later ones are only estimated
+        # Model tokens per estimated token, from the model's last count. Four characters per token is
+        # right for prose, but logs, numbers and IDs have about twice as many tokens.
+        self.ratio = 1.0
         slug = self.cwd.strip(os.sep).replace(os.sep, "-") or "root"
         folder = self.agent_dir / "python-sessions" / slug
         self.session_file = folder / f"{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}.jsonl"
@@ -66,21 +69,30 @@ class AgentSession:
 
     def context_tokens(self):
         """Tokens the next request sends: the model's last count plus an estimate of what came after."""
-        tokens = self.usage["context"] + sum(compaction.estimate_tokens(m) for m in self.messages[self.counted:])
+        tokens = self.usage["context"] + self.estimate(self.messages[self.counted:])
         if self.counted == 0:  # no count from the model yet: estimate the system prompt and tools as well
             system, tools = self.context_parts()[:2]
             tokens += system[1] + tools[1]
         return tokens
 
-    def context_parts(self):
-        """What the next request is made of, for /context: (label, estimated tokens, how many)."""
+    def estimate(self, messages):
+        """Estimated tokens of messages: four characters per token, scaled by the model's last count."""
+        return round(self.ratio * sum(compaction.estimate_tokens(m) for m in messages))
+
+    def fixed_parts(self):
+        """Unscaled estimates of the system prompt and the tool schemas, and the number of tools."""
         tools = list(self.extensions.tools.values())
         schemas = json.dumps([[t.name, t.description, t.parameters] for t in tools])
-        parts = [("system prompt", len(self.system_prompt(tools)) // 4, 1), ("tools", len(schemas) // 4, len(tools))]
+        return len(self.system_prompt(tools)) // 4, len(schemas) // 4, len(tools)
+
+    def context_parts(self):
+        """What the next request is made of, for /context: (label, estimated tokens, how many)."""
+        system, schemas, count = self.fixed_parts()
+        parts = [("system prompt", round(self.ratio * system), 1), ("tools", round(self.ratio * schemas), count)]
         for role, label in [("compaction", "summary"), ("user", "your messages"), ("assistant", "answers"),
                             ("toolResult", "tool results")]:
             messages = [m for m in self.messages if m["role"] == role]
-            parts.append((label, sum(compaction.estimate_tokens(m) for m in messages), len(messages)))
+            parts.append((label, self.estimate(messages), len(messages)))
         return parts
 
     def auto_compact(self, reason, force=False):
@@ -97,7 +109,8 @@ class AgentSession:
     def compact(self, instructions=None, reason="manual"):
         """Summarize the older messages and keep the newest ones. Returns the summary message, or None
         when there is nothing to summarize. /compact calls this; auto_compact() calls it when needed."""
-        cut = compaction.find_cut(self.messages, self.compaction_settings["keep_recent_tokens"])
+        # find_cut counts four characters per token; keep_recent_tokens are the model's tokens.
+        cut = compaction.find_cut(self.messages, self.compaction_settings["keep_recent_tokens"] / self.ratio)
         previous = self.messages[0] if self.messages and self.messages[0]["role"] == "compaction" else None
         old = self.messages[1 if previous else 0:cut]
         if not old:
@@ -134,6 +147,11 @@ class AgentSession:
                 self.usage["output"] += usage["output"]
                 self.usage["context"] = usage["input"] + usage["output"]
                 self.counted = len(self.messages)
+                # The request was everything before this answer. Never below 1: an estimate that is too
+                # low lets a request overflow, one that is too high only compacts a little early.
+                system, schemas, _ = self.fixed_parts()
+                estimated = system + schemas + sum(compaction.estimate_tokens(m) for m in self.messages[:-1])
+                self.ratio = min(4.0, max(1.0, usage["input"] / estimated))
         for listener in self.listeners:
             listener(event)
 

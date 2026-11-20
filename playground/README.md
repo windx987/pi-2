@@ -32,7 +32,7 @@ The agent runs `npm test`, reads `math.js` and the test, edits the bug, and runs
 
 ## 2. One bug in 1000 files
 
-<p align="center"><img alt="Scenario 2, one bug in 1000 files: the agent reads the rule in prices/README.md, writes one test that loops over all 1000 files, runs it with node --test, and names the only failing file. Reading every file would take about 38k tokens, more than the 32k window; the test needs a few thousand. Hint: point the agent at the rule and ask for a test; stop it if it reads the files one by one." src="../assets/diagrams/playground-2-prices.svg" width="900"></p>
+<p align="center"><img alt="Scenario 2, one bug in 1000 files: the agent reads the rule in prices/README.md, writes one test that loops over all 1000 files, runs it with node --test, and names the only failing file. Reading every file would take about 56k tokens, more than the 32k window; the test needs a few thousand. Hint: point the agent at the rule and ask for a test; stop it if it reads the files one by one." src="../assets/diagrams/playground-2-prices.svg" width="900"></p>
 
 [prices/](prices/) has 1000 files, `item-0001.js` to `item-1000.js`. Each exports a net price and a function `gross()` that adds 7% VAT. One of them is wrong, and they are written in four different ways, so you cannot spot it by looking. [prices/README.md](prices/README.md) says what every file must do.
 
@@ -40,7 +40,7 @@ Why these tools:
 
 - **read** for the rule in `prices/README.md` and one or two files to see their shape, not for all 1000: together they are more than the context holds.
 - **write** creates the test, a new file.
-- **bash** runs it. The 1000 checks happen inside Node, outside the model's context, and only the result comes back: one failing file instead of 38k tokens of code.
+- **bash** runs it. The 1000 checks happen inside Node, outside the model's context, and only the result comes back: one failing file instead of 56k tokens of code.
 - Not **subagent**: splitting the files between subagents would still read every one of them. A checkable rule is a job for code.
 
 Load read, write and bash, and ask:
@@ -55,9 +55,9 @@ What to look for:
 
 ## 3. Thirty incident reports
 
-<p align="center"><img alt="Scenario 3, thirty incident reports: three subagents each read 10 reports in their own context and return a short list; the parent combines the three lists. Read by the parent alone, the reports take about 34k tokens and the session compacts; with subagents the parent holds only the lists. Hint: give each subagent a complete task with its files, what to look for and what to return; read the root cause, not the logs, which show database timeouts even when the database was fine." src="../assets/diagrams/playground-3-incidents.svg" width="900"></p>
+<p align="center"><img alt="Scenario 3, thirty incident reports: three subagents each read 10 reports in their own context and return a short list; the parent combines the three lists. Read by the parent alone, the reports take about 25k tokens and the session compacts; with subagents the parent holds only the lists. Hint: give each subagent a complete task with its files, what to look for and what to return; read the root cause, not the logs, which show database timeouts even when the database was fine; expect a few minutes." src="../assets/diagrams/playground-3-incidents.svg" width="900"></p>
 
-[incidents/](incidents/) has 30 incident reports, `INC-2601.md` to `INC-2630.md`. Each has a timeline, a page of logs, and the root cause at the end. Together they are about 34k tokens: more than a 32k model can hold at once. Some logs show database timeouts although the database was fine, so the agent has to read each root cause, not search for "database".
+[incidents/](incidents/) has 30 incident reports, `INC-2601.md` to `INC-2630.md`. Each has a timeline, a page of logs, and the root cause at the end. Together they are about 25k tokens: past the 16k where a 32k model compacts, while 10 of them, about 9k, fit one subagent. Some logs show database timeouts although the database was fine, so the agent has to read each root cause, not search for "database".
 
 Why these tools:
 
@@ -75,6 +75,7 @@ What to look for:
 
 - Three `subagent` boxes, each returning a short list. Each subagent reads its 10 reports in its own context.
 - The parent's context grows only by those three lists: compare `/context` before and after.
+- It takes a few minutes: each report is one request to the model, and the subagents run one after another. Each `subagent` box stays grey, with no progress, until its subagent answers.
 
 Then start a new session with `/new` and ask the same without subagents: "Read every report in incidents/, INC-2601.md to INC-2630.md, and tell me which incidents the database caused." The context fills up, the session compacts (see [docs/compaction.md](../docs/compaction.md)), and findings from the early reports may be lost in the summary.
 

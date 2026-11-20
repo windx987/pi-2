@@ -21,7 +21,7 @@
 <text x="841.5" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Parent combines</text>
 <text x="841.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">three lists into one answer</text>
 <line x1="806.5" y1="84" x2="826.5" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="30" y="168" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">30 REPORTS, ABOUT 34K TOKENS</text>
+<text x="30" y="168" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">30 REPORTS, ABOUT 25K TOKENS</text>
 <rect x="30" y="180" width="160" height="96" rx="8" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.2"/>
 <path d="M 42 192 h 16 l 6 6 v 18 h -22 z" fill="#ffffff" stroke="#6b7280" stroke-width="1"/>
 <path d="M 70 192 h 16 l 6 6 v 18 h -22 z" fill="#ffffff" stroke="#6b7280" stroke-width="1"/>
@@ -65,19 +65,18 @@
 <text x="270" y="342" fill="#2f5a96" font-size="13" font-weight="700" text-anchor="middle">parent: 3 lists</text>
 <text x="566" y="202" fill="#1f2328" font-size="13" font-weight="600" text-anchor="start">Parent reads all 30 itself</text>
 <rect x="566" y="210" width="500" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
-<rect x="566" y="210" width="500.0" height="12" rx="6" fill="#b03a37" opacity="0.8"/>
+<rect x="566" y="210" width="427.24609375" height="12" rx="6" fill="#b03a37" opacity="0.8"/>
 <line x1="816.0" y1="205" x2="816.0" y2="227" stroke="#1f2328" stroke-width="1.2" stroke-dasharray="3 3"/>
-<text x="566" y="240" fill="#b03a37" font-size="12" font-weight="400" text-anchor="start">about 34k tokens: compacts, early findings may be lost</text>
-<path d="M 1070 210 l 10 6 l -10 6 z" fill="#b03a37"/>
+<text x="566" y="240" fill="#b03a37" font-size="12" font-weight="400" text-anchor="start">about 25k tokens: compacts, early findings may be lost</text>
 <text x="566" y="280" fill="#1f2328" font-size="13" font-weight="600" text-anchor="start">Parent with three subagents</text>
 <rect x="566" y="288" width="500" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
 <rect x="566" y="288" width="38.14697265625" height="12" rx="6" fill="#2f7d5b" opacity="0.8"/>
 <line x1="816.0" y1="283" x2="816.0" y2="305" stroke="#1f2328" stroke-width="1.2" stroke-dasharray="3 3"/>
-<text x="566" y="318" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">only the three lists; each subagent holds about 11k</text>
+<text x="566" y="318" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">only the three lists; each subagent holds about 9k</text>
 <text x="566" y="350" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">The dashed line is where compaction starts (16k of 32k).</text>
 <rect x="30" y="380" width="1040" height="82" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
 <text x="48" y="406" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
 <text x="96" y="406" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">A subagent sees nothing of your conversation: give each one a complete task, with its files (INC-2601 to INC-2610), what to look for, and what to</text>
 <text x="96" y="426" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">return. The root cause is in the last section of each report. Careful: some logs are full of database timeouts although the database was fine, so</text>
-<text x="96" y="446" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">read the cause, not the logs.</text>
+<text x="96" y="446" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">read the cause, not the logs. Expect a few minutes: one request per report, and each subagent box stays grey until its subagent answers.</text>
 </svg>

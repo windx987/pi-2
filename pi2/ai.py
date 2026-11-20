@@ -48,7 +48,8 @@ def stream(model, context, api_key):
     calls = {}  # the provider streams each tool call in pieces, keyed by its index
 
     try:
-        response = urllib.request.urlopen(request, timeout=600)
+        # The timeout is for silence, not for the whole answer: a stalled stream fails after two minutes.
+        response = urllib.request.urlopen(request, timeout=120)
     except urllib.error.HTTPError as error:
         raise RuntimeError(f"{error.code} {error.read().decode(errors='replace')}") from None
     except urllib.error.URLError as error:

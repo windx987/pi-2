@@ -1029,7 +1029,7 @@
 <rect x="566" y="210" width="500" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
 <rect x="566" y="210" width="500.0" height="12" rx="6" fill="#b03a37" opacity="0.8"/>
 <line x1="816.0" y1="205" x2="816.0" y2="227" stroke="#1f2328" stroke-width="1.2" stroke-dasharray="3 3"/>
-<text x="566" y="240" fill="#b03a37" font-size="12" font-weight="400" text-anchor="start">about 38k tokens of files: more than the window</text>
+<text x="566" y="240" fill="#b03a37" font-size="12" font-weight="400" text-anchor="start">about 56k tokens of files: more than the window</text>
 <path d="M 1070 210 l 10 6 l -10 6 z" fill="#b03a37"/>
 <text x="566" y="280" fill="#1f2328" font-size="13" font-weight="600" text-anchor="start">Write a test and run it</text>
 <rect x="566" y="288" width="500" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>

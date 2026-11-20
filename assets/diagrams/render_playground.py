@@ -131,7 +131,7 @@ def scenario_prices():
         fill = RED if i == wrong else "#dbe4f0"
         parts.append(f'<rect x="{x}" y="{y}" width="{size}" height="{size}" rx="1.5" fill="{fill}"/>')
     parts.append(text(30, 396, "item-0001.js … item-1000.js, written four different ways", size=12, color="#4b5563"))
-    parts += context_bar(566, 210, 500, "Read every file", 38000 + 1000 * 30, "about 38k tokens of files: more than the window")
+    parts += context_bar(566, 210, 500, "Read every file", 56000, "about 56k tokens of files: more than the window")
     parts += context_bar(566, 288, 500, "Write a test and run it", 2500, "the rule, one test file, one result")
     parts.append(text(566, 350, "The dashed line is where compaction starts (16k of 32k).", size=12, color="#4b5563"))
     h_parts, h = hint(414, [
@@ -150,7 +150,7 @@ def scenario_incidents():
         ("", "Each answers", "a short list: number, date, cause"),
         ("", "Parent combines", "three lists into one answer"),
     ])
-    parts.append(heading(30, 168, "30 reports, about 34k tokens"))
+    parts.append(heading(30, 168, "30 reports, about 25k tokens"))
     for g in range(3):
         gx = 30 + g * 172
         parts.append(f'<rect x="{gx}" y="180" width="160" height="96" rx="8" fill="{TINT[PURPLE]}" stroke="{PURPLE}" stroke-width="1.2"/>')
@@ -161,13 +161,14 @@ def scenario_incidents():
         parts.append(f'<line x1="{gx + 80}" y1="278" x2="{270}" y2="318" stroke="{PURPLE}" stroke-width="1.2" marker-end="url(#arrow)"/>')
     parts.append(f'<rect x="200" y="320" width="140" height="34" rx="8" fill="{TINT[BLUE]}" stroke="{BLUE}" stroke-width="1.5"/>')
     parts.append(text(270, 342, "parent: 3 lists", size=13, color=BLUE, weight="700", anchor="middle"))
-    parts += context_bar(566, 210, 500, "Parent reads all 30 itself", 34000 + 3000, "about 34k tokens: compacts, early findings may be lost")
-    parts += context_bar(566, 288, 500, "Parent with three subagents", 2500, "only the three lists; each subagent holds about 11k")
+    parts += context_bar(566, 210, 500, "Parent reads all 30 itself", 25000 + 3000, "about 25k tokens: compacts, early findings may be lost")
+    parts += context_bar(566, 288, 500, "Parent with three subagents", 2500, "only the three lists; each subagent holds about 9k")
     parts.append(text(566, 350, "The dashed line is where compaction starts (16k of 32k).", size=12, color="#4b5563"))
     h_parts, h = hint(380, [
         "A subagent sees nothing of your conversation: give each one a complete task, with its files (INC-2601 to INC-2610), what "
         "to look for, and what to return. The root cause is in the last section of each report. Careful: some logs are full of "
-        "database timeouts although the database was fine, so read the cause, not the logs.",
+        "database timeouts although the database was fine, so read the cause, not the logs. Expect a few minutes: one request "
+        "per report, and each subagent box stays grey until its subagent answers.",
     ])
     write("playground-3-incidents.svg", 380 + h + 20, parts + h_parts)
 

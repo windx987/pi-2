@@ -6,8 +6,10 @@ Every request sends the whole conversation: the system prompt, your messages, th
 
 ## How it works
 
-1. **When.** Before each prompt and between turns, after the tool results are added, the session checks `context > contextWindow - reserveTokens`. The context is the model's last token count plus an estimate of the messages after it (four characters per token); before the model has counted, as at the start or right after a compaction, the system prompt and tool definitions are estimated too.
+1. **When.** Before each prompt and between turns, after the tool results are added, the session checks `context > contextWindow - reserveTokens`. The context is the model's last token count plus an estimate of the messages after it; before the model has counted, as at the start or right after a compaction, the system prompt and tool definitions are estimated too.
 2. **What it keeps.** About `keepRecentTokens` of the newest messages, word for word. The cut never separates a tool call from its result.
+
+Estimates count four characters per token, times a ratio the session learns from the model's last count. Four characters is right for prose, but logs, numbers and IDs have about twice as many tokens: without the ratio, the kept messages would be twice as large as `keepRecentTokens`, still over the threshold, and the session would compact again on every turn.
 3. **What it summarizes.** The older messages go to the model as plain text, with a request for a structured summary: goal, constraints, progress, key decisions, next steps, critical context. Files that `read`, `write` and `edit` touched are listed under it. A second compaction updates the first summary.
 4. **What the model sees next.** The system prompt, the summary as a user message, then the kept messages. The session file keeps every message.
 
@@ -44,10 +46,10 @@ The footer gives one number. `/context` shows where it comes from:
  answers           2.1k  (9 messages)
  tool results       10k  (8 messages)
 
- Parts are estimates (4 characters per token).
+ Parts are estimates (4 characters per token, times 1.4 from the model's last count).
 ```
 
-The bar is the window, and `│` marks where automatic compaction starts. The total is the same as the footer's: the model's last count plus an estimate of what came after it. The parts are estimates, so their sum is close to the total but not equal. Tool results are usually the largest part: that is what `/compact`, and exercise 05's subagent, make smaller.
+The bar is the window, and `│` marks where automatic compaction starts. The total is the same as the footer's: the model's last count plus an estimate of what came after it. The parts are estimates, scaled by the ratio when the model counted more tokens than four characters each, so their sum is close to the total but not equal. Tool results are usually the largest part: that is what `/compact`, and exercise 05's subagent, make smaller.
 
 ## Compacting by hand: `/compact`
 

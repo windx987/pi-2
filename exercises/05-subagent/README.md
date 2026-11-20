@@ -50,7 +50,7 @@ cd ~/pi-workshop
 "$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/05-subagent/subagent.py"
 ```
 
-The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 34k tokens: more than a 32k model holds at once. Ask:
+The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 25k tokens: past the 16k where a 32k model compacts, while each subagent's 10 reports, about 9k, fit. Ask:
 
 "The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents: the first reads INC-2601.md to INC-2610.md, the second INC-2611.md to INC-2620.md, the third INC-2621.md to INC-2630.md. Each one reads the Root cause section of its reports, not the logs, and returns the incidents the database caused, with the incident number, the date and the cause. Then combine the three lists."
 

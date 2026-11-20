@@ -217,7 +217,8 @@ class InteractiveMode:
             else:
                 unit = f"({count} message{'s' if count > 1 else ''})"
             rows.append(f"{label:<15}{tokens(n):>7}  {DIM}{unit}{RESET}")
-        rows += ["", f"{DIM}Parts are estimates (4 characters per token).{RESET}"]
+        scale = f", times {session.ratio:.1f} from the model's last count" if session.ratio > 1 else ""
+        rows += ["", f"{DIM}Parts are estimates (4 characters per token{scale}).{RESET}"]
         self.print_box(TOOL_BG["pending"], rows)
 
     def select_model(self, args):
