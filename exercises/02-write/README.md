@@ -19,7 +19,7 @@ pi2 checks the model's arguments against `parameters` before `execute` runs. A m
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Path` at the top.
+Follow EXERCISE 1 to 4 in [write.py](write.py). Add `from pathlib import Path` at the top.
 
 1. Resolve `params["path"]` against `ctx.cwd`.
 
@@ -98,7 +98,7 @@ Load it together with your read tool, from your playground copy:
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/02-write/starter.py"
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py"
 ```
 
 Ask: "Create notes/todo.md with three workshop goals, then read it back." Then: "Write a file to /tmp/outside.txt."

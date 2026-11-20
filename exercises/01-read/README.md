@@ -12,7 +12,7 @@ The first tool: the agent can look at files in the directory it works in.
 
 The model cannot touch your machine. It can only answer with text or with a tool call: a tool name and JSON arguments. pi2 runs the tool and sends the result back as the next message. A tool is therefore a contract: the description and schema tell the model what it may ask for, and the result tells it what happened.
 
-1. pi2 starts, loads `starter.py` with `-e`, and calls its `extension(pi)`.
+1. pi2 starts, loads `read.py` with `-e`, and calls its `extension(pi)`.
 2. `pi.register_tool(read_tool)` adds `read`. The next request to the model lists it with its schema (step 2 in [the big picture](../../README.md#the-big-picture)).
 3. The model answers with a call such as `read({"path": "math.js"})`.
 4. pi2 checks the arguments against `parameters`, then calls `execute(params, ctx)` (steps 6 and 7).
@@ -20,7 +20,7 @@ The model cannot touch your machine. It can only answer with text or with a tool
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `from pathlib import Path` at the top.
+Follow EXERCISE 1 to 4 in [read.py](read.py). Add `from pathlib import Path` at the top.
 
 1. Resolve `params["path"]` against `ctx.cwd`.
 
@@ -113,7 +113,7 @@ Work in a copy of the playground, never in the repository (`REPO` is the path of
 
 ```bash
 cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py"
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py"
 ```
 
 Ask: "What does math.js export?", then "Show me lines 5 to 7 of math.js.", then "Read missing.txt."

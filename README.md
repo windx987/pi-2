@@ -111,8 +111,8 @@ So one file can add a tool, put a rule on other files' tools, or both. These are
 |---|---|---|
 | [examples/hello.py](examples/hello.py) | tool | The smallest tool |
 | [examples/permission_gate.py](examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
-| [exercises/01-read](exercises/01-read/starter.py) to [04-edit](exercises/04-edit/starter.py) | tool | The four coding tools, which you write; 01 to 03 show the solution in the Steps of their README |
-| [exercises/05-subagent](exercises/05-subagent/starter.py) | tool | A tool that runs a second agent through `ctx.session` |
+| [exercises/01-read](exercises/01-read/read.py) to [04-edit](exercises/04-edit/edit.py) | tool | The four coding tools, which you write; 01 to 03 show the solution in the Steps of their README |
+| [exercises/05-subagent](exercises/05-subagent/subagent.py) | tool | A tool that runs a second agent through `ctx.session` |
 
 A tool extension:
 
@@ -162,22 +162,22 @@ In Pi it is the same idea in TypeScript: `export default function (pi: Extension
 
 | Exercise | Tool | Instructions |
 |---|---|---|
-| [01-read](exercises/01-read/starter.py) | `read` | [README](exercises/01-read/README.md) |
-| [02-write](exercises/02-write/starter.py) | `write` | [README](exercises/02-write/README.md) |
-| [03-bash](exercises/03-bash/starter.py) | `bash` | [README](exercises/03-bash/README.md); test the timeout with [check_timeout.py](exercises/03-bash/check_timeout.py) |
-| [04-edit](exercises/04-edit/starter.py) | `edit` | [README](exercises/04-edit/README.md) |
-| [05-subagent](exercises/05-subagent/starter.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
+| [01-read](exercises/01-read/read.py) | `read` | [README](exercises/01-read/README.md) |
+| [02-write](exercises/02-write/write.py) | `write` | [README](exercises/02-write/README.md) |
+| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); test the timeout with [check_timeout.py](exercises/03-bash/check_timeout.py) |
+| [04-edit](exercises/04-edit/edit.py) | `edit` | [README](exercises/04-edit/README.md) |
+| [05-subagent](exercises/05-subagent/subagent.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
 
 Each README says what the tool does, the steps, what to ask the agent and what you should see; the starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
 
 ```bash
 cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py"
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py"
 ```
 
 `REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
 
-Check a tool without a model before you try it: `python3 exercises/check.py 01` runs the checks of exercise 01 against its `starter.py` and shows PASS, FAIL or TODO for each step. `python3 exercises/check.py` checks all five, and `python3 exercises/check.py 01 path/to/read.py` checks another file.
+Check a tool without a model before you try it: `python3 exercises/check.py 01` runs the checks of exercise 01 against its `read.py` and shows PASS, FAIL or TODO for each step. `python3 exercises/check.py` checks all five, and `python3 exercises/check.py 01 path/to/my_read.py` checks another file.
 
 ## Playground
 

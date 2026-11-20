@@ -24,7 +24,7 @@ The subagent does not see the conversation, so the task it gets must be complete
 
 ## Steps
 
-Follow the comments in [starter.py](starter.py):
+Follow the comments in [subagent.py](subagent.py):
 
 1. Give the subagent the parent's tools, except `subagent` itself.
 2. Create the child `AgentSession` and call `prompt(task)`.
@@ -47,7 +47,7 @@ From your playground copy, load your read tool and the subagent (your read tool 
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/05-subagent/starter.py"
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/05-subagent/subagent.py"
 ```
 
 The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 34k tokens: more than a 32k model holds at once. Ask:

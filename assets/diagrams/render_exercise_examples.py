@@ -30,13 +30,13 @@ EXECUTE_RULES = [
 
 
 def solution_source(name):
-    """The exercise's starter.py with execute() replaced by the whole function from its README."""
+    """The exercise's tool file, such as read.py, with execute() replaced by the whole function from its README."""
     folder = ROOT / "exercises" / name
     readme = (folder / "README.md").read_text()
     code = re.search(r"```python\n(.*?)```", readme.split("The whole function")[1], re.S).group(1)
     imports, function = code.split("\n\n\n", 1)
     imports = "\n".join(line for line in imports.splitlines() if not line.startswith("#") and "pi2" not in line)
-    starter = (folder / "starter.py").read_text()
+    starter = (folder / f"{name.split('-', 1)[1]}.py").read_text()
     start = starter.index("def execute(params, ctx):")
     end = starter.index("\n\n\n", start)
     source = starter[:start] + function.rstrip("\n") + starter[end:]
@@ -92,7 +92,7 @@ EXAMPLES = {
     "01-read": {
         "ask": "What is in package.json?",
         "run": [
-            ("start", "You start pi2 with read", ["./pi2.sh -e exercises/01-read/starter.py"],
+            ("start", "You start pi2 with read", ["./pi2.sh -e exercises/01-read/read.py"],
              "extension(pi) runs and registers the read tool."),
             ("1", "You type the question", [], "Interactive mode hands it to AgentSession.prompt. No extension code runs."),
             ("2", "pi2 offers read to the model", ['"read": "Read the contents of a text file…"', "parameters: path required; offset, limit"],
@@ -108,7 +108,7 @@ EXAMPLES = {
     "02-write": {
         "ask": "Create notes/todo.md with three items.",
         "run": [
-            ("start", "You start pi2 with read and write", ["./pi2.sh -e exercises/01-read/starter.py \\", "  -e exercises/02-write/starter.py"],
+            ("start", "You start pi2 with read and write", ["./pi2.sh -e exercises/01-read/read.py \\", "  -e exercises/02-write/write.py"],
              "Each extension(pi) registers its tool."),
             ("1", "You type the request", [], "Interactive mode hands it to AgentSession.prompt."),
             ("2", "pi2 offers read and write", ['"write": "Write content to a file…"', "parameters: path, content (both required)"],
@@ -127,7 +127,7 @@ EXAMPLES = {
         "ask": "Run the tests.",
         "fold": ["def docker_args"],
         "run": [
-            ("start", "You start pi2 with three tools", ["pi2.sh -e …/01-read/starter.py \\", "  -e …/02-write/starter.py -e …/03-bash/starter.py"],
+            ("start", "You start pi2 with three tools", ["pi2.sh -e …/01-read/read.py \\", "  -e …/02-write/write.py -e …/03-bash/bash.py"],
              "From a playground copy under your home directory, with Docker running."),
             ("1", "You type the request", [], "Interactive mode hands it to AgentSession.prompt."),
             ("2", "pi2 offers read, write and bash", ['"bash": "Execute a bash command in the…"', "parameters: command required; timeout"],
@@ -147,7 +147,7 @@ def main():
     for name, example in EXAMPLES.items():
         rows = code_rows(name, example.get("fold", []))
         out = Path(__file__).with_name(f"exercise-{name}.svg")
-        write_svg(out, [(f"exercises/{name}/starter.py, solved", rows)], f'You ask: "{example["ask"]}"', example["run"])
+        write_svg(out, [(f"exercises/{name}/{name.split('-', 1)[1]}.py, solved", rows)], f'You ask: "{example["ask"]}"', example["run"])
 
 
 if __name__ == "__main__":

@@ -2,11 +2,11 @@
 # your execute() directly, the way pi2 would.
 #
 # From the repository root:
-#   python3 exercises/check.py                    # every exercise, each with its starter.py
+#   python3 exercises/check.py                    # every exercise, each with its tool file
 #   python3 exercises/check.py 01                 # one exercise
 #   python3 exercises/check.py 01 path/to/read.py # your tool in another file
 #
-# The checks of an exercise are in test_<tool>.py next to its starter.py.
+# The checks of an exercise are in test_<tool>.py next to <tool>.py, such as test_read.py next to read.py.
 
 import importlib.util
 import os
@@ -132,7 +132,7 @@ def main():
             sys.exit(f"No exercise starts with {args[0]}. Try 01 to 05.")
     passed = total = 0
     for folder in folders:
-        path = Path(args[1]).resolve() if len(args) > 1 else folder / "starter.py"
+        path = Path(args[1]).resolve() if len(args) > 1 else folder / f"{folder.name.split('-', 1)[1]}.py"
         p, t = check(folder, path)
         passed, total = passed + p, total + t
     print(f"\n{passed} of {total} checks pass.")

@@ -2,7 +2,7 @@
 # as an error result that says the command was stopped, and leave no container running.
 #
 # Needs Docker running. From the repository root:
-#   python3 exercises/03-bash/check_timeout.py                  # checks starter.py
+#   python3 exercises/03-bash/check_timeout.py                  # checks bash.py
 #   python3 exercises/03-bash/check_timeout.py path/to/bash.py  # checks another file
 
 import shutil
@@ -22,7 +22,7 @@ TIMEOUT = 2
 
 
 def main():
-    path = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "starter.py"
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "bash.py"
     if subprocess.run(["docker", "info"], capture_output=True).returncode != 0:
         sys.exit("Docker is not running. Start it (Docker Desktop, or `colima start`) and try again.")
     api = ExtensionAPI()

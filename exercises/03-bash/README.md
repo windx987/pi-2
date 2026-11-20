@@ -10,7 +10,7 @@ The agent can run commands, each one in a new Docker container.
 
 ## How it works
 
-With `bash` the agent can do anything a shell can, so where the shell runs matters. Every command runs in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `docker_args()` in [starter.py](starter.py) builds that command line for you; your job is the process handling around it.
+With `bash` the agent can do anything a shell can, so where the shell runs matters. Every command runs in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `docker_args()` in [bash.py](bash.py) builds that command line for you; your job is the process handling around it.
 
 The container reduces what a command can reach; it is not a proven sandbox. Run the [isolation checks](#isolation-checks) on your machine before relying on it.
 
@@ -26,7 +26,7 @@ Why SIGTERM: `docker run` passes SIGTERM on to the container, whose init process
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py). Add `import subprocess` at the top.
+Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top.
 
 1. Start the process with `subprocess.Popen`; a missing Docker raises `FileNotFoundError`.
 
@@ -144,8 +144,8 @@ Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docke
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/02-write/starter.py" \
-  -e "$REPO/exercises/03-bash/starter.py"
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py" \
+  -e "$REPO/exercises/03-bash/bash.py"
 ```
 
 Ask:

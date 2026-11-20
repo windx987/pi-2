@@ -21,7 +21,7 @@ Several edits in one call are all matched against the original file, not one aft
 
 ## Steps
 
-Follow EXERCISE 1 to 4 in [starter.py](starter.py):
+Follow EXERCISE 1 to 4 in [edit.py](edit.py):
 
 1. Resolve the path and read the file.
 2. Find each `oldText` once in the original content (`str.count`); name the failing edit (`edits[0]`, `edits[1]`, ...) in the error.
@@ -44,8 +44,8 @@ Start Docker as in exercise 03, and load it with your read, write and bash tools
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/starter.py" -e "$REPO/exercises/02-write/starter.py" \
-  -e "$REPO/exercises/03-bash/starter.py" -e "$REPO/exercises/04-edit/starter.py"
+"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py" \
+  -e "$REPO/exercises/03-bash/bash.py" -e "$REPO/exercises/04-edit/edit.py"
 ```
 
 Ask: "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again: all four tools in one task. Then ask: "Rename add to sum in math.js and update its callers." Then copy the line `return a + b;` once more into `math.js` yourself and ask: "In math.js, replace `return a + b;` with `return a - b;`."

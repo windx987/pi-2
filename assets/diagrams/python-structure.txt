@@ -16,7 +16,7 @@ a │   ├── compaction.py -- summarizes old messages when the context fill
 a │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
 ## your work
 w ├── exercises/ -- your extensions, each with a README and checks
-w │   ├── 01-read/ … 04-edit/ -- you implement execute() in starter.py
+w │   ├── 01-read/ … 04-edit/ -- you implement execute() in read.py … edit.py
 w │   ├── 05-subagent/ -- a tool that runs a second agent
 w │   └── check.py -- checks your tools without a model
 w ├── playground/ -- for the agent: a failing test, 1000 files, 30 reports
