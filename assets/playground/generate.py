@@ -77,17 +77,18 @@ One of the files is wrong.
 # --- incidents ---------------------------------------------------------------------------------------
 
 SERVICES = ["checkout", "search", "accounts", "payments", "catalog", "notifications", "reports", "login"]
-# (caused by the database, root cause, what the logs show)
+# (caused by the database, root cause, what the logs show). A database cause starts with "The database", so
+# the question has one answer; the decoys say the database was healthy.
 CAUSES = [
-    (True, "The connection pool of the primary Postgres database was exhausted: a batch job opened connections and never closed them.",
+    (True, "The database ran out of connections: a batch job filled the pool of the primary Postgres database and never closed them.",
      "pool exhausted: 100/100 connections in use, waiting for a free connection"),
-    (True, "A long-running migration held a lock on the orders table, so every write to it waited until the migration finished.",
+    (True, "The database locked the orders table for a long-running migration, so every write to it waited until the migration finished.",
      "lock wait timeout exceeded on table orders"),
-    (True, "Replication lag on the read replica reached 9 minutes after a disk slowdown, so reads returned old data.",
+    (True, "The database's read replica fell 9 minutes behind after a disk slowdown, so reads returned old data.",
      "replica lag 540s, read from replica returned stale row"),
-    (True, "The database volume ran out of disk space because old write-ahead log files were never archived.",
+    (True, "The database ran out of disk space on its volume because old write-ahead log files were never archived.",
      "could not extend file: No space left on device (database volume)"),
-    (True, "A missing index on sessions.user_id made a new query scan the whole table, which saturated the database CPU.",
+    (True, "The database CPU was saturated: a missing index on sessions.user_id made a new query scan the whole table.",
      "slow query 14.2s: SELECT * FROM sessions WHERE user_id = $1"),
     (False, "An expired TLS certificate on the internal load balancer made clients reject every connection.",
      "x509: certificate has expired or is not yet valid"),

@@ -52,9 +52,9 @@ cd ~/pi-workshop
 
 The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 25k tokens: past the 16k where a 32k model compacts, while each subagent's 10 reports, about 9k, fit. Ask:
 
-"The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents: the first reads INC-2601.md to INC-2610.md, the second INC-2611.md to INC-2620.md, the third INC-2621.md to INC-2630.md. Each one reads the Root cause section of its reports, not the logs, and returns the incidents the database caused, with the incident number, the date and the cause. Then combine the three lists."
+"The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents: the first reads INC-2601.md to INC-2610.md, the second INC-2611.md to INC-2620.md, the third INC-2621.md to INC-2630.md. Each one reads the Root cause section of every report, not the logs, and returns one line per report: the incident number, the date, the root cause, and yes if the root cause says the database failed, no if something else did. Then list the yes lines, numbered."
 
-Name the files and what to return: neither tool can list a folder, and a subagent sees only its task, not your conversation. Without the names the model guesses, such as `incidents/1.txt`.
+Name the files and what to return: neither tool can list a folder, and a subagent sees only its task, not your conversation. Without the names the model guesses, such as `incidents/1.txt`. Ask for a line per report, not only the matches: a report the subagent skipped or misjudged then shows up as a wrong "no" you can check, instead of silently missing. Ask for numbered lines rather than a count: a model writes 1, 2, 3 reliably, but a count it states is a guess and can be off by one.
 
 Then type `/new` and ask the same without subagents. See [scenario 3 of the playground](../../playground/README.md#3-thirty-incident-reports) for what to look for.
 
