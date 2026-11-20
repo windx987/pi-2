@@ -29,7 +29,7 @@ Several edits in one call are matched against the original file, not one after a
 
 ## Hands-on exercise
 
-Implement `execute()` in `starter.ts` (EXERCISE 1 to 4). Load it with your read and write tools and ask:
+Implement `execute()` in `edit.ts` (EXERCISE 1 to 4). Load it with your read and write tools and ask:
 
 - "Rename add to sum in math.js and update its callers."
 - "In math.js, replace `return a + b;` with `return a - b;`" after you copied that line twice into the file: the edit must fail as ambiguous.
@@ -43,4 +43,4 @@ Implement `execute()` in `starter.ts` (EXERCISE 1 to 4). Load it with your read 
 ## Further exploration
 
 - The original tool: `git show cead615b4:packages/coding-agent/src/core/tools/edit.ts`, and its tests: `git show cead615b4:packages/coding-agent/test/tools.test.ts` (section "edit tool").
-- CHALLENGE in `starter.ts`: CRLF files.
+- CHALLENGE in `edit.ts`: CRLF files.

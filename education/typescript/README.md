@@ -110,7 +110,7 @@ Start with Types and Control Flow Analysis; they cover everything the exercises 
 
 ## Try it
 
-1. Open `education/exercises/01-read/starter.ts` and add `params.path.toFixed();` inside `execute`.
+1. Open `education/exercises/01-read/read.ts` and add `params.path.toFixed();` inside `execute`.
 2. Run `npx tsc --noEmit -p education/tsconfig.json`. TypeScript reports that `toFixed` does not exist on type `string`.
 3. Change it to `params.offset.toFixed();`. Now it reports that `params.offset` is possibly `undefined`.
 4. Change it to `(params.offset ?? 1).toFixed();`. The error goes away. Remove the line.

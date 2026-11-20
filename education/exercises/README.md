@@ -9,7 +9,7 @@ The workshop edition of Pi ships without coding tools. Start it and ask it to re
 | [03-edit](03-edit/README.md) | `edit` | Exact matching, uniqueness, diffs, safe changes |
 | [04-bash](04-bash/README.md) | `bash` | Processes, output streams, exit codes, isolation |
 
-Each exercise directory has a `README.md` with the steps and a `starter.ts`: an extension whose tool is already defined and registered, with its JSON Schema written. You implement `execute()`.
+Each exercise directory has a `README.md` with the steps and a starter named after its tool, such as `read.ts`: an extension whose tool is already defined and registered, with its JSON Schema written. You implement `execute()`.
 
 The starters are TypeScript. If you have not used it before, read [TypeScript for the workshop](../typescript/README.md) first.
 
@@ -73,10 +73,10 @@ cd ~/pi-workshop
 `-e` loads an extension file and can be repeated. From the playground copy, with `REPO` set to the repository path:
 
 ```bash
-"$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/starter.ts"
+"$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/read.ts"
 ```
 
-After each exercise, add the next file with another `-e`. Edit `starter.ts` in place; type `/reload` in Pi to load your changes without restarting.
+After each exercise, add the next file with another `-e`. Edit the starter (`read.ts`, ...) in place; type `/reload` in Pi to load your changes without restarting.
 
 ## How the pieces fit
 

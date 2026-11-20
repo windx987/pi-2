@@ -12,7 +12,7 @@ The model cannot touch your machine. It can only answer with text or with a tool
 
 ## Execution flow
 
-1. Pi starts, loads `starter.ts` with `-e`, and calls its default export with the extension API.
+1. Pi starts, loads `read.ts` with `-e`, and calls its default export with the extension API.
 2. `pi.registerTool(readTool)` adds `read` to the session's tool registry. It is active, so the next request to the model lists it with its schema.
 3. The model answers with `read({ "path": "package.json" })`.
 4. Pi validates the arguments against `parameters`, then calls `execute(toolCallId, params, signal, onUpdate, ctx)`.
@@ -28,11 +28,11 @@ The model cannot touch your machine. It can only answer with text or with a tool
 
 ## Hands-on exercise
 
-Open `starter.ts` and implement `execute()`, following EXERCISE 1 to 4 in its comments. Run it:
+Open `read.ts` and implement `execute()`, following EXERCISE 1 to 4 in its comments. Run it:
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/starter.ts"
+"$REPO/pi-test.sh" -e "$REPO/education/exercises/01-read/read.ts"
 ```
 
 Ask: "What does math.js export?" and "Show me lines 5 to 7 of math.js."

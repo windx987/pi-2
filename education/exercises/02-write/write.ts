@@ -1,7 +1,7 @@
 // Exercise 02: the write tool. Lets the agent create files and replace them whole.
 //
 // Load it with the read tool:
-//   ./pi-test.sh -e education/exercises/01-read/starter.ts -e education/exercises/02-write/starter.ts
+//   ./pi-test.sh -e education/exercises/01-read/read.ts -e education/exercises/02-write/write.ts
 // Then ask: "Create notes/todo.md with three items."
 //
 // LEARN:
