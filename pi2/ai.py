@@ -9,12 +9,15 @@ import json
 import urllib.error
 import urllib.request
 
+from .compaction import SUMMARY_PREFIX, SUMMARY_SUFFIX
+
 # Message shapes used everywhere in pi2 (the same roles as Pi):
 #   {"role": "user", "content": "text"}
 #   {"role": "assistant", "content": [blocks], "stop_reason": ..., "usage": {"input": n, "output": n}}
 #       blocks: {"type": "thinking", "text"}, {"type": "text", "text"},
 #               {"type": "toolCall", "id", "name", "arguments": {...}}
 #   {"role": "toolResult", "tool_call_id", "tool_name", "content": "text", "is_error": bool}
+#   {"role": "compaction", "summary": "text", "tokens_before": n}  (sent as a user message)
 
 
 def stream(model, context, api_key):
@@ -30,7 +33,9 @@ def stream(model, context, api_key):
     if model.get("max_tokens"):
         body["max_tokens"] = model["max_tokens"]
 
-    headers = {"Content-Type": "application/json"}
+    # Cloudflare-fronted gateways reject Python's default "Python-urllib/3.x"
+    # User-Agent with 403 / error code 1010, so identify as pi2 instead.
+    headers = {"Content-Type": "application/json", "User-Agent": "pi2/0.1"}
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
     request = urllib.request.Request(
@@ -113,6 +118,8 @@ def convert_messages(system_prompt, messages):
     for message in messages:
         if message["role"] == "user":
             result.append({"role": "user", "content": message["content"]})
+        elif message["role"] == "compaction":  # the summary of older messages, see compaction.py
+            result.append({"role": "user", "content": SUMMARY_PREFIX + message["summary"] + SUMMARY_SUFFIX})
         elif message["role"] == "assistant":
             text = "".join(block["text"] for block in message["content"] if block["type"] == "text")
             entry = {"role": "assistant", "content": text}

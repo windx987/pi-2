@@ -27,6 +27,9 @@ def run(context, config, emit):
             if result.get("aborted"):
                 emit({"type": "agent_end"})
                 return
+        if config.get("prepare_next_turn"):
+            # Between turns, after the tool results: the session compacts if they filled the window.
+            config["prepare_next_turn"]()
 
 
 def stream_assistant_response(context, config, emit):

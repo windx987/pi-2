@@ -10,7 +10,7 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 
 | Path | What it is |
 |---|---|
-| `pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions |
+| `pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions, compaction |
 | `tools/` | One extension file per tool: `math.py`, `lsdir.py`, `find.py`, `read.py`, `write.py`, `edit.py`, `bash.py` |
 | `tools/math.py` | The arithmetic tool, registered as `evaluate_equation` |
 | `tools/lsdir.py` | List a directory, defaulting to the working directory |
@@ -110,7 +110,25 @@ REPO=/path/to/pi-2
 | Enter | Send the message; while the agent works, queue another message |
 | ctrl+c | While the agent works: clear queued messages; if none are queued, stop it. In the editor: clear it |
 | ctrl+d | Exit |
+| `/compact [focus]` | Summarize the older messages now to free context; the optional text says what the summary must keep |
+| `/context` | Show how full the context window is, where compaction starts, and what fills it |
 | `/new`, `/quit`, `/help` | New session, exit, list commands. `/quit` exits immediately, even while the agent works |
+
+The editor stays at the bottom of the screen while the agent works, with the footer, so the next message can be typed and edited as the answer streams above it. Text left in it when the turn ends is kept for the next editor.
+
+### Context length and compaction
+
+Every request sends the whole conversation: the system prompt, your messages, the answers and every tool result. The footer shows how much of the model's `contextWindow` that is. When it gets close, [compaction.py](pi2/compaction.py) asks the model to summarize the older messages and keeps only the summary and the newest messages, as Pi does. The session file still keeps every message.
+
+Compaction runs by itself before a prompt and between turns (after tool results), and once more if the server rejects a request as too long. `/compact [focus]` does it by hand. The settings live in `<agentDir>/settings.json`, the same file Pi uses:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `compaction.enabled` | `true` | Compact automatically |
+| `compaction.reserveTokens` | 16384, at most half the window | Room left for the answer |
+| `compaction.keepRecentTokens` | 20000, at most a quarter of the window | Newest messages kept word for word |
+
+Small windows get less: with `contextWindow` 8192 the defaults are 4096 and 2048, so it compacts above about 4k and keeps about 2k.
 
 ### Extensions
 
@@ -143,7 +161,7 @@ A tool is a `define_tool(...)` value: name, description, JSON Schema of its argu
 | 7. Tool runs | `execute` in `tools/*.py` |
 | 8. Result back, saved | `pi2/agent_loop.py` `run`, `AgentSession.save` |
 
-Read them in that order. `pi2/extensions.py` is how extensions get in, and `pi2/cli.py` starts everything.
+Read them in that order. `pi2/extensions.py` is how extensions get in, and `pi2/cli.py` starts everything. `pi2/compaction.py` is called by `AgentSession` when the context fills up.
 
 ### Notes
 
