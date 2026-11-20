@@ -1,9 +1,8 @@
-# Writes the two generated scenarios of the playground, the same every run (fixed seed):
-#   playground/prices/     1000 small price files, one of them wrong
-#   playground/incidents/  30 long incident reports, a few caused by the database
+# Writes the generated scenario of the playground, the same every run (fixed seed):
+#   playground/incidents/  30 incident reports, a few caused by the database
 # It lives outside the playground so the agent cannot read the answers from it.
 #
-#   python3 assets/playground/generate.py            # write both scenarios
+#   python3 assets/playground/generate.py            # write the reports
 #   python3 assets/playground/generate.py --answers  # print the answers, for the instructor
 
 import random
@@ -13,66 +12,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 PLAYGROUND = Path(__file__).resolve().parents[2] / "playground"
-FILES = 1000
 REPORTS = 30
 # Log lines per report: about 900 tokens a report, so 10 fit one subagent well below compaction (16k of
 # 32k) and all 30 do not.
 LOG_LENGTH = 25
-
-# --- prices ------------------------------------------------------------------------------------------
-
-PRODUCTS = ["desk lamp", "office chair", "notebook", "water bottle", "backpack", "keyboard", "monitor stand",
-            "coffee mug", "phone case", "headphones", "mouse pad", "pencil set", "plant pot", "wall clock",
-            "travel adapter", "usb cable", "desk mat", "bookshelf", "reading light", "laptop sleeve"]
-COLORS = ["black", "white", "red", "blue", "green", "grey", "yellow", "oak", "steel", "navy"]
-
-# Four correct ways to write the same price, so the files do not all look alike.
-STYLES = [
-    "export function gross() {{\n\treturn Math.round(net * 1.07);\n}}",
-    "export function gross() {{\n\treturn Math.round((net * 107) / 100);\n}}",
-    "const VAT = 0.07;\n\nexport function gross() {{\n\treturn Math.round(net + net * VAT);\n}}",
-    "export function gross() {{\n\tconst vat = net * 0.07;\n\treturn Math.round(net + vat);\n}}",
-]
-# The bug: truncates instead of rounding, wrong only when the cents end in .5 or more.
-BUG = "export function gross() {{\n\treturn Math.trunc(net * 1.07);\n}}"
-
-
-def safe_net(rng, wrong_when_truncated):
-    """A net price whose VAT fraction is far from .5, so every correct style rounds the same way."""
-    while True:
-        net = rng.randrange(199, 99999)
-        fraction = net * 7 % 100  # hundredths of a cent in net * 0.07
-        if wrong_when_truncated and fraction >= 60:
-            return net
-        if not wrong_when_truncated and not 40 <= fraction <= 60:
-            return net
-
-
-def prices(rng):
-    folder = PLAYGROUND / "prices"
-    shutil.rmtree(folder, ignore_errors=True)
-    folder.mkdir()
-    bug = rng.randrange(FILES) + 1
-    for i in range(1, FILES + 1):
-        product = f"{rng.choice(COLORS)} {rng.choice(PRODUCTS)}"
-        net = safe_net(rng, wrong_when_truncated=i == bug)
-        body = BUG if i == bug else rng.choice(STYLES)
-        (folder / f"item-{i:04d}.js").write_text(
-            f"// {product}: price in cents, with 7% VAT.\n\nexport const net = {net};\n\n{body.format()}\n"
-        )
-    (folder / "README.md").write_text(f"""# Prices
-
-{FILES} files, `item-0001.js` to `item-{FILES:04d}.js`, one per product. Each exports:
-
-- `net`: the price without VAT, in whole cents.
-- `gross()`: the price with 7% VAT, in whole cents, rounded to the nearest cent (half a cent rounds up).
-
-For example, `net = 1000` gives `gross() = 1070`, and `net = 1235` gives `1321` (1321.45 rounded).
-
-One of the files is wrong.
-""")
-    return bug
-
 
 # --- incidents ---------------------------------------------------------------------------------------
 
@@ -175,15 +118,12 @@ def incidents(rng):
 
 
 def main():
-    rng = random.Random(2026)
-    bug = prices(rng)
-    answers = incidents(rng)
+    answers = incidents(random.Random(2026))
     if "--answers" in sys.argv:
-        print(f"prices: item-{bug:04d}.js uses Math.trunc instead of Math.round")
         print(f"incidents caused by the database ({len(answers)}):")
         print("\n".join(f"  {a}" for a in answers))
     else:
-        print(f"wrote {PLAYGROUND / 'prices'} and {PLAYGROUND / 'incidents'}")
+        print(f"wrote {PLAYGROUND / 'incidents'}")
 
 
 if __name__ == "__main__":

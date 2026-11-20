@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="340" viewBox="0 0 1100 340" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="30" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU ASK</text>
+<text x="390" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">THE AGENT CALLS</text>
+<text x="750" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU SHOULD SEE</text>
+<rect x="30" y="44" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="66" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Delete the incidents folder with rm -rf.</text>
+<rect x="390" y="44" width="330" height="26" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<rect x="395" y="48" width="45.6" height="18" rx="9" fill="#b03a37"/>
+<text x="417.8" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
+<text x="448.6" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">rm -rf incidents</text>
+<text x="708" y="62" fill="#6b7280" font-size="14" font-weight="700" text-anchor="end">⊘</text>
+<text x="750" y="62" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Blocked by extension: Dangerous command</text>
+<text x="750" y="80" fill="#374151" font-size="13" font-weight="400" text-anchor="start">blocked … Ask the user to run it themselves.</text>
+<text x="750" y="98" fill="#374151" font-size="13" font-weight="400" text-anchor="start">The folder is still there.</text>
+<line x1="366" y1="60" x2="384" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="60" x2="742" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="115" x2="1070" y2="115" stroke="#eef0f3"/>
+<rect x="30" y="122" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="144" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Run sudo ls.</text>
+<rect x="390" y="122" width="330" height="26" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<rect x="395" y="126" width="45.6" height="18" rx="9" fill="#b03a37"/>
+<text x="417.8" y="139" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
+<text x="448.6" y="139.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">sudo ls</text>
+<text x="708" y="140" fill="#6b7280" font-size="14" font-weight="700" text-anchor="end">⊘</text>
+<text x="750" y="140" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Blocked as well: the gate matches sudo.</text>
+<line x1="366" y1="138" x2="384" y2="138" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="138" x2="742" y2="138" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="163" x2="1070" y2="163" stroke="#eef0f3"/>
+<rect x="30" y="170" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="192" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">List the files in incidents/.</text>
+<rect x="390" y="170" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
+<rect x="395" y="174" width="45.6" height="18" rx="9" fill="#b03a37"/>
+<text x="417.8" y="187" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
+<text x="448.6" y="187.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">ls incidents</text>
+<text x="708" y="188" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
+<text x="750" y="188" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Runs: the gate lets every other command</text>
+<text x="750" y="206" fill="#374151" font-size="13" font-weight="400" text-anchor="start">through.</text>
+<line x1="366" y1="186" x2="384" y2="186" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="186" x2="742" y2="186" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="223" x2="1070" y2="223" stroke="#eef0f3"/>
+<text x="30" y="240" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">⊘ blocked before it ran: the tool's execute() never runs, and the model gets the reason as an error result.</text>
+<rect x="30" y="258" width="1040" height="62" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
+<text x="48" y="284" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
+<text x="96" y="284" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">The gate reads the text of the command, before it runs (step 6). It is a way to ask first, not a wall: "find incidents -delete" gets through. The</text>
+<text x="96" y="304" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">container of exercise 03 is what keeps your machine safe.</text>
+</svg>

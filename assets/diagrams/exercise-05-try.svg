@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="364" viewBox="0 0 1100 364" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="30" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU ASK</text>
+<text x="390" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">THE AGENT CALLS</text>
+<text x="750" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU SHOULD SEE</text>
+<rect x="30" y="44" width="330" height="70" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="66" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">The reports in incidents/ are INC-2601.md to</text>
+<text x="44" y="84" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">INC-2630.md. Use three subagents … one line</text>
+<text x="44" y="102" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">per report … numbered.</text>
+<rect x="390" y="44" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
+<rect x="395" y="48" width="75.2" height="18" rx="9" fill="#6d4bb3"/>
+<text x="432.6" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">subagent</text>
+<text x="478.2" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">INC-2601 … INC-2610</text>
+<text x="708" y="62" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
+<rect x="390" y="76" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
+<rect x="395" y="80" width="75.2" height="18" rx="9" fill="#6d4bb3"/>
+<text x="432.6" y="93" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">subagent</text>
+<text x="478.2" y="93.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">INC-2611 … INC-2620</text>
+<text x="708" y="94" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
+<rect x="390" y="108" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
+<rect x="395" y="112" width="75.2" height="18" rx="9" fill="#6d4bb3"/>
+<text x="432.6" y="125" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">subagent</text>
+<text x="478.2" y="125.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">INC-2621 … INC-2630</text>
+<text x="708" y="126" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
+<text x="750" y="62" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Each box grey while its subagent reads 10</text>
+<text x="750" y="80" fill="#374151" font-size="13" font-weight="400" text-anchor="start">reports, then green with 10 yes or no lines</text>
+<text x="750" y="98" fill="#374151" font-size="13" font-weight="400" text-anchor="start">and your cost note. Then the yes lines,</text>
+<text x="750" y="116" fill="#374151" font-size="13" font-weight="400" text-anchor="start">numbered.</text>
+<rect x="750" y="128" width="310" height="8" rx="4" fill="#f3f4f6" stroke="#d1d5db"/>
+<rect x="750" y="128" width="28.38134765625" height="8" rx="4" fill="#2f7d5b" opacity="0.8"/>
+<line x1="905.0" y1="124" x2="905.0" y2="140" stroke="#1f2328" stroke-width="1" stroke-dasharray="2 2"/>
+<line x1="366" y1="60" x2="384" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="60" x2="742" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="151" x2="1070" y2="151" stroke="#eef0f3"/>
+<rect x="30" y="158" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="180" fill="#2f5a96" font-size="13" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">/context</text>
+<text x="394" y="180" fill="#6b7280" font-size="12" font-weight="400" text-anchor="start">no tool call: a pi2 command</text>
+<text x="750" y="176" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Only the three lists are in the parent's</text>
+<text x="750" y="194" fill="#374151" font-size="13" font-weight="400" text-anchor="start">context: a few thousand tokens, far from the</text>
+<text x="750" y="212" fill="#374151" font-size="13" font-weight="400" text-anchor="start">mark.</text>
+<rect x="750" y="224" width="310" height="8" rx="4" fill="#f3f4f6" stroke="#d1d5db"/>
+<rect x="750" y="224" width="28.38134765625" height="8" rx="4" fill="#2f7d5b" opacity="0.8"/>
+<line x1="905.0" y1="220" x2="905.0" y2="236" stroke="#1f2328" stroke-width="1" stroke-dasharray="2 2"/>
+<line x1="366" y1="174" x2="384" y2="174" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="174" x2="742" y2="174" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="247" x2="1070" y2="247" stroke="#eef0f3"/>
+<text x="30" y="264" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">The full ask is in the README. The bar is the parent's context; the dashed mark is where compaction starts (16k of 32k).</text>
+<rect x="30" y="282" width="1040" height="62" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
+<text x="48" y="308" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
+<text x="96" y="308" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">Give a subagent a complete task: its files, what to look for, what to return; it sees nothing of your conversation. Expect a few minutes: one</text>
+<text x="96" y="328" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">request per report, one subagent after another.</text>
+</svg>

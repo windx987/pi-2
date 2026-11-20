@@ -20,14 +20,14 @@ def execute(params, ctx):
     # EXERCISE 1: Resolve params["path"] against ctx.cwd (os.path.join, or pathlib: Path(ctx.cwd) / path),
     # so relative paths mean "relative to the directory the agent works in".
     #
-    # EXERCISE 2: Read the file as UTF-8 text (Path.read_text(encoding="utf-8")).
+    # EXERCISE 2: Errors. Raise an exception when there is no such file (Path.is_file()). pi2 turns a raised
+    # exception into an error result; write the message for the model, which reads it.
     #
-    # EXERCISE 3: Apply params.get("offset") and params.get("limit"). Split into lines, keep the selected
-    # ones, and when lines remain after them, end the text with a note such as
+    # EXERCISE 3: Read the file as UTF-8 text (Path.read_text(encoding="utf-8")) and split it into lines.
+    #
+    # EXERCISE 4: Apply params.get("offset") and params.get("limit"). Raise an exception for an offset past
+    # the end, keep the selected lines, and when lines remain after them, end the text with a note such as
     # "[120 more lines. Use offset=201 to continue.]" so the model knows how to read on.
-    #
-    # EXERCISE 4: Errors. Raise an exception for a missing file or an offset past the end of the file.
-    # pi2 turns a raised exception into an error result; write the message for the model, which reads it.
     #
     # Return the text as a string.
     #

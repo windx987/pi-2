@@ -1,4 +1,4 @@
-# Writes playground-1-test.svg, playground-2-prices.svg and playground-3-incidents.svg: for each playground
+# Writes playground-1-test.svg and playground-2-incidents.svg: for each playground
 # scenario, what the agent does with which tool, how much of the context it needs, and a hint.
 # Run from anywhere: python3 assets/diagrams/render_playground.py
 import textwrap
@@ -115,33 +115,6 @@ def scenario_test():
     write("playground-1-test.svg", 322 + h + 20, parts + h_parts)
 
 
-def scenario_prices():
-    parts = [heading(30, 28, "What the agent does")]
-    parts += flow(42, [
-        ("read", "Learn the rule", "prices/README.md, one file"),
-        ("write", "Write a test", "loops over all 1000 files"),
-        ("bash", "Run it", "node --test prices.test.js"),
-        ("", "Name the file", "the only failing check"),
-    ])
-    parts.append(heading(30, 168, "1000 files, one wrong"))
-    cols, size, step = 50, 8, 10
-    wrong = 50 * 13 + 37  # where the red square is drawn; not the real file
-    for i in range(1000):
-        x, y = 30 + (i % cols) * step, 182 + (i // cols) * step
-        fill = RED if i == wrong else "#dbe4f0"
-        parts.append(f'<rect x="{x}" y="{y}" width="{size}" height="{size}" rx="1.5" fill="{fill}"/>')
-    parts.append(text(30, 396, "item-0001.js … item-1000.js, written four different ways", size=12, color="#4b5563"))
-    parts += context_bar(566, 210, 500, "Read every file", 56000, "about 56k tokens of files: more than the window")
-    parts += context_bar(566, 288, 500, "Write a test and run it", 2500, "the rule, one test file, one result")
-    parts.append(text(566, 350, "The dashed line is where compaction starts (16k of 32k).", size=12, color="#4b5563"))
-    h_parts, h = hint(414, [
-        "The agent cannot look at 1000 files, but it can write code that does. Point it at the rule in prices/README.md and ask "
-        "for one test that imports every file and compares gross() with the price the rule gives. If it starts reading the "
-        "files one by one, stop it (ctrl+c) and ask for the test.",
-    ])
-    write("playground-2-prices.svg", 414 + h + 20, parts + h_parts)
-
-
 def scenario_incidents():
     parts = [heading(30, 28, "What the agent does")]
     parts += flow(42, [
@@ -170,9 +143,9 @@ def scenario_incidents():
         "database timeouts although the database was fine, so read the cause, not the logs. Expect a few minutes: one request "
         "per report, and each subagent box stays grey until its subagent answers.",
     ])
-    write("playground-3-incidents.svg", 380 + h + 20, parts + h_parts)
+    write("playground-2-incidents.svg", 380 + h + 20, parts + h_parts)
 
 
-scenario_test()
-scenario_prices()
-scenario_incidents()
+if __name__ == "__main__":
+    scenario_test()
+    scenario_incidents()

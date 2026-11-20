@@ -165,7 +165,7 @@ class CompactionTest(unittest.TestCase):
     def test_defaults_shrink_for_a_small_window_and_settings_json_overrides_them(self):
         with tempfile.TemporaryDirectory() as agent_dir:
             settings = compaction.load_settings(agent_dir, 32768)
-            self.assertEqual((settings["reserve_tokens"], settings["keep_recent_tokens"]), (16384, 8192))
+            self.assertEqual((settings["reserve_tokens"], settings["keep_recent_tokens"]), (16384, 4096))
             Path(agent_dir, "settings.json").write_text(json.dumps({"compaction": {"keepRecentTokens": 500}}))
             self.assertEqual(compaction.load_settings(agent_dir, 32768)["keep_recent_tokens"], 500)
 
@@ -341,6 +341,11 @@ class InteractiveModeTest(unittest.TestCase):
     def test_answers_with_text_or_tool_calls_get_no_note(self):
         self.assertNotIn("without a reply", self.render_end(answer({"type": "text", "text": "hello"})))
         self.assertNotIn("without a reply", self.render_end(answer(call("echo", {"text": "x"}), stop_reason="tool_use")))
+
+    def test_a_read_of_part_of_a_file_shows_the_lines(self):
+        self.assertIn("math.js:5-7", tui.tool_title(call("read", {"path": "math.js", "offset": 5, "limit": 3})))
+        self.assertIn("math.js:5-", tui.tool_title(call("read", {"path": "math.js", "offset": 5})))
+        self.assertNotIn(":", tui.tool_title(call("read", {"path": "math.js"})).split("math.js")[1])
 
     def test_a_truncated_answer_says_so(self):
         self.assertIn("truncated", self.render_end(answer({"type": "text", "text": "cut"}, stop_reason="length")))

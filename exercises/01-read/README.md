@@ -30,18 +30,29 @@ Follow EXERCISE 1 to 4 in [read.py](read.py). Add `from pathlib import Path` at 
 
    `ctx.cwd` is the directory the agent works in. `/` joins it with a relative path; an absolute path replaces it, so both kinds work.
 
-2. Read the file as UTF-8 text.
+2. Raise an exception when there is no such file.
+
+   ```python
+   if not path.is_file():
+       raise FileNotFoundError(f"File not found: {params['path']}")
+   ```
+
+   pi2 turns the exception into an error result, and the model reads the message. Name the path the model sent, not the resolved one, so it recognizes its own call.
+
+3. Read the file as UTF-8 text, split into lines.
 
    ```python
    lines = path.read_text(encoding="utf-8").split("\n")
    ```
 
-   Name the encoding: the default depends on the machine. Split into lines now, because step 3 counts lines.
+   Name the encoding: the default depends on the machine. Split into lines now, because step 4 counts lines.
 
-3. Apply `offset` and `limit`, and say how to read on when lines are left.
+4. Apply `offset` and `limit`, and say how to read on when lines are left.
 
    ```python
    offset = int(params.get("offset") or 1)
+   if offset > len(lines):
+       raise ValueError(f"Offset {offset} is beyond the end of the file ({len(lines)} lines).")
    end = len(lines)
    if params.get("limit") is not None:
        end = min(end, offset - 1 + int(params["limit"]))
@@ -51,19 +62,9 @@ Follow EXERCISE 1 to 4 in [read.py](read.py). Add `from pathlib import Path` at 
    return text
    ```
 
-   `offset` counts from 1, a Python list from 0, hence `offset - 1`. Without `limit`, read to the end; `min` stops at the end when `limit` reaches past it. `int()` because the schema type is `number`, so the model may send `3.0`. The model cannot see what was left out; the note tells it the next call to make.
+   `offset` counts from 1, a Python list from 0, hence `offset - 1`; an offset past the end is an error, like a missing file. Without `limit`, read to the end; `min` stops at the end when `limit` reaches past it. `int()` because the schema type is `number`, so the model may send `3.0`. The model cannot see what was left out; the note tells it the next call to make.
 
-4. Raise an exception for a missing file or an offset past the end.
-
-   ```python
-   if not path.is_file():                 # before read_text
-       raise FileNotFoundError(f"File not found: {params['path']}")
-
-   if offset > len(lines):                # after offset is known
-       raise ValueError(f"Offset {offset} is beyond the end of the file ({len(lines)} lines).")
-   ```
-
-   pi2 turns the exception into an error result, and the model reads the message. Name the path the model sent, not the resolved one, so it recognizes its own call.
+Each step adds its lines below the previous one, so the four blocks together are the whole function.
 
 The whole run, with the line of the solution each step uses:
 
@@ -118,10 +119,12 @@ cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
 
 Ask: "What does math.js export?", then "Show me lines 5 to 7 of math.js.", then "Read missing.txt."
 
+<p align="center"><img alt="Try it for read: you ask what math.js exports and the agent calls read math.js, which turns green; you ask for lines 5 to 7 and it calls read with offset 5 and limit 3, and you see three lines and your note; you ask to read missing.txt and the call turns red with your message. Hint: with only read the agent cannot list a folder, so name the file." src="../../assets/diagrams/exercise-01-try.svg" width="900"></p>
+
 ## Expected result
 
 - The agent calls `read`. A tool box shows `read math.js` and the first lines of the file, and turns green.
-- For part of a file, the call has `offset` and `limit`.
+- For part of a file, the call has `offset` and `limit`: the box shows `read math.js:5-7`.
 - For a missing file, the box turns red with your message, and the agent says the file does not exist instead of inventing its contents.
 
 ## Where to look

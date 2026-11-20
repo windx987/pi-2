@@ -9,7 +9,7 @@ WIDTH, HEIGHT = 1210, 610
 LEFT, RIGHT = 30, 1180
 WINDOW = 32768  # the workshop model; one pixel per WINDOW / (RIGHT - LEFT) tokens
 THRESHOLD = WINDOW - 16384
-KEEP = 8192
+KEEP = 4096
 STYLE = {
     "system": ("#f3f4f6", "#6b7280"),
     "user": ("#eef3fa", "#2f5a96"),

@@ -103,6 +103,8 @@ cd ~/pi-workshop
 
 Ask: "Create notes/todo.md with three workshop goals, then read it back." Then: "Write a file to /tmp/outside.txt."
 
+<p align="center"><img alt="Try it for write: you ask to create notes/todo.md and read it back, and the agent calls write then read, both green; you ask to write /tmp/outside.txt and the write turns red: refused outside the working directory. Hint: the model sees only your confirmation, not the file." src="../../assets/diagrams/exercise-02-try.svg" width="900"></p>
+
 ## Expected result
 
 - A green `write notes/todo.md` box with your confirmation, then a `read` of the same file. `cat notes/todo.md` in another terminal shows the content.

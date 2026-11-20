@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="330" viewBox="0 0 1100 330" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="30" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU ASK</text>
+<text x="390" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">THE AGENT CALLS</text>
+<text x="750" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU SHOULD SEE</text>
+<rect x="30" y="44" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="66" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">What does math.js export?</text>
+<rect x="390" y="44" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
+<rect x="395" y="48" width="45.6" height="18" rx="9" fill="#b03a37"/>
+<text x="417.8" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
+<text x="448.6" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="708" y="62" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
+<text x="750" y="62" fill="#374151" font-size="13" font-weight="400" text-anchor="start">The first lines of math.js in the box, then an</text>
+<text x="750" y="80" fill="#374151" font-size="13" font-weight="400" text-anchor="start">answer naming add and average.</text>
+<line x1="366" y1="60" x2="384" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="60" x2="742" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="97" x2="1070" y2="97" stroke="#eef0f3"/>
+<rect x="30" y="104" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="126" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Show me lines 5 to 7 of math.js.</text>
+<rect x="390" y="104" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
+<rect x="395" y="108" width="45.6" height="18" rx="9" fill="#b03a37"/>
+<text x="417.8" y="121" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
+<text x="448.6" y="121.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js:5-7</text>
+<text x="708" y="122" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
+<text x="750" y="122" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Three lines and your note: [N more lines. Use</text>
+<text x="750" y="140" fill="#374151" font-size="13" font-weight="400" text-anchor="start">offset=8 to continue.]</text>
+<line x1="366" y1="120" x2="384" y2="120" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="120" x2="742" y2="120" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="157" x2="1070" y2="157" stroke="#eef0f3"/>
+<rect x="30" y="164" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
+<text x="44" y="186" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Read missing.txt.</text>
+<rect x="390" y="164" width="330" height="26" rx="7" fill="#fbeeee" stroke="#b03a37" stroke-width="1.2"/>
+<rect x="395" y="168" width="45.6" height="18" rx="9" fill="#b03a37"/>
+<text x="417.8" y="181" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
+<text x="448.6" y="181.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">missing.txt</text>
+<text x="708" y="182" fill="#b03a37" font-size="14" font-weight="700" text-anchor="end">✗</text>
+<text x="750" y="182" fill="#374151" font-size="13" font-weight="400" text-anchor="start">A red box with your message. The agent says</text>
+<text x="750" y="200" fill="#374151" font-size="13" font-weight="400" text-anchor="start">the file does not exist instead of inventing</text>
+<text x="750" y="218" fill="#374151" font-size="13" font-weight="400" text-anchor="start">it.</text>
+<line x1="366" y1="180" x2="384" y2="180" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="726" y1="180" x2="742" y2="180" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
+<line x1="30" y1="235" x2="1070" y2="235" stroke="#eef0f3"/>
+<rect x="30" y="248" width="1040" height="62" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
+<text x="48" y="274" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
+<text x="96" y="274" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">With only read, the agent cannot list a folder: it may first try "read ." and get an error. That is fine; name the file in your question and it</text>
+<text x="96" y="294" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">reads it.</text>
+</svg>

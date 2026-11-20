@@ -87,26 +87,26 @@ class SubagentTest(unittest.TestCase):
         self.assertEqual(len(self.requests), 2)
         self.assertEqual(self.requests[1][0][-1]["content"], "echo: x")
 
-    def test_3_answer(self):
-        """Step 3: the result is the subagent's final answer."""
+    def test_4_answer(self):
+        """Step 4: the result is the subagent's final answer."""
         result, _ = self.run_task(TOOL_CALL, FINAL)
         self.assertIn("Found 3 files.", result)
 
-    def test_3_cost_note(self):
-        """Step 3: a note says what it cost: 1 tool call, and the input tokens (3.0k)."""
+    def test_4_cost_note(self):
+        """Step 4: a note says what it cost: 1 tool call, and the input tokens (3.0k)."""
         result, _ = self.run_task(TOOL_CALL, FINAL)
         note = result.replace("Found 3 files.", "")
         self.assertRegex(note, re.compile(r"\b1\b\D{0,12}tool|tool\D{0,12}\b1\b", re.IGNORECASE), f"say it made 1 tool call: {result!r}")
         self.assertRegex(note, r"3\.0\s*k|3000|3,000", f"say it used 3000 input tokens (3.0k): {result!r}")
 
-    def test_4_error(self):
-        """Step 4: when the subagent's model fails, the tool raises with its error message."""
+    def test_3_error(self):
+        """Step 3: when the subagent's model fails, the tool raises with its error message."""
         failed = answer(stop_reason="error", error_message="502 Bad Gateway")
         error = error_of(self.subagent, {"task": "List the files."}, "/work", session=self.parent(failed))
         self.assertIn("502 Bad Gateway", str(error))
 
-    def test_4_aborted(self):
-        """Step 4: ctrl+c in the subagent raises KeyboardInterrupt, so the parent stops too."""
+    def test_3_aborted(self):
+        """Step 3: ctrl+c in the subagent raises KeyboardInterrupt, so the parent stops too."""
         session = self.parent("interrupt")
         try:
             result = self.subagent.execute({"task": "List the files."}, ToolContext(cwd="/work", session=session))

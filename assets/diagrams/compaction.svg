@@ -17,10 +17,10 @@
 <rect x="522.3330078125" y="50" width="22.566650390625" height="46" rx="6" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
 <rect x="546.899658203125" y="50" width="138.380859375" height="46" rx="6" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.5"/>
 <text x="616.090087890625" y="78" text-anchor="middle" fill="#2f7d5b" font-size="12" font-weight="600">tool result</text>
-<path d="M 63.585693359375 104 v 8 H 382.461669921875 v -8" fill="none" stroke="#b7791f" stroke-width="1.5"/>
-<text x="223.023681640625" y="130" text-anchor="middle" fill="#b7791f" font-size="13" font-weight="600">older messages: summarized</text>
-<path d="M 386.461669921875 104 v 8 H 684.280517578125 v -8" fill="none" stroke="#2f5a96" stroke-width="1.5"/>
-<text x="535.37109375" y="130" text-anchor="middle" fill="#2f5a96" font-size="13" font-weight="600">newest messages: kept word for word (keepRecentTokens)</text>
+<path d="M 63.585693359375 104 v 8 H 519.3330078125 v -8" fill="none" stroke="#b7791f" stroke-width="1.5"/>
+<text x="291.4593505859375" y="130" text-anchor="middle" fill="#b7791f" font-size="13" font-weight="600">older messages: summarized</text>
+<path d="M 523.3330078125 104 v 8 H 684.280517578125 v -8" fill="none" stroke="#2f5a96" stroke-width="1.5"/>
+<text x="603.8067626953125" y="130" text-anchor="middle" fill="#2f5a96" font-size="13" font-weight="600">newest messages: kept word for word (keepRecentTokens)</text>
 <rect x="30" y="166" width="1150" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
 <rect x="30" y="166" width="656.280517578125" height="12" rx="6" fill="#b03a37" opacity="0.8"/>
 <line x1="605.0" y1="158" x2="605.0" y2="186" stroke="#1f2328" stroke-width="1.5" stroke-dasharray="4 3"/>
@@ -35,20 +35,15 @@
 <text x="30" y="352" fill="#4b5563" font-size="13" font-weight="700" letter-spacing="0.5">AFTER: WHAT THE MODEL SEES FROM NOW ON</text>
 <rect x="31.0" y="370" width="29.585693359375" height="46" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
 <rect x="62.585693359375" y="370" width="43.623779296875" height="46" rx="6" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
-<rect x="108.20947265625" y="370" width="19.05712890625" height="46" rx="6" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
-<rect x="129.2666015625" y="370" width="5.01904296875" height="46" rx="6" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<rect x="136.28564453125" y="370" width="15.547607421875" height="46" rx="6" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
-<rect x="153.833251953125" y="370" width="89.24755859375" height="46" rx="6" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.5"/>
-<text x="198.45703125" y="398" text-anchor="middle" fill="#2f7d5b" font-size="12" font-weight="600">tool result</text>
-<rect x="245.080810546875" y="370" width="22.566650390625" height="46" rx="6" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
-<rect x="269.6474609375" y="370" width="138.380859375" height="46" rx="6" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.5"/>
-<text x="338.837890625" y="398" text-anchor="middle" fill="#2f7d5b" font-size="12" font-weight="600">tool result</text>
+<rect x="108.20947265625" y="370" width="22.566650390625" height="46" rx="6" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
+<rect x="132.776123046875" y="370" width="138.380859375" height="46" rx="6" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.5"/>
+<text x="201.966552734375" y="398" text-anchor="middle" fill="#2f7d5b" font-size="12" font-weight="600">tool result</text>
 <path d="M 63.585693359375 424 v 8 H 105.20947265625 v -8" fill="none" stroke="#b7791f" stroke-width="1.5"/>
 <text x="84.3975830078125" y="450" text-anchor="middle" fill="#b7791f" font-size="13" font-weight="600">summary</text>
 <rect x="30" y="486" width="1150" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
-<rect x="30" y="486" width="379.0283203125" height="12" rx="6" fill="#2f7d5b" opacity="0.8"/>
+<rect x="30" y="486" width="242.156982421875" height="12" rx="6" fill="#2f7d5b" opacity="0.8"/>
 <line x1="605.0" y1="478" x2="605.0" y2="506" stroke="#1f2328" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="30" y="520" fill="#4b5563" font-size="12">context: about 11k tokens</text>
+<text x="30" y="520" fill="#4b5563" font-size="12">context: about 7k tokens</text>
 <text x="613.0" y="520" fill="#1f2328" font-size="12">contextWindow - reserveTokens = 16k</text>
 <text x="1180" y="520" text-anchor="end" fill="#4b5563" font-size="12">contextWindow = 32k</text>
 <rect x="30" y="575" width="22" height="16" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>

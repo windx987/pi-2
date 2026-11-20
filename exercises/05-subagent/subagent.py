@@ -31,13 +31,13 @@ def execute(params, ctx):
     # EXERCISE 2: Start the subagent: AgentSession(runtime, model, your ExtensionAPI, ctx.cwd, agent_dir),
     # then child.prompt(params["task"]). prompt() returns when the subagent's loop is done.
     #
-    # EXERCISE 3: Return its answer. The last message in child.messages is its final answer; join the
-    # text of its blocks whose "type" is "text". Add a short note on what it cost, such as
-    # "[subagent: 4 tool calls, 3.1k input tokens]" (count "toolResult" messages, read child.usage).
-    #
-    # EXERCISE 4: Failures. When the last message's "stop_reason" is "error", raise an exception with
+    # EXERCISE 3: Failures. When the last message's "stop_reason" is "error", raise an exception with
     # its "error_message". When it is "aborted" (you pressed ctrl+c), raise KeyboardInterrupt, so the
     # parent stops too instead of carrying on without the answer.
+    #
+    # EXERCISE 4: Return its answer. The last message in child.messages is its final answer; join the
+    # text of its blocks whose "type" is "text". Add a short note on what it cost, such as
+    # "[subagent: 4 tool calls, 3.1k input tokens]" (count "toolResult" messages, read child.usage).
     #
     # CHALLENGE: Roles. Add a "role" parameter, "scout" or "worker", as Pi's example does with
     # agents/*.md: a scout gets only the read tool, a worker gets all of them.

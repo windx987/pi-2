@@ -28,8 +28,8 @@ Follow the comments in [subagent.py](subagent.py):
 
 1. Give the subagent the parent's tools, except `subagent` itself.
 2. Create the child `AgentSession` and call `prompt(task)`.
-3. Return the text of its last message, with a note on what it cost.
-4. Turn a failed or aborted subagent into an error, or into ctrl+c for the parent.
+3. Turn a failed or aborted subagent into an error, or into ctrl+c for the parent.
+4. Return the text of its last message, with a note on what it cost.
 
 ## Check your tool
 
@@ -56,7 +56,9 @@ The playground's [incidents/](../../playground/incidents/) has 30 incident repor
 
 Name the files and what to return: neither tool can list a folder, and a subagent sees only its task, not your conversation. Without the names the model guesses, such as `incidents/1.txt`. Ask for a line per report, not only the matches: a report the subagent skipped or misjudged then shows up as a wrong "no" you can check, instead of silently missing. Ask for numbered lines rather than a count: a model writes 1, 2, 3 reliably, but a count it states is a guess and can be off by one.
 
-Then type `/new` and ask the same without subagents. See [scenario 3 of the playground](../../playground/README.md#3-thirty-incident-reports) for what to look for.
+Then type `/new` and ask the same without subagents. See [scenario 2 of the playground](../../playground/README.md#2-thirty-incident-reports) for what to look for.
+
+<p align="center"><img alt="Try it for subagent: the ask gives three subagent calls, each grey while it reads 10 reports and then green with 10 yes or no lines and the cost note, then the yes lines numbered; /context shows only the three lists in the parent's context. Hint: give each subagent a complete task, and expect a few minutes." src="../../assets/diagrams/exercise-05-try.svg" width="900"></p>
 
 ## Expected result
 

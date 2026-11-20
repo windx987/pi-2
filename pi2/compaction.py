@@ -10,8 +10,8 @@ import json
 import re
 from pathlib import Path
 
-# Pi's defaults. A small window gets less: half of it for the answer, a quarter kept word for word, so
-# that a compacted conversation is well below the threshold and does not compact again at once.
+# Pi's defaults. A small window gets less: half of it for the answer, an eighth kept word for word, so
+# that a compacted conversation is well below the threshold and /compact frees room well before it.
 RESERVE_TOKENS = 16384
 KEEP_RECENT_TOKENS = 20000
 TOOL_RESULT_MAX_CHARS = 2000
@@ -74,7 +74,7 @@ def load_settings(agent_dir, context_window):
     settings = {
         "enabled": True,
         "reserve_tokens": min(RESERVE_TOKENS, context_window // 2),
-        "keep_recent_tokens": min(KEEP_RECENT_TOKENS, context_window // 4),
+        "keep_recent_tokens": min(KEEP_RECENT_TOKENS, context_window // 8),
     }
     path = Path(agent_dir) / "settings.json"
     if path.exists():

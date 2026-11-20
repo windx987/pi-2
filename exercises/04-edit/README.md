@@ -50,6 +50,8 @@ cd ~/pi-workshop
 
 Ask: "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again: all four tools in one task. Then ask: "Rename add to sum in math.js and update its callers." Then copy the line `return a + b;` once more into `math.js` yourself and ask: "In math.js, replace `return a + b;` with `return a - b;`."
 
+<p align="center"><img alt="Try it for edit: Fix the failing test runs npm test (red), read, edit and npm test (green); renaming add to sum is one edit call with two replacements; replacing a line that occurs twice is refused, and the agent reads the file and retries with more context. Hint: each oldText must occur once in the original file." src="../../assets/diagrams/exercise-04-try.svg" width="900"></p>
+
 ## Expected result
 
 - `npm test` fails, then a green `edit math.js` box, then `npm test` passes.

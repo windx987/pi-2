@@ -10,8 +10,9 @@ cd ~/pi-workshop
 | Scenario | Tools | What it shows |
 |---|---|---|
 | [1. A failing test](#1-a-failing-test) | read, write, bash, edit | The tool-call loop: read, run, fix, run again |
-| [2. One bug in 1000 files](#2-one-bug-in-1000-files) | read, write, bash | When there is too much to read, the agent writes code to check it |
-| [3. Thirty incident reports](#3-thirty-incident-reports) | read, subagent | Too much for one context: subagents read, the parent gets the answers |
+| [2. Thirty incident reports](#2-thirty-incident-reports) | read, subagent | Too much for one context: subagents read, the parent gets the answers |
+| [3. Watching the context](#3-watching-the-context-context-compact-new) | read | `/context`, `/compact`, automatic compaction and `/new` on the same reports |
+| [4. A permission gate](#4-a-permission-gate) | read, write, bash, permission_gate.py | A listener blocks dangerous commands before they run |
 
 ## 1. A failing test
 
@@ -30,32 +31,9 @@ Ask: "Run the tests and fix what fails."
 
 The agent runs `npm test`, reads `math.js` and the test, edits the bug, and runs the tests again.
 
-## 2. One bug in 1000 files
+## 2. Thirty incident reports
 
-<p align="center"><img alt="Scenario 2, one bug in 1000 files: the agent reads the rule in prices/README.md, writes one test that loops over all 1000 files, runs it with node --test, and names the only failing file. Reading every file would take about 56k tokens, more than the 32k window; the test needs a few thousand. Hint: point the agent at the rule and ask for a test; stop it if it reads the files one by one." src="../assets/diagrams/playground-2-prices.svg" width="900"></p>
-
-[prices/](prices/) has 1000 files, `item-0001.js` to `item-1000.js`. Each exports a net price and a function `gross()` that adds 7% VAT. One of them is wrong, and they are written in four different ways, so you cannot spot it by looking. [prices/README.md](prices/README.md) says what every file must do.
-
-Why these tools:
-
-- **read** for the rule in `prices/README.md` and one or two files to see their shape, not for all 1000: together they are more than the context holds.
-- **write** creates the test, a new file.
-- **bash** runs it. The 1000 checks happen inside Node, outside the model's context, and only the result comes back: one failing file instead of 56k tokens of code.
-- Not **subagent**: splitting the files between subagents would still read every one of them. A checkable rule is a job for code.
-
-Load read, write and bash, and ask:
-
-"One of the 1000 files in prices/ computes the wrong price. Read prices/README.md, write a test that checks every file against it, run it, and tell me which file is wrong."
-
-What to look for:
-
-- The agent reads the README and one or two files, not all 1000: they would not fit in its context. Type `/context` to see why.
-- It writes a test, for example `prices.test.js`, that loops over the folder, then runs it with `node --test prices.test.js`.
-- The test fails for exactly one file, and the agent names it. With edit loaded, ask it to fix the file and run the test again.
-
-## 3. Thirty incident reports
-
-<p align="center"><img alt="Scenario 3, thirty incident reports: three subagents each read 10 reports in their own context and return a short list; the parent combines the three lists. Read by the parent alone, the reports take about 25k tokens and the session compacts; with subagents the parent holds only the lists. Hint: give each subagent a complete task with its files, what to look for and what to return; read the root cause, not the logs, which show database timeouts even when the database was fine; expect a few minutes." src="../assets/diagrams/playground-3-incidents.svg" width="900"></p>
+<p align="center"><img alt="Scenario 2, thirty incident reports: three subagents each read 10 reports in their own context and return a short list; the parent combines the three lists. Read by the parent alone, the reports take about 25k tokens and the session compacts; with subagents the parent holds only the lists. Hint: give each subagent a complete task with its files, what to look for and what to return; read the root cause, not the logs, which show database timeouts even when the database was fine; expect a few minutes." src="../assets/diagrams/playground-2-incidents.svg" width="900"></p>
 
 [incidents/](incidents/) has 30 incident reports, `INC-2601.md` to `INC-2630.md`. Each has a timeline, a page of logs, and the root cause at the end. Together they are about 25k tokens: past the 16k where a 32k model compacts, while 10 of them, about 9k, fit one subagent. Some logs show database timeouts although the database was fine, so the agent has to read each root cause, not search for "database".
 
@@ -77,8 +55,51 @@ What to look for:
 - The parent's context grows only by those three lists: compare `/context` before and after.
 - It takes a few minutes: each report is one request to the model, and the subagents run one after another. Each `subagent` box stays grey, with no progress, until its subagent answers.
 
-Then start a new session with `/new` and ask the same without subagents: "Read every report in incidents/, INC-2601.md to INC-2630.md, and tell me which incidents the database caused." The context fills up, the session compacts (see [docs/compaction.md](../docs/compaction.md)), and findings from the early reports may be lost in the summary.
+To see what happens without subagents, do [scenario 3](#3-watching-the-context-context-compact-new): the parent reads the reports itself, and the context fills up.
 
-## Making the scenarios again
+## 3. Watching the context: `/context`, `/compact`, `/new`
 
-`prices/` and `incidents/` are generated by [assets/playground/generate.py](../assets/playground/generate.py), outside the playground so the agent cannot read the answers. It writes the same files every time. Instructors can print the answers with `python3 assets/playground/generate.py --answers`.
+<p align="center"><img alt="Scenario 3, watching the context: /context shows under 1k; reading reports 01 to 08 fills it to 7k to 10k of tool results, below the compaction mark at 16k; /compact with a focus summarizes the older messages and keeps the newest 4k; reading reports 09 to 30 passes 16k and compacts automatically while the agent reads on; /new starts empty, and the agent no longer knows what it found. Hint: say what the summary must keep in the focus of /compact." src="../assets/diagrams/playground-3-context.svg" width="900"></p>
+
+The same 30 reports, read by one agent without subagents. Every report stays in the context, so you can watch it fill up, compact it by hand, see it compact on its own, and start over.
+
+Why these tools:
+
+- **read** only. Every report the agent reads stays in its context until compaction summarizes it.
+- Not **subagent**: here the point is to fill one context.
+
+Load read, and type each step in order:
+
+1. `/context`. The window is almost empty: the system prompt and one tool, under 1k of 33k.
+2. Ask: "Read INC-2601.md to INC-2608.md in incidents/ and give one line per report: the number, and yes if the root cause says the database failed, no if something else did."
+3. `/context` again. Tool results are now most of it, 7k to 10k: a small model sometimes reads a file twice. The bar is getting close to `│`, where automatic compaction starts (16k).
+4. `/compact keep the yes or no line of every report`. A box says `Compacted N messages`, with the tokens before and after, and shows the start of the summary. `/context` now has a summary part and fewer tool results: the newest messages, about 4k, are kept word for word.
+5. Ask: "Read INC-2609.md to INC-2630.md the same way." Halfway through, the context passes 16k and you see `Context is filling up: summarizing older messages...`, then another `Compacted` box. The agent goes on reading.
+6. Ask: "List the yes lines of all 30 reports, numbered." Compare with the answers (see [Making the reports again](#making-the-reports-again)). A report that is wrong or missing was lost in a summary: compare with scenario 2, where the parent never held the reports.
+7. `/new`. `New session started`, and `/context` is almost empty again. Ask: "Which incidents did the database cause?" The agent does not know, and starts reading the reports again: a new session starts with no messages. The old one is still in `~/.pi/agent/python-sessions/`, but pi2 does not load it again.
+
+[docs/compaction.md](../docs/compaction.md) explains what is kept and the settings.
+
+## 4. A permission gate
+
+<p align="center"><img alt="Scenario 4, a permission gate: Delete the incidents folder with rm -rf gives a bash call that is blocked before it runs, with the reason Dangerous command blocked, and the folder stays; sudo ls is blocked as well; ls incidents runs. Hint: the gate matches the text of the command, so it is a way to ask first, not a wall; the container is what keeps the machine safe." src="../assets/diagrams/playground-4-gate.svg" width="900"></p>
+
+[examples/permission_gate.py](../examples/permission_gate.py) registers no tool. It listens to every tool call (step 6 of the big picture) and blocks bash commands that are hard to undo: `rm -rf`, `sudo`, `chmod 777`. A blocked call never runs; the model gets the reason as an error result.
+
+Why these tools:
+
+- **bash** is what the gate watches. It needs Docker, as in exercise 03.
+- **read** and **write** let the agent look for another way after a refusal.
+- **permission_gate.py** is a listener, not a tool: load it with `-e` like any extension.
+
+Load read, write, bash and `examples/permission_gate.py`, and ask:
+
+1. "Delete the incidents folder with rm -rf." The `$ rm -rf incidents` box turns red with `Blocked by extension: Dangerous command blocked: rm -rf incidents. Ask the user to run it themselves.` The agent says it was blocked, and `ls incidents` in another terminal still shows the 30 reports.
+2. "Run sudo ls." Blocked as well.
+3. "List the files in incidents/." Allowed: the gate lets every other command through.
+
+What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, your playground copy loses the folder: copy it again. The real protection is the container of exercise 03, which sees only the working directory. The gate is for asking first, not for safety.
+
+## Making the reports again
+
+`incidents/` is generated by [assets/playground/generate.py](../assets/playground/generate.py), outside the playground so the agent cannot read the answers. It writes the same files every time. Instructors can print the answers with `python3 assets/playground/generate.py --answers`.

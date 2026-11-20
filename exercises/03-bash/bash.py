@@ -50,18 +50,18 @@ def execute(params, ctx):
     # raise an exception that says so.
     #
     # EXERCISE 2: Collect output. Send stderr into stdout (stderr=subprocess.STDOUT) so both arrive in
-    # one text, in order, the way a terminal shows them. proc.communicate() waits for the process and
-    # returns (output, None).
+    # one text, in order, the way a terminal shows them. proc.communicate(timeout=params.get("timeout"))
+    # waits for the process and returns (output, None).
     #
-    # EXERCISE 3: Return the output; when proc.returncode is not 0, raise an exception with the output
-    # and "Command exited with code N", so the model gets an error result.
-    #
-    # EXERCISE 4: Stop runaway commands. Pass timeout=params.get("timeout") to communicate() and catch
-    # subprocess.TimeoutExpired. Then stop the process with proc.terminate() and call communicate()
-    # again to wait for it. Say in the result that the command was stopped.
+    # EXERCISE 3: Stop runaway commands. Catch subprocess.TimeoutExpired, stop the process with
+    # proc.terminate() and call communicate() again to wait for it. Say in the result that the command
+    # was stopped. Do the same for KeyboardInterrupt (ctrl+c), then raise it again.
     # Use terminate() (SIGTERM), not kill() and not subprocess.run(timeout=...): docker run passes
     # SIGTERM on to the container, but SIGKILL ends only the docker client and leaves the container
     # running. With Docker running, python3 exercises/check.py 03 checks that too.
+    #
+    # EXERCISE 4: Return the output; when proc.returncode is not 0, raise an exception with the output
+    # and "Command exited with code N", so the model gets an error result.
     #
     # CHALLENGE: Long output. Keep the last 2000 lines for the model and say how much was left out.
     raise NotImplementedError(f"bash is not implemented yet (asked to run {params['command']} in {ctx.cwd}).")

@@ -42,15 +42,31 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
 
    `Popen` starts the process without waiting for it. The arguments are a list, so no shell runs on your machine: the model's command reaches `bash` only inside the container. `from None` keeps the error message short for the model.
 
-2. Collect stdout and stderr as one text with `communicate()`.
+2. Collect stdout and stderr as one text with `communicate()`, which waits at most `timeout` seconds.
 
    ```python
-   output, _ = proc.communicate()
+   try:
+       output, _ = proc.communicate(timeout=params.get("timeout"))
    ```
 
-   `stderr=subprocess.STDOUT` in step 1 sends errors into the same pipe, so the output arrives in order, as a terminal shows it. `text=True` makes it a `str`. `communicate()` waits for the end and reads everything.
+   `stderr=subprocess.STDOUT` in step 1 sends errors into the same pipe, so the output arrives in order, as a terminal shows it. `text=True` makes it a `str`. `communicate()` waits for the end and reads everything. Without a timeout `params.get` gives `None`, and it waits as long as the command runs.
 
-3. Return the output, or raise with `Command exited with code N`.
+3. Stop the process when the timeout passes, and when you press ctrl+c. These `except` clauses belong to the `try` of step 2:
+
+   ```python
+   except subprocess.TimeoutExpired:
+       proc.terminate()
+       output, _ = proc.communicate()
+       raise RuntimeError(f"{output}\nCommand stopped after {params['timeout']} seconds.") from None
+   except KeyboardInterrupt:
+       proc.terminate()
+       proc.communicate()
+       raise
+   ```
+
+   `terminate()` sends SIGTERM, which stops the container (see "Why SIGTERM" above). The second `communicate()` waits until it has stopped and collects the output so far. ctrl+c needs the same, or the container keeps running after you stop the agent; `raise` then passes it on, so the agent stops too.
+
+4. Return the output, or raise with `Command exited with code N`.
 
    ```python
    if proc.returncode != 0:
@@ -60,27 +76,7 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
 
    A failing command becomes an error result that still has its output, so the model sees what failed. `"(no output)"` tells it an empty result is not a broken tool.
 
-4. Pass the timeout to `communicate()`; on `TimeoutExpired`, call `terminate()` and `communicate()` again. This replaces the line from step 2:
-
-   ```python
-   try:
-       output, _ = proc.communicate(timeout=params.get("timeout"))
-   except subprocess.TimeoutExpired:
-       proc.terminate()
-       output, _ = proc.communicate()
-       raise RuntimeError(f"{output}\nCommand stopped after {params['timeout']} seconds.") from None
-   ```
-
-   Without a timeout `params.get` gives `None`, and `communicate()` waits forever. `terminate()` sends SIGTERM, which stops the container (see "Why SIGTERM" above). The second `communicate()` waits until it has stopped and collects the output so far.
-
-   ctrl+c needs the same treatment, or the container keeps running after you stop the agent. Add a second `except` to the same `try`:
-
-   ```python
-   except KeyboardInterrupt:
-       proc.terminate()
-       proc.communicate()
-       raise
-   ```
+Each step adds its lines below the previous one, so the four blocks together are the whole function.
 
 The whole run, with the line of the solution each step uses:
 
@@ -146,6 +142,8 @@ Ask:
 - "Why does the test fail?" The agent reads `math.js` and the test, and explains. Fixing it with a small change is exercise 04.
 - "Run `sleep 30` with a 2 second timeout."
 - "Run `getent hosts example.com`." It fails: the container has no network.
+
+<p align="center"><img alt="Try it for bash: Run the tests gives a red npm test with one failing test and exit code 1; Why does the test fail? reads math.js and math.test.js; sleep 30 with a 2 second timeout is stopped and no container is left; getent hosts example.com fails because the container has no network. Hint: start Docker and keep the playground under your home directory." src="../../assets/diagrams/exercise-03-try.svg" width="900"></p>
 
 ## Expected result
 

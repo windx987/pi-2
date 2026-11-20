@@ -19,7 +19,7 @@ w ├── exercises/ -- your extensions, each with a README and checks
 w │   ├── 01-read/ … 04-edit/ -- you implement execute() in read.py … edit.py
 w │   ├── 05-subagent/ -- a tool that runs a second agent
 w │   └── check.py -- checks your tools without a model
-w ├── playground/ -- for the agent: a failing test, 1000 files, 30 reports
+w ├── playground/ -- for the agent: a failing test, 30 incident reports
 ## read and run
 r ├── docs/ -- connecting a model; context length and compaction
 r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)

@@ -48,16 +48,16 @@ class DockerTest(Workspace):
         self.assertIn("/workspace", text, f"the command should run in /workspace: {text.strip()[:200]}")
         self.assertIn("found me", text, f"the container does not see ctx.cwd; Docker shares only some folders: {text.strip()[:200]}")
 
-    def test_4_timeout_comes_back(self):
-        """Step 4 (Docker): sleep 30 with a 2 second timeout comes back soon, as an error that says so."""
+    def test_3_timeout_comes_back(self):
+        """Step 3 (Docker): sleep 30 with a 2 second timeout comes back soon, as an error that says so."""
         started = time.monotonic()
         error = error_of(self.bash, {"command": "sleep 30", "timeout": TIMEOUT}, self.cwd)
         seconds = time.monotonic() - started
         self.assertLess(seconds, TIMEOUT + 8, f"the tool returned after {seconds:.0f} s; stop the process at the timeout")
         self.assertRegex(str(error).lower(), "stop|time", f"say that the command was stopped: {error}")
 
-    def test_4_timeout_leaves_no_container(self):
-        """Step 4 (Docker): after the timeout, no container keeps running."""
+    def test_3_timeout_leaves_no_container(self):
+        """Step 3 (Docker): after the timeout, no container keeps running."""
         try:
             error_of(self.bash, {"command": "sleep 30", "timeout": TIMEOUT}, self.cwd)
         except AssertionError:

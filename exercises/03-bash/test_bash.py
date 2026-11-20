@@ -64,24 +64,24 @@ class BashTest(Workspace):
         self.assertLess(text.index("first"), text.index("second"))
         self.assertLess(text.index("second"), text.index("third"))
 
-    def test_3_exit_code(self):
-        """Step 3: a non-zero exit code raises an exception with the output and the code."""
+    def test_4_exit_code(self):
+        """Step 4: a non-zero exit code raises an exception with the output and the code."""
         error = error_of(self.bash, {"command": "echo broken; exit 3"}, self.cwd)
         self.assertIn("broken", str(error), f"include the output: {error}")
         self.assertIn("3", str(error), f"include the exit code: {error}")
 
-    def test_3_success_is_not_an_error(self):
-        """Step 3: exit code 0 returns the output, with no error."""
+    def test_4_success_is_not_an_error(self):
+        """Step 4: exit code 0 returns the output, with no error."""
         self.assertIn("ok", call(self.bash, {"command": "echo ok; exit 0"}, self.cwd))
 
-    def test_4_timeout(self):
-        """Step 4: a command over its timeout is stopped soon after, as an error that says so."""
+    def test_3_timeout(self):
+        """Step 3: a command over its timeout is stopped soon after, as an error that says so."""
         started = time.monotonic()
         error = error_of(self.bash, {"command": "echo started; sleep 30", "timeout": 1}, self.cwd)
         seconds = time.monotonic() - started
         self.assertLess(seconds, 8, f"the tool returned after {seconds:.0f} s; stop the process at the timeout")
         self.assertRegex(str(error).lower(), "stop|time", f"say that the command was stopped: {error}")
 
-    def test_4_no_timeout_given(self):
-        """Step 4: without a timeout, a command runs to the end."""
+    def test_3_no_timeout_given(self):
+        """Step 3: without a timeout, a command runs to the end."""
         self.assertIn("done", call(self.bash, {"command": "sleep 1; echo done"}, self.cwd))

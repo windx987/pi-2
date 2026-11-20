@@ -380,7 +380,12 @@ def tool_title(call):
         return f"{BOLD}$ {args['command']}{RESET}"
     title = f"{BOLD}{call['name']}{RESET}"
     if "path" in args:
-        return f"{title} {ACCENT}{args['path']}{RESET}"
+        # Part of a file shows as path:first-last, as Pi's read renderer does.
+        lines = ""
+        if args.get("offset") or args.get("limit"):
+            first = int(args.get("offset") or 1)
+            lines = f":{first}-{first + int(args['limit']) - 1}" if args.get("limit") else f":{first}-"
+        return f"{title} {ACCENT}{args['path']}{lines}{RESET}"
     return f"{title} {DIM}{' '.join(f'{k}={v!r}' for k, v in args.items())}{RESET}"
 
 
