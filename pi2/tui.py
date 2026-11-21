@@ -17,6 +17,7 @@ import signal
 import sys
 import textwrap
 import threading
+import time
 
 try:
     import readline  # noqa: F401  (line editing and history for input())
@@ -51,9 +52,24 @@ ACCENT = fg(198, 146, 234)
 WARNING = fg(222, 199, 101)
 ERROR = fg(240, 137, 110)
 MUTED = fg(160, 165, 178)
+SUCCESS = fg(*MINT)
 USER_BG = bg(43, 50, 82)
 TOOL_BG = {"pending": bg(52, 54, 60), "success": bg(30, 70, 55), "error": bg(88, 48, 40)}
 PREVIEW_LINES = 5
+
+
+def duration(seconds):
+    """How long a turn took, as the Finished line shows it: 3.4s, 1m 05s."""
+    if seconds < 60:
+        return f"{seconds:.1f}s"
+    minutes, rest = divmod(int(seconds), 60)
+    return f"{minutes}m {rest:02d}s"
+
+
+def elapsed_seconds(started):
+    """The live counter: whole seconds, then minutes once a turn is long."""
+    seconds = int(time.monotonic() - started)
+    return f"{seconds}s" if seconds < 60 else f"{seconds // 60}m {seconds % 60:02d}s"
 
 
 def exit_on_signal(signum, frame):
@@ -76,6 +92,15 @@ class InteractiveMode:
         self.writer = None  # the streaming text block being written, if any
         self.working = False  # whether the "Working..." line is on screen
         self.tool_box_height = 0
+        self.turn_started = None  # monotonic start of the whole turn
+        self.busy = False  # a turn is running: the footer counts its time
+        self.status_started = None  # monotonic start of the Working/Compacting line
+        self.status_label = ""
+        self.status_shown = None  # last whole second drawn in the status line
+        self.footer_shown = None
+        self.last_stop_reason = None
+        self.ticker = None
+        self.ticker_stop = threading.Event()
         self.pending = queue.Queue()  # messages typed while the agent is working
         self.reader = None
         self.reader_stop = threading.Event()
@@ -97,6 +122,9 @@ class InteractiveMode:
 
     def run(self):
         self.print_header()
+        self.ticker_stop.clear()
+        self.ticker = threading.Thread(target=self.tick_loop, daemon=True)
+        self.ticker.start()
         self.previous_sigint = signal.getsignal(signal.SIGINT)
         signal.signal(signal.SIGINT, self.on_sigint)
         if termios is not None:
@@ -122,6 +150,10 @@ class InteractiveMode:
                     continue
                 self.run_prompt(text)
         finally:
+            self.ticker_stop.set()
+            if self.ticker:
+                self.ticker.join(timeout=1.0)
+                self.ticker = None
             self.stop_read_ahead()
             signal.signal(signal.SIGINT, self.previous_sigint)
         write("\n")
@@ -135,14 +167,31 @@ class InteractiveMode:
 
     def run_prompt(self, text):
         """Run one turn while a reader thread queues anything typed after Enter."""
+        self.turn_started = time.monotonic()
+        self.footer_shown = None
+        self.last_stop_reason = None
+        self.busy = True
         self.start_read_ahead()
+        outcome = None
         try:
             self.session.prompt(text)
+            outcome = "aborted" if self.last_stop_reason == "aborted" else "finished"
         except KeyboardInterrupt:
+            outcome = "aborted"
             self.clear_working()
             self.out(f"\n {ERROR}Operation aborted{RESET}\n")
         finally:
+            # Stop the clock before tearing down the reader, so its join time is not counted.
+            elapsed = time.monotonic() - self.turn_started
+            self.busy = False
+            self.turn_started = None
+            self.clear_working()  # before the editor is erased, or the status line would be left behind
             self.stop_read_ahead()
+            if outcome and not self.quit_requested:
+                if outcome == "aborted":
+                    self.out(f"\n {ERROR}✗ Aborted after {duration(elapsed)}{RESET}\n")
+                else:
+                    self.out(f"\n {SUCCESS}✓ Finished in {duration(elapsed)}{RESET}\n")
 
     def on_sigint(self, signum, frame):
         """Ctrl+c: clear queued messages first; stop the agent only when the queue is empty."""
@@ -487,6 +536,9 @@ class InteractiveMode:
         left = f"{usage['context']} / {tokens(model['context_window'])} ({percent:.1f}%)"
         if usage["input"]:
             left = f"↑{tokens(usage['input'])} ↓{tokens(usage['output'])} {left}"
+        if self.busy and not self.working and self.turn_started is not None:
+            # The status line is gone while the answer streams: keep the live counter in the footer.
+            left = f"⠋ {elapsed_seconds(self.turn_started)}  {left}"
         right = model["id"]
         return f"{DIM}{cwd}{RESET}", f"{DIM}{left}{' ' * max(1, w - len(left) - len(right))}{right}{RESET}"
 
@@ -556,8 +608,7 @@ class InteractiveMode:
     def on_event(self, event):
         kind = event["type"]
         if kind == "message_start":
-            self.out(f"\n {DIM}⠋ Working...{RESET}")
-            self.working = True
+            self.start_status("Working...")
         elif kind == "message_update":
             self.clear_working()
             delta = event["event"]
@@ -576,6 +627,7 @@ class InteractiveMode:
                 if self.writer:
                     self.writer.end()
                     self.writer = None
+                self.last_stop_reason = message["stop_reason"]
                 if message["stop_reason"] == "error":
                     self.out(f"\n {ERROR}Error: {message['error_message']}{RESET}\n")
                 elif message["stop_reason"] == "aborted":
@@ -584,8 +636,7 @@ class InteractiveMode:
                     self.out(f"\n {ERROR}Response was truncated before completion.{RESET}\n")
         elif kind == "compaction_start":
             why = {"manual": "Compacting", "threshold": "Context is filling up", "overflow": "Context too long"}
-            self.out(f"\n {DIM}⠋ {why[event['reason']]}: summarizing older messages...{RESET}")
-            self.working = True
+            self.start_status(f"{why[event['reason']]}: summarizing older messages...")
         elif kind == "compaction_end":
             self.clear_working()
             if "error" in event:
@@ -632,6 +683,11 @@ class InteractiveMode:
         if not self.working:
             return
         with self.lock:
+            # Inside the lock, so the ticker cannot redraw the line after it was erased.
+            self.working = False
+            self.status_label = ""
+            self.status_started = None
+            self.status_shown = None
             if self.editor:
                 self.erase_editor()  # cursor on the editor's top border, one row under the spinner
                 write("\x1b[1A\r\x1b[2K")  # up to the spinner, clear it
@@ -641,7 +697,56 @@ class InteractiveMode:
             else:
                 write("\r\x1b[2K\x1b[1A")
                 self.out_line_start, self.out_column = True, 0
-        self.working = False
+
+    # Live status line and timer --------------------------------------------------------------------
+
+    def start_status(self, label):
+        """Show a ticking status line above the editor, replacing one that is already there."""
+        if self.working:
+            self.clear_working()
+        self.status_label = label
+        self.status_started = time.monotonic()
+        self.status_shown = None
+        self.out("\n" + self.status_text())
+        self.working = True  # only after the line is on screen, so the ticker cannot redraw a stale row
+
+    def status_text(self):
+        return f" {DIM}⠋ {self.status_label} {elapsed_seconds(self.status_started)}{RESET}"
+
+    def tick_loop(self):
+        """Once a second, refresh the live counter: the status line, or the footer when it is gone."""
+        while not self.ticker_stop.wait(0.25):
+            self.tick()
+
+    def tick(self):
+        started = self.status_started
+        if self.working and started is not None:
+            shown = int(time.monotonic() - started)
+            if shown != self.status_shown:
+                self.status_shown = shown
+                self.redraw_status()
+        elif self.busy and self.turn_started is not None:
+            shown = int(time.monotonic() - self.turn_started)
+            if shown != self.footer_shown:
+                self.footer_shown = shown
+                if self.editor:
+                    self.redraw_editor()
+
+    def redraw_status(self):
+        """Rewrite the status line in place, above the editor, without moving the answer."""
+        with self.lock:
+            if not self.working:
+                return
+            text = self.status_text()
+            if self.editor:
+                self.erase_editor()
+                write("\x1b[1A\r\x1b[2K")  # from the editor's top border up to the status line
+                write(text)
+                self.track(text)
+                self.draw_editor()  # writes the newline first, because out_line_start is False
+            else:
+                write("\r\x1b[2K" + text)
+                self.track(text)
 
 
 class StreamWriter:
