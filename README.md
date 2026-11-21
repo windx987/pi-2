@@ -64,19 +64,42 @@ Exercise 03's bash tool runs the commands the model writes. Choose where; you ca
 |---|---|---|
 | Commands run | in a new container that sees only the working directory, without network | with bash on your machine, in the working directory, as Pi's own bash tool does |
 | A wrong command can | change the working directory only | reach your files, your network, everything your user may do |
-| Setup | install Docker and pull one image (below) | nothing |
+| Setup | option 1 below | option 2 below |
 | Start pi2 with | `"$REPO/pi2.sh" ...` | `PI2_NO_DOCKER=1 "$REPO/pi2.sh" ...` |
 
-**Docker.** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), or on macOS [Colima](https://github.com/abiosoft/colima) (`brew install colima docker && colima start`). Then pull the image once and try it:
+**Option 1: Docker (recommended)**
 
 ```bash
 docker pull node:22-bookworm-slim
 docker run --rm node:22-bookworm-slim node --version
 ```
 
-Docker shares only your home directory with its containers, which is why the playground goes in `~/pi-workshop`.
+Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), or on macOS [Colima](https://github.com/abiosoft/colima) (`brew install colima docker && colima start`), then pull the image once and try it as above. Docker shares only your home directory with its containers, which is why the playground goes in `~/pi-workshop`.
 
-**No-Docker mode.** Nothing to install: put `PI2_NO_DOCKER=1` in front of the command that starts pi2, or `export PI2_NO_DOCKER=1` once per terminal. `python3 exercises/check.py 03` always runs the "(no Docker)" checks, with or without Docker installed; they show TODO until you write the tool. Because nothing isolates the commands, work only in the playground copy, load [the permission gate](playground/README.md#4-a-permission-gate) with your tools, and read each command before the agent's next step. [Exercise 03](exercises/03-bash/README.md#without-docker) has the details.
+**Option 2: no Docker**
+
+The commands run on your machine, so what they call must be installed there. The playground's tests need Node.js 22 or newer, which brings `npm` with it (in option 1 the container image has them):
+
+```bash
+# macOS (Homebrew), or the installer from nodejs.org
+brew install node
+
+# Linux and WSL: nvm, since distribution packages (apt install nodejs) are often too old
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+nvm install 22                # in a new terminal
+
+node --version                # v22 or newer
+npm --version
+(cd "$REPO/playground" && npm test)    # runs the tests: pass 1, fail 1
+```
+
+The failing test is the bug the agent fixes in exercise 04. Then turn the mode on:
+
+```bash
+export PI2_NO_DOCKER=1     # once per terminal, or put PI2_NO_DOCKER=1 in front of the command that starts pi2
+```
+
+The bash tool then runs each command with bash on your machine, in the working directory. `python3 exercises/check.py 03` always runs the "(no Docker)" checks, with or without Docker installed; they show TODO until you write the tool. Because nothing isolates the commands, work only in the playground copy, load [the permission gate](playground/README.md#4-a-permission-gate) with your tools, and read each command before the agent's next step. [Exercise 03](exercises/03-bash/README.md#without-docker) has the details.
 
 ### 5. Start pi2
 

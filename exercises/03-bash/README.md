@@ -153,7 +153,7 @@ Ask:
 
 ## Without Docker
 
-Start pi2 with `PI2_NO_DOCKER=1` in front, and `command_args()` runs the command with `bash` on your machine, in the working directory, instead of in a container:
+Start pi2 with `PI2_NO_DOCKER=1` in front, and `command_args()` runs the command with `bash` on your machine, in the working directory, instead of in a container. The commands then use what is installed on your machine: for `npm test`, install Node.js 22 or newer (see [the install guide](../../README.md#4-docker-or-the-no-docker-mode-for-exercise-03)).
 
 ```bash
 cd ~/pi-workshop
