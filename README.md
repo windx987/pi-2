@@ -16,16 +16,60 @@ Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extens
 
 ## Getting started
 
-Requires Python 3.10 or newer and no packages, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and Docker for exercise 03.
+You need Python 3.10 or newer (no packages), git, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and Docker for exercise 03. It runs on macOS and Linux; on Windows, use [WSL](https://learn.microsoft.com/windows/wsl/install) and follow the Linux steps inside it.
+
+### 1. Python
+
+```bash
+python3 --version
+```
+
+If it says 3.10 or newer, go on. Otherwise install a newer one:
+
+| System | Install |
+|---|---|
+| macOS | `brew install python@3.12`, or the installer from [python.org](https://www.python.org/downloads/) |
+| Ubuntu, Debian, WSL | `sudo apt install python3`; on an older release that still gives 3.9 or less, use [the deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) or [pyenv](https://github.com/pyenv/pyenv) |
+| Fedora | `sudo dnf install python3` |
+
+pi2 uses only the standard library: no `pip install`, no virtual environment. If `python3` is still an older version, point pi2 at the new one with `export PYTHON=/path/to/python3.12`.
+
+### 2. The code
+
+Clone the `python` branch and remember where it is: the exercises and the playground use `$REPO` for the path of your clone.
 
 ```bash
 git clone -b python https://github.com/windx987/pi-2.git
 cd pi-2
+export REPO="$PWD"
 ```
 
-Connect a model: run it with Ollama or vLLM, give it a context of at least 32k tokens, and add it to `~/.pi/agent/models.json`, the same file Pi uses. [docs/models.md](docs/models.md) has both setups, step by step.
+Add the `export REPO=...` line, with the full path, to `~/.zshrc` or `~/.bashrc` so new terminals have it too. Check that everything is in place, without a model:
 
-Then start it from the clone with the example tool, the way the TypeScript edition starts with `./pi-test.sh`:
+```bash
+python3 -m unittest discover tests
+```
+
+It should end with `OK`.
+
+### 3. A model
+
+Run a model with Ollama or vLLM, give it a context of at least 32k tokens, and add it to `~/.pi/agent/models.json`, the same file Pi uses. [docs/models.md](docs/models.md) has both setups, step by step. At a workshop, the instructor gives you the address and key of a shared server: put them in `models.json` as in the vLLM example.
+
+### 4. Docker (for exercise 03)
+
+The bash tool runs every command in a container, so a wrong command cannot touch your machine. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), or on macOS [Colima](https://github.com/abiosoft/colima) (`brew install colima docker && colima start`). Then pull the image once and try it:
+
+```bash
+docker pull node:22-bookworm-slim
+docker run --rm node:22-bookworm-slim node --version
+```
+
+Docker shares only your home directory with its containers, which is why the playground goes in `~/pi-workshop`. Exercises 01 and 02 need no Docker, so you can start before it is set up.
+
+### 5. Start pi2
+
+Start it from the clone with the example tool, the way the TypeScript edition starts with `./pi-test.sh`:
 
 ```bash
 ./pi2.sh -e examples/hello.py
