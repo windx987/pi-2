@@ -29,6 +29,9 @@ sys.exit(proc.wait())
 class BashTest(Workspace):
     def setUp(self):
         super().setUp()
+        no_docker = os.environ.pop("PI2_NO_DOCKER", None)  # these checks are for the Docker command line
+        if no_docker is not None:
+            self.addCleanup(os.environ.__setitem__, "PI2_NO_DOCKER", no_docker)
         self.bash = load_tool("bash")
         bin_dir = Path(tempfile.mkdtemp(prefix="pi2-fake-docker-"))
         self.addCleanup(shutil.rmtree, bin_dir, ignore_errors=True)
@@ -85,3 +88,27 @@ class BashTest(Workspace):
     def test_3_no_timeout_given(self):
         """Step 3: without a timeout, a command runs to the end."""
         self.assertIn("done", call(self.bash, {"command": "sleep 1; echo done"}, self.cwd))
+
+
+class NoDockerTest(Workspace):
+    """The same tool with PI2_NO_DOCKER=1: the commands run on this machine, through command_args()."""
+
+    def setUp(self):
+        super().setUp()
+        os.environ["PI2_NO_DOCKER"] = "1"
+        self.addCleanup(os.environ.pop, "PI2_NO_DOCKER", None)
+        self.bash = load_tool("bash")
+
+    def test_1_in_the_workspace(self):
+        """Step 1 (no Docker): the command runs in ctx.cwd. Start it with command_args(), not ["docker", ...]."""
+        text = call(self.bash, {"command": "pwd"}, self.cwd)
+        self.assertEqual(Path(text.strip()).resolve(), self.cwd.resolve(),
+                         f"use command_args(params['command'], ctx.cwd), not docker: {text.strip()[:200]}")
+
+    def test_3_timeout_stops_everything(self):
+        """Step 3 (no Docker): the timeout stops the command and what it started, with terminate()."""
+        error = error_of(self.bash, {"command": "(sleep 3; touch late.txt) & wait", "timeout": 1}, self.cwd)
+        self.assertRegex(str(error).lower(), "stop|time", f"say that the command was stopped: {error}")
+        time.sleep(3)
+        self.assertFalse((self.cwd / "late.txt").exists(), "a child of the command kept running after the "
+                                                           "timeout: stop it with proc.terminate()")

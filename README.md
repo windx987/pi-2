@@ -16,7 +16,7 @@ Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extens
 
 ## Getting started
 
-You need Python 3.10 or newer (no packages), git, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and Docker for exercise 03. It runs on macOS and Linux; on Windows, use [WSL](https://learn.microsoft.com/windows/wsl/install) and follow the Linux steps inside it.
+You need Python 3.10 or newer (no packages), git, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and, for exercise 03, Docker or the no-Docker mode (step 4). It runs on macOS and Linux; on Windows, use [WSL](https://learn.microsoft.com/windows/wsl/install) and follow the Linux steps inside it.
 
 ### 1. Python
 
@@ -56,16 +56,27 @@ It should end with `OK`.
 
 Run a model with Ollama or vLLM, give it a context of at least 32k tokens, and add it to `~/.pi/agent/models.json`, the same file Pi uses. [docs/models.md](docs/models.md) has both setups, step by step. At a workshop, the instructor gives you the address and key of a shared server: put them in `models.json` as in the vLLM example.
 
-### 4. Docker (for exercise 03)
+### 4. Docker, or the no-Docker mode (for exercise 03)
 
-The bash tool runs every command in a container, so a wrong command cannot touch your machine. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), or on macOS [Colima](https://github.com/abiosoft/colima) (`brew install colima docker && colima start`). Then pull the image once and try it:
+Exercise 03's bash tool runs the commands the model writes. Choose where; you can switch any time. Exercises 01 and 02 need neither, so you can start before this is set up.
+
+| | Docker (recommended) | No-Docker mode |
+|---|---|---|
+| Commands run | in a new container that sees only the working directory, without network | with bash on your machine, in the working directory, as Pi's own bash tool does |
+| A wrong command can | change the working directory only | reach your files, your network, everything your user may do |
+| Setup | install Docker and pull one image (below) | nothing |
+| Start pi2 with | `"$REPO/pi2.sh" ...` | `PI2_NO_DOCKER=1 "$REPO/pi2.sh" ...` |
+
+**Docker.** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), or on macOS [Colima](https://github.com/abiosoft/colima) (`brew install colima docker && colima start`). Then pull the image once and try it:
 
 ```bash
 docker pull node:22-bookworm-slim
 docker run --rm node:22-bookworm-slim node --version
 ```
 
-Docker shares only your home directory with its containers, which is why the playground goes in `~/pi-workshop`. Exercises 01 and 02 need no Docker, so you can start before it is set up.
+Docker shares only your home directory with its containers, which is why the playground goes in `~/pi-workshop`.
+
+**No-Docker mode.** Nothing to install: put `PI2_NO_DOCKER=1` in front of the command that starts pi2, or `export PI2_NO_DOCKER=1` once per terminal. `python3 exercises/check.py 03` always runs the "(no Docker)" checks, with or without Docker installed; they show TODO until you write the tool. Because nothing isolates the commands, work only in the playground copy, load [the permission gate](playground/README.md#4-a-permission-gate) with your tools, and read each command before the agent's next step. [Exercise 03](exercises/03-bash/README.md#without-docker) has the details.
 
 ### 5. Start pi2
 
@@ -208,7 +219,7 @@ In Pi it is the same idea in TypeScript: `export default function (pi: Extension
 |---|---|---|
 | [01-read](exercises/01-read/read.py) | `read` | [README](exercises/01-read/README.md) |
 | [02-write](exercises/02-write/write.py) | `write` | [README](exercises/02-write/README.md) |
-| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); with Docker running, the checks also use a real container |
+| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); with Docker running, the checks also use a real container; `PI2_NO_DOCKER=1` runs it without Docker |
 | [04-edit](exercises/04-edit/edit.py) | `edit` | [README](exercises/04-edit/README.md) |
 | [05-subagent](exercises/05-subagent/subagent.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
 

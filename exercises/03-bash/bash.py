@@ -1,6 +1,7 @@
 # Exercise 03: the bash tool. Lets the agent run commands, inside a Docker container.
 #
 # Needs Docker running and the image pulled once:  docker pull node:22-bookworm-slim
+# No Docker? Start pi2 with PI2_NO_DOCKER=1 to run the commands on this machine instead (see command_args).
 # Load it with the earlier tools, from a playground copy under your home directory:
 #   "$REPO/pi2.sh" -e .../01-read/read.py -e .../02-write/write.py -e .../03-bash/bash.py
 # Then ask: "Run the tests and tell me what fails."
@@ -17,6 +18,8 @@
 # README.md next to this file.
 
 import os
+import sys
+import textwrap
 
 from pi2 import ExtensionAPI, define_tool
 
@@ -44,8 +47,32 @@ def docker_args(command, workspace):
     ]
 
 
+# Without Docker: a small Python process in the place of `docker run --init`. It runs the command with bash in
+# the workspace, in its own process group, and passes SIGTERM and ctrl+c on to all of it, so terminate() stops
+# the command and everything it started, as with the container.
+LOCAL_RUNNER = textwrap.dedent("""
+    import os, signal, subprocess, sys
+    proc = subprocess.Popen(["bash", "-c", sys.argv[2]], cwd=sys.argv[1], start_new_session=True)
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(sig, lambda *_: os.killpg(proc.pid, signal.SIGTERM))
+    sys.exit(proc.wait())
+    """)
+
+
+def no_docker():
+    return os.environ.get("PI2_NO_DOCKER") == "1"
+
+
+def command_args(command, workspace):
+    """The command line that runs `command`: docker run ..., or with PI2_NO_DOCKER=1 bash on this machine."""
+    if no_docker():
+        # SAFETY: no container. The command sees your files, your network and your user's rights.
+        return [sys.executable, "-c", LOCAL_RUNNER, workspace, command]
+    return ["docker", *docker_args(command, workspace)]
+
+
 def execute(params, ctx):
-    # EXERCISE 1: Start the process: subprocess.Popen(["docker", *docker_args(params["command"], ctx.cwd)],
+    # EXERCISE 1: Start the process: subprocess.Popen(command_args(params["command"], ctx.cwd),
     # stdout=subprocess.PIPE, text=True). It raises FileNotFoundError when Docker is not installed;
     # raise an exception that says so.
     #
@@ -71,8 +98,9 @@ bash_tool = define_tool(
     name="bash",
     label="bash",
     description=(
-        "Execute a bash command in the working directory, inside a container without network. Returns "
-        "stdout and stderr combined. Optionally provide a timeout in seconds."
+        "Execute a bash command in the working directory"
+        + ("" if no_docker() else ", inside a container without network")
+        + ". Returns stdout and stderr combined. Optionally provide a timeout in seconds."
     ),
     prompt_snippet="Execute bash commands (ls, grep, find, etc.)",
     parameters={

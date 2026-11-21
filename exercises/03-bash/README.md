@@ -10,7 +10,7 @@ The agent can run commands, each one in a new Docker container.
 
 ## How it works
 
-With `bash` the agent can do anything a shell can, so where the shell runs matters. Every command runs in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `docker_args()` in [bash.py](bash.py) builds that command line for you; your job is the process handling around it.
+With `bash` the agent can do anything a shell can, so where the shell runs matters. Every command runs in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `docker_args()` in [bash.py](bash.py) builds that command line for you, and `command_args()` puts `docker` in front of it; your job is the process handling around it. No Docker? See [Without Docker](#without-docker).
 
 The container reduces what a command can reach; it is not a proven sandbox. Run the [isolation checks](#isolation-checks) on your machine before relying on it.
 
@@ -33,14 +33,14 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
    ```python
    try:
        proc = subprocess.Popen(
-           ["docker", *docker_args(params["command"], ctx.cwd)],
+           command_args(params["command"], ctx.cwd),
            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
        )
    except FileNotFoundError:
        raise RuntimeError("Docker is not installed or not on PATH.") from None
    ```
 
-   `Popen` starts the process without waiting for it. The arguments are a list, so no shell runs on your machine: the model's command reaches `bash` only inside the container. `from None` keeps the error message short for the model.
+   `Popen` starts the process without waiting for it. `command_args()` gives the full command line, `docker run ...`, as a list, so no shell runs on your machine: the model's command reaches `bash` only inside the container. `from None` keeps the error message short for the model.
 
 2. Collect stdout and stderr as one text with `communicate()`, which waits at most `timeout` seconds.
 
@@ -92,7 +92,7 @@ import subprocess
 def execute(params, ctx):
     try:
         proc = subprocess.Popen(
-            ["docker", *docker_args(params["command"], ctx.cwd)],
+            command_args(params["command"], ctx.cwd),
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
         )
     except FileNotFoundError:
@@ -150,6 +150,20 @@ Ask:
 - The tool box shows `$ npm test` and the first lines of the output.
 - Failing commands come back as red error results with their output and exit code, and the agent reacts to them.
 - The timeout stops the command, and ctrl+c stops a running command. Afterwards `docker ps` shows no container.
+
+## Without Docker
+
+Start pi2 with `PI2_NO_DOCKER=1` in front, and `command_args()` runs the command with `bash` on your machine, in the working directory, instead of in a container:
+
+```bash
+cd ~/pi-workshop
+PI2_NO_DOCKER=1 "$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py" \
+  -e "$REPO/exercises/03-bash/bash.py" -e "$REPO/examples/permission_gate.py"
+```
+
+Your `execute()` does not change. `LOCAL_RUNNER` in [bash.py](bash.py) takes the place of `docker run --init`: it starts the command in its own process group and passes SIGTERM and ctrl+c on to all of it, so `terminate()` still stops the command and whatever it started. `check.py 03` checks both ways: the "(no Docker)" checks run with `PI2_NO_DOCKER=1`, without Docker.
+
+This is how Pi's own bash tool works: on the host. Nothing isolates the command then. It sees your files, your network and everything your user may do, and a wrong `rm` is a real one. Start pi2 from the playground copy, load [the permission gate](../../examples/permission_gate.py) as above, and read what the agent runs. The [isolation checks](#isolation-checks) below fail on purpose in this mode: try `curl -sI https://example.com` and see it answer.
 
 ## Isolation checks
 

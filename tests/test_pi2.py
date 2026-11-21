@@ -358,7 +358,7 @@ class ExerciseChecksTest(unittest.TestCase):
         script = Path(__file__).parent.parent / "exercises" / "check.py"
         run = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, timeout=120)
         self.assertNotIn("FAIL", run.stdout, run.stdout + run.stderr)
-        self.assertRegex(run.stdout, r"\n0 of (44|47) checks pass\.", run.stdout + run.stderr)  # 47 with Docker running
+        self.assertRegex(run.stdout, r"\n0 of (46|49) checks pass\.", run.stdout + run.stderr)  # 49 with Docker running
 
 if __name__ == "__main__":
     unittest.main()

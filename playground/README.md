@@ -88,7 +88,7 @@ Load read, and type each step in order:
 
 Why these tools:
 
-- **bash** is what the gate watches. It needs Docker, as in exercise 03.
+- **bash** is what the gate watches. It needs Docker, as in exercise 03, or `PI2_NO_DOCKER=1`: then the gate is all that stands between the command and your machine.
 - **read** and **write** let the agent look for another way after a refusal.
 - **permission_gate.py** is a listener, not a tool: load it with `-e` like any extension.
 
@@ -98,7 +98,7 @@ Load read, write, bash and `examples/permission_gate.py`, and ask:
 2. "Run sudo ls." Blocked as well.
 3. "List the files in incidents/." Allowed: the gate lets every other command through.
 
-What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, your playground copy loses the folder: copy it again. The real protection is the container of exercise 03, which sees only the working directory. The gate is for asking first, not for safety.
+What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, your playground copy loses the folder: copy it again. The real protection is the container of exercise 03, which sees only the working directory; with `PI2_NO_DOCKER=1` there is none. The gate is for asking first, not for safety.
 
 ## Making the reports again
 

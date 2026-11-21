@@ -3,6 +3,7 @@
 # They need Docker running and the image pulled once (docker pull node:22-bookworm-slim). Without
 # Docker, check.py skips this file and says so; test_bash.py still checks your process handling.
 
+import os
 import subprocess
 import time
 
@@ -31,6 +32,9 @@ def wait_for_leftovers(before):
 class DockerTest(Workspace):
     def setUp(self):
         super().setUp()
+        no_docker = os.environ.pop("PI2_NO_DOCKER", None)  # these checks are for the real container
+        if no_docker is not None:
+            self.addCleanup(os.environ.__setitem__, "PI2_NO_DOCKER", no_docker)
         self.bash = load_tool("bash")
         self.before = running_containers()
         self.addCleanup(self.remove_leftovers)

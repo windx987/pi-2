@@ -125,7 +125,7 @@ EXAMPLES = {
     },
     "03-bash": {
         "ask": "Run the tests.",
-        "fold": ["def docker_args"],
+        "fold": ["def docker_args", "LOCAL_RUNNER", "def no_docker", "def command_args"],
         "run": [
             ("start", "You start pi2 with three tools", ["pi2.sh -e …/01-read/read.py \\", "  -e …/02-write/write.py -e …/03-bash/bash.py"],
              "From a playground copy under your home directory, with Docker running."),
