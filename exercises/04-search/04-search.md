@@ -1,39 +1,31 @@
 # Exercise 04: search
 
-Build `grep`, a tool that searches file contents with a regular expression. Compare it with the
-existing `find_files` tool, which searches file names.
+## Goal
+- Build `grep` to search file contents with a regular expression.
+- Ask the agent to find Python files, search for `TODO`, and filter the search to `*.py`.
 
-## Task
+`find_files` searches filenames. `grep` searches text inside files.
 
-From the repository root:
+## Requirements
+- Required: `pattern`.
+- Optional: `path` (directory, default `.`) and `include` (filename glob, default `*`).
+- Resolve `path` from `ctx.cwd` and require a directory.
+- Return `relative/path:line:text` for each match.
+- Skip `.git` and files that are not UTF-8.
+- Return `(no matches)` when empty and stop after 200 matches.
 
+## Hints
+- Use `re.compile`, `root.rglob("*")`, and `fnmatch`.
+- Number lines from 1.
+- Catch regex, file, and decoding errors as appropriate.
+
+## Run
 ```bash
 python3 -m pi2 --cwd playground/04-search \
   -e tools/04-grep.py -e tools/find.py
 ```
 
-Ask the agent to find Python files by name, search the project for `TODO`, and repeat with
-`include: "*.py"`. The playground contains `app.py`, `helpers.py`, `test_app.py`, `guide.md`, and
-`users.json`.
-
-## Contract
-
-Arguments are `pattern` (required regex), `path` (optional directory, default `.`), and `include`
-(optional filename glob, default `*`). Return `path:line:text` for each matching line, relative to
-the search root. Reject an empty pattern, invalid regexes, missing paths, and file roots. Skip `.git`
-and files that are not UTF-8. Return `(no matches)` when there are none. Stop after 200 matches and
-append `[stopped after 200 matches]`.
-
-## Hints
-
-Resolve the root against `ctx.cwd`; compile with `re.compile`; walk with `root.rglob("*")`; keep
-files, skip `.git`, apply `fnmatch` to `file.name`, read UTF-8, and search each line.
-
 ## Check
-
 ```bash
 python3 exercises/check.py 04
 ```
-
-The starter template is [`tools/04-grep.py`](../../tools/04-grep.py). `find_files` is in
-[`tools/find.py`](../../tools/find.py).
