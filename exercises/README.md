@@ -10,7 +10,7 @@ tools: every tool comes from an extension, and every extension is a Python file 
 | 02 | [write](02-write/02-write.md) | `write` | `playground/02-write/` | walkthrough |
 | 03 | [edit](03-edit/03-edit.md) | `edit` | `playground/03-edit/` | build from scratch |
 | 04 | [search](04-search/04-search.md) | `grep` | `playground/04-search/` | build from scratch |
-| 05 | [execute](05-execute/05-execute.md) | `bash` | `playground/05-execute/` | build from scratch |
+| 05 | [execute](05-command/05-command.md) | `command` | `playground/05-command/` | build from scratch |
 | 06 | [subagents](06-subagents/06-subagents.md) | `subagent` | `playground/06-subagents/` | build from scratch |
 
 The instructor walks through 01 and 02. In 03 to 06 you get the contract, hints and checks, but not
@@ -81,7 +81,7 @@ git restore playground/03-edit
 ## Resetting after a task
 
 `--cwd` limits the default paths and the `write`/`edit` guard. It is not a sandbox: `read` and
-`bash` can still reach outside it. Restore a changed playground with git:
+`command` can still reach outside it. Restore a changed playground with git:
 
 ```bash
 git restore playground/03-edit

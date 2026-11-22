@@ -28,7 +28,7 @@ TOOLS = {
     "02": ("write", "02-write"),
     "03": ("edit", "03-edit"),
     "04": ("grep", "04-grep"),
-    "05": ("bash", "05-bash"),
+    "05": ("command", "05-command"),
     "06": ("subagent", "06-subagent"),
 }
 

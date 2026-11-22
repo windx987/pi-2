@@ -93,7 +93,7 @@ Start the agent in a playground while launching from the repository root:
 python3 -m pi2 --cwd playground/03-edit -e tools
 ```
 
-Ask "What is 2 + 3?" The `math.py` extension registers the `evaluate_equation` tool. The other files register `lsdir`, `find_files`, `read`, `write`, `edit` and `bash`.
+Ask "What is 2 + 3?" The `math.py` extension registers the `evaluate_equation` tool. The other files register `lsdir`, `find_files`, `read`, `write`, `edit` and `command`.
 
 `--cwd`, `--settings`, and `-e` are resolved from the directory where you launch the command. The
 `--cwd` option changes the agent's working directory; it is not a sandbox. To reset a changed
@@ -166,7 +166,7 @@ Read them in that order. `pi2/extensions.py` is how extensions get in, and `pi2/
 ### Notes
 
 - Sessions are written to `~/.pi/agent/python-sessions/` but are not resumed.
-- The `bash` tool runs commands directly on the host as your user. There is no sandbox; work in a copy of the playground.
+- The `command` tool runs commands directly on the host as your user. There is no sandbox; work in a copy of the playground.
 - This branch has no tests and no packaging. Check the import path with `python3 -m pi2 --help`.
 - One provider API is supported: `openai-completions`.
 
