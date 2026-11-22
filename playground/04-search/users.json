@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Ada Lovelace",
+    "role": "admin",
+    "note": "TODO: add the remaining users"
+  },
+  {
+    "id": 2,
+    "name": "Grace Hopper",
+    "role": "editor",
+    "note": "FIXME: role names are not final"
+  }
+]

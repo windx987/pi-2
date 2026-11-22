@@ -1,0 +1,6 @@
+Plain ASCII line.
+Café, naïve, résumé.
+東京, 京都, 大阪.
+Emoji: 🚀 🧪 ✅
+Thai: สวัสดีครับ
+German: Grüße aus München.

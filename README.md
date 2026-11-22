@@ -11,7 +11,7 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 | Path | What it is |
 |---|---|
 | `pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions, compaction |
-| `tools/` | One extension file per tool: `math.py`, `lsdir.py`, `find.py`, `read.py`, `write.py`, `edit.py`, `bash.py` |
+| `tools/` | One extension file per tool: `math.py`, `lsdir.py`, `find.py`, `read.py`, `write.py`, `edit.py`, `bash.py`, `grep.py`, `subagent.py` |
 | `tools/math.py` | The arithmetic tool, registered as `evaluate_equation` |
 | `tools/lsdir.py` | List a directory, defaulting to the working directory |
 | `tools/find.py` | Find files recursively by glob, defaulting to the working directory |
@@ -87,23 +87,23 @@ Use a private settings file:
 python3 -m pi2 --settings settings.local.json -e tools
 ```
 
+Start the agent in a playground while launching from the repository root:
+
+```bash
+python3 -m pi2 --cwd playground/03-edit -e tools
+```
+
 Ask "What is 2 + 3?" The `math.py` extension registers the `evaluate_equation` tool. The other files register `lsdir`, `find_files`, `read`, `write`, `edit` and `bash`.
 
-To work in a copy of the playground, so the agent does not change this repository:
+`--cwd`, `--settings`, and `-e` are resolved from the directory where you launch the command. The
+`--cwd` option changes the agent's working directory; it is not a sandbox. To reset a changed
+playground after an exercise, run `git restore playground/03-edit`.
 
-```bash
-cp -R playground ~/pi-workshop
-cd ~/pi-workshop
-PYTHONPATH="$REPO" python3 -m pi2 -e "$REPO/tools"
-```
-
-`REPO` is the path to this clone:
-
-```bash
-REPO=/path/to/pi-2
-```
-
-`PYTHONPATH` lets Python find the `pi2/` package from outside the repository. `-e` points at the tools folder in the repository. When you run from the repository root, neither is needed; use `python3 -m pi2 -e tools`.
+| Option | Meaning |
+|---|---|
+| `--settings FILE` | Use a settings file instead of the repository-root default |
+| `--cwd DIR` | Set the agent's working directory |
+| `-e FILE_OR_DIR` | Load an extension; repeat for multiple extensions |
 
 | Key or command | Does |
 |---|---|

@@ -1,12 +1,12 @@
 """The command line: reads the settings, loads the extensions and starts interactive mode.
 
     python3 -m pi2 -e tools
+    python3 -m pi2 --cwd playground -e tools
     python3 -m pi2 --settings settings.local.json -e tools
 """
 
 import argparse
 import json
-import os
 from pathlib import Path
 
 from . import __version__
@@ -61,6 +61,10 @@ def main():
     parser = argparse.ArgumentParser(prog="pi2", description="pi/2, the Pi Workshop Edition in Python")
     parser.add_argument("--settings", help="settings file (default: settings.json in the repository root)")
     parser.add_argument(
+        "--cwd",
+        help="directory the agent works in (default: the current directory)",
+    )
+    parser.add_argument(
         "-e",
         "--extension",
         action="append",
@@ -80,5 +84,11 @@ def main():
     for path in args.extension:
         extensions.load(path)
 
-    session = AgentSession(runtime, runtime.model, extensions, os.getcwd(), agent_dir)
+    cwd = Path(args.cwd).expanduser().resolve() if args.cwd else Path.cwd().resolve()
+    if not cwd.exists():
+        raise SystemExit(f"Working directory not found: {args.cwd}")
+    if not cwd.is_dir():
+        raise SystemExit(f"Not a directory: {args.cwd}")
+
+    session = AgentSession(runtime, runtime.model, extensions, str(cwd), agent_dir)
     InteractiveMode(session).run()
