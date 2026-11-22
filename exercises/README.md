@@ -14,8 +14,7 @@ tools: every tool comes from an extension, and every extension is a Python file 
 | 06 | [subagents](06-subagents/06-subagents.md) | `subagent` | `playground/06-subagents/` | build from scratch |
 
 The instructor walks through 01 and 02. In 03 to 06 you get the contract, hints and checks, but not
-the full solution. Working reference implementations are in `tools/`, for the instructor and for
-after you have tried the exercise yourself.
+the full solution. Starter templates with TODO hints are in `tools/`.
 
 ## Requirements
 
@@ -52,7 +51,7 @@ Because the agent starts inside `playground/NN-...`, the prompts stay short:
 ## Checking your tool
 
 Each exercise has a `test_*.py` next to its instructions. With no file argument, checks use the
-working reference in `tools/`; pass your own extension file as the second argument:
+TODO starter in `tools/`; pass your own extension file as the second argument:
 
 ```bash
 python3 exercises/check.py 03
@@ -64,7 +63,7 @@ Use `01` to `06`, or no number to run every exercise. A check shows:
 - `FAIL` — it raised the wrong error, returned the wrong text, or changed the wrong file.
 - `TODO` — `execute()` still raises `NotImplementedError`.
 
-To check the reference implementation instead of your file:
+To check a starter template:
 
 ```bash
 python3 exercises/check.py 03 tools/03-edit.py

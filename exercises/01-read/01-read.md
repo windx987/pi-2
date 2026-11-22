@@ -128,7 +128,7 @@ def execute(params, ctx):
 
 </details>
 
-The reference implementation is [`tools/01-read.py`](../../tools/01-read.py).
+The starter template is [`tools/01-read.py`](../../tools/01-read.py).
 
 ## Check your tool
 

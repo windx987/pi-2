@@ -106,7 +106,7 @@ def execute(params, ctx):
 
 </details>
 
-The reference implementation is [`tools/02-write.py`](../../tools/02-write.py).
+The starter template is [`tools/02-write.py`](../../tools/02-write.py).
 
 ## Check your tool
 
@@ -153,4 +153,4 @@ use the encoded bytes for both the write and the count, and keep the same path c
 |---|---|
 | [`pi2/schema.py`](../pi2/schema.py) | Argument validation before `execute` |
 | [`pi2/extensions.py`](../pi2/extensions.py) | `ToolContext.cwd` and `define_tool` |
-| [`tools/02-write.py`](../../tools/02-write.py) | The reference implementation |
+| [`tools/02-write.py`](../../tools/02-write.py) | The TODO starter template |

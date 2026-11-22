@@ -125,6 +125,6 @@ if you do.
 
 | File | What to look at |
 |---|---|
-| [`tools/03-edit.py`](../../tools/03-edit.py) | The reference implementation |
+| [`tools/03-edit.py`](../../tools/03-edit.py) | The TODO starter template |
 | [`tools/02-write.py`](../../tools/02-write.py) | The same working-directory guard |
 | [`pi2/schema.py`](../pi2/schema.py) | How the arguments are validated |

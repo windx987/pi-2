@@ -35,5 +35,5 @@ files, skip `.git`, apply `fnmatch` to `file.name`, read UTF-8, and search each 
 python3 exercises/check.py 04
 ```
 
-The reference implementation is [`tools/04-grep.py`](../../tools/04-grep.py). `find_files` is in
+The starter template is [`tools/04-grep.py`](../../tools/04-grep.py). `find_files` is in
 [`tools/find.py`](../../tools/find.py).

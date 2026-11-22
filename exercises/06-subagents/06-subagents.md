@@ -35,4 +35,4 @@ Create a new `ExtensionAPI`, copy the parent's tools into it, then construct `Ag
 python3 exercises/check.py 06
 ```
 
-The reference implementation is [`tools/06-subagent.py`](../../tools/06-subagent.py).
+The starter template is [`tools/06-subagent.py`](../../tools/06-subagent.py).

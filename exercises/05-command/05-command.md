@@ -33,4 +33,4 @@ Windows it uses the default Windows shell, so shell syntax may differ between pl
 python3 exercises/check.py 05
 ```
 
-The reference implementation is [`tools/05-command.py`](../../tools/05-command.py).
+The starter template is [`tools/05-command.py`](../../tools/05-command.py).
