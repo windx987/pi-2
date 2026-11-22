@@ -13,6 +13,24 @@
 - Return the child's final text and a short usage note.
 - Propagate errors and interrupts.
 
+## Output
+
+Return the child's final text, a blank line, then a short note:
+
+```text
+Found 3 files.
+
+[subagent: 1 tool call, 3.0k input tokens]
+```
+
+Use `calls` for zero or two or more.
+
+## Errors
+
+Raise `ValueError` when `task` is empty or `ctx.session` is missing. Raise
+`RuntimeError` with the child's message when its model fails. Re-raise
+`KeyboardInterrupt` when the child is aborted.
+
 ## Hints
 - Create a new `ExtensionAPI` for the child.
 - Construct `AgentSession` with the parent's settings.

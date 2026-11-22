@@ -14,6 +14,22 @@
 - Skip `.git` and files that are not UTF-8.
 - Return `(no matches)` when empty and stop after 200 matches.
 
+## Output
+
+One line per match, with paths relative to the search root:
+
+```text
+src/app.py:2:# TODO: fix
+```
+
+Return `(no matches)` when nothing matches. Stop after 200 matches and add
+`[stopped after 200 matches]` as the last line.
+
+## Errors
+
+Raise `ValueError` for an empty pattern, an invalid regular expression, a
+missing path, or a path that is not a directory.
+
 ## Hints
 - Use `re.compile`, `root.rglob("*")`, and `fnmatch`.
 - Number lines from 1.

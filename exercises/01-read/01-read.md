@@ -13,6 +13,25 @@
 - If more lines remain, tell the agent the next offset.
 - Show an error when the file is missing or the offset is invalid.
 
+## Output
+
+Return the selected lines joined with `\n`. No trailing newline.
+
+If more lines remain, add a blank line, then `[N more lines. Use offset=X.]`:
+
+```text
+one
+two
+
+[3 more lines. Use offset=4.]
+```
+
+An empty file returns `""`.
+
+## Errors
+
+Raise `ValueError` when the file is missing or `offset` is past the last line.
+
 ## Hints
 - Use `Path(ctx.cwd)` and `Path.read_text(encoding="utf-8")`.
 - Convert the one-based offset to a zero-based slice.

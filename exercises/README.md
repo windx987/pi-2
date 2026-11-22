@@ -21,13 +21,15 @@ python3 exercises/check.py 01
 python3 exercises/check.py
 ```
 
-## Tool inputs
+## How a tool works
 
 Every tool has this function:
 
 ```python
 def execute(params, ctx):
 ```
+
+### Input
 
 `params` holds the values from the agent:
 
@@ -37,7 +39,7 @@ offset = params.get("offset", 1)
 limit = params.get("limit", 2000)
 ```
 
-`ctx.cwd` is the playground path:
+`ctx.cwd` is the playground path. Join relative paths with it:
 
 ```python
 target = Path(ctx.cwd) / path
@@ -45,3 +47,30 @@ target = Path(ctx.cwd) / path
 
 If `ctx.cwd` is `/home/user/pi-2/playground/01-read` and `path` is `todo.md`,
 the tool reads `/home/user/pi-2/playground/01-read/todo.md`.
+
+The agent may also send an absolute path. That same line handles it: an
+absolute right side replaces the left side.
+
+### Output
+
+`execute` returns a string. pi2 shows that text to the model, so write it for a
+reader: the file text, the result of the command, or a short line saying what
+changed.
+
+Return text only. Do not return a dict or list: pi2 would show the model its
+Python repr instead of a result.
+
+### Errors
+
+When something is wrong, raise an exception:
+
+```python
+if not target.exists():
+    raise ValueError(f"File not found: {params['path']}")
+```
+
+pi2 turns the message into an error result the model can read. Do not return
+`"error: ..."` — the model would treat it as normal output.
+
+Say what is wrong and, when you can, what to do next. `NotImplementedError` is
+special: the checks show it as TODO, not FAIL.

@@ -11,6 +11,20 @@
 - Leave the file unchanged on failure.
 - Write UTF-8 and return a confirmation.
 
+## Output
+
+Return one short line that includes the path:
+
+```text
+Edited math.py
+```
+
+## Errors
+
+Raise `ValueError` when the file is missing or outside `ctx.cwd`, when `oldText`
+is empty, or when `oldText` does not occur exactly once. Leave the file
+unchanged.
+
 ## Hints
 - Read the file before changing it.
 - Check `text.count(oldText)` before calling `replace`.

@@ -11,6 +11,22 @@
 - Return `(no output)` when there is no output.
 - Raise an error containing the output and exit code when it fails.
 
+## Output
+
+Return stdout and stderr together. When both are empty, return `(no output)`.
+
+## Errors
+
+Raise `RuntimeError` when the command exits non-zero. Include the output and
+the code:
+
+```text
+bad
+Command exited with code 3
+```
+
+A missing command is just exit code 127.
+
 ## Hints
 - Use `subprocess.run(..., shell=True, cwd=ctx.cwd)`.
 - Capture stdout and redirect stderr to stdout.

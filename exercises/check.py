@@ -6,6 +6,9 @@
 #   python3 exercises/check.py 06 tools/06-subagent.py   # check a specific tool file
 #
 # The checks for an exercise live in test_<tool>.py next to its starter.
+#
+# Behavior is specified in exercises/README.md and each NN-*.md.
+# These checks implement that spec. If they disagree, the docs win.
 
 import importlib.util
 import os

@@ -1,5 +1,7 @@
 # Checks for exercise 04, one or more per step of 04-search.md. Run: python3 exercises/check.py 04
 
+import re
+
 from check import Workspace, call, error_of, load_tool
 
 
@@ -71,7 +73,8 @@ class GrepTest(Workspace):
         (self.cwd / "many").mkdir()
         (self.cwd / "many/lines.txt").write_text("\n".join("TODO" for _ in range(250)) + "\n", encoding="utf-8")
         result = call(self.grep, {"pattern": "TODO", "path": "many"}, self.cwd)
-        self.assertEqual(len(result.splitlines()), 201)
+        matches = [line for line in result.splitlines() if re.search(r":\d+:", line)]
+        self.assertEqual(len(matches), 200)
         self.assertIn("[stopped after 200 matches]", result)
 
     def test_invalid_regex(self):

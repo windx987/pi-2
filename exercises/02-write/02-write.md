@@ -12,6 +12,19 @@
 - Replace the complete file contents.
 - Return a short confirmation.
 
+## Output
+
+Write the file, then return one short line that includes the path:
+
+```text
+Wrote plan.md
+```
+
+## Errors
+
+Raise `ValueError` when the path is outside `ctx.cwd` or is a directory. Write
+nothing in those cases.
+
 ## Hints
 - Resolve both `cwd` and the target before checking containment.
 - Use `target.parent.mkdir(parents=True, exist_ok=True)`.
