@@ -3,6 +3,7 @@
     python3 -m pi2 -e tools
     python3 -m pi2 --cwd playground -e tools
     python3 -m pi2 --settings settings.local.json -e tools
+    python3 -m pi2 --model remote/example-model -e tools
 """
 
 import argparse
@@ -39,14 +40,35 @@ def load_settings(path):
     except json.JSONDecodeError as error:
         raise SystemExit(f"Cannot read {path}: {error}") from None
 
+    check_settings(settings, path)
+    return settings
+
+
+def check_settings(settings, path):
+    """Require "providers" with models, or the old flat "provider"."""
+    providers = settings.get("providers")
+    if providers is not None and not isinstance(providers, dict):
+        raise SystemExit(f'{path}: "providers" must be an object.')
+    if providers:
+        for name, provider in providers.items():
+            if not isinstance(provider, dict):
+                raise SystemExit(f"{path}: provider {name} must be an object.")
+            if not provider.get("baseUrl"):
+                raise SystemExit(f"{path}: provider {name} needs a baseUrl.")
+            models = provider.get("models")
+            if not isinstance(models, list) or not models:
+                raise SystemExit(f"{path}: provider {name} needs a models array.")
+            for model in models:
+                if not isinstance(model, dict) or not model.get("id"):
+                    raise SystemExit(f'{path}: every model of provider {name} needs an "id".')
+        return
     provider = settings.get("provider")
     if not isinstance(provider, dict):
-        raise SystemExit(f'{path}: add a "provider" object.')
+        raise SystemExit(f'{path}: add a "providers" object (or the old "provider").')
     if not provider.get("baseUrl"):
         raise SystemExit(f"{path}: provider.baseUrl is required.")
     if not provider.get("model"):
         raise SystemExit(f"{path}: provider.model is required.")
-    return settings
 
 
 def resolve_agent_dir(settings, settings_path):
@@ -60,6 +82,7 @@ def resolve_agent_dir(settings, settings_path):
 def main():
     parser = argparse.ArgumentParser(prog="pi2", description="pi/2, the Pi Workshop Edition in Python")
     parser.add_argument("--settings", help="settings file (default: settings.json in the repository root)")
+    parser.add_argument("--model", help='model as "provider/id" (or its number); default: the first in settings.json')
     parser.add_argument(
         "--cwd",
         help="directory the agent works in (default: the current directory)",
@@ -78,7 +101,8 @@ def main():
     settings = load_settings(settings_path)
     agent_dir = resolve_agent_dir(settings, settings_path)
 
-    runtime = ModelRuntime(settings["provider"])
+    runtime = ModelRuntime(settings)
+    model = runtime.find(args.model)
 
     extensions = ExtensionAPI()
     for path in args.extension:
@@ -90,5 +114,5 @@ def main():
     if not cwd.is_dir():
         raise SystemExit(f"Not a directory: {args.cwd}")
 
-    session = AgentSession(runtime, runtime.model, extensions, str(cwd), agent_dir)
+    session = AgentSession(runtime, model, extensions, str(cwd), agent_dir)
     InteractiveMode(session).run()

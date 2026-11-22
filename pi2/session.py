@@ -26,6 +26,11 @@ class AgentSession:
         self.compaction_settings = compaction.load_settings(agent_dir, model.get("context_window", 32768))
         self.new_session()
 
+    def set_model(self, model):
+        """Switch models: the next request uses it, and the compaction budget resizes to its window."""
+        self.model = model
+        self.compaction_settings = compaction.load_settings(self.agent_dir, model.get("context_window", 32768))
+
     def new_session(self):
         """Start an empty conversation in a new session file."""
         self.messages = []

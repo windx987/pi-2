@@ -539,7 +539,7 @@ class InteractiveMode:
         if self.busy and not self.working and self.turn_started is not None:
             # The status line is gone while the answer streams: keep the live counter in the footer.
             left = f"⠋ {elapsed_seconds(self.turn_started)}  {left}"
-        right = model["id"]
+        right = f"{model['provider']}/{model['id']}"
         return f"{DIM}{cwd}{RESET}", f"{DIM}{left}{' ' * max(1, w - len(left) - len(right))}{right}{RESET}"
 
     def command(self, text):
@@ -552,12 +552,15 @@ class InteractiveMode:
             self.out(f"\n {DIM}New session started{RESET}\n")
         elif name == "/compact":
             self.compact(text[len(name):].strip() or None)
+        elif name == "/model":
+            self.select_model(args)
         elif name == "/context":
             self.context()
         elif name == "/help":
             self.out(
                 f"\n {DIM}/compact [focus] summarize older messages to free context\n"
                 f" /context       show how full the context window is, and with what\n"
+                f" /model [id]    list models in settings.json; switch with a number or provider/id\n"
                 f" /new           start a new session\n /quit          exit pi2{RESET}\n"
             )
         else:
@@ -578,6 +581,25 @@ class InteractiveMode:
             self.out(f"\n {ERROR}{error}{RESET}\n")
         finally:
             self.stop_read_ahead()
+
+    def select_model(self, args):
+        """/model lists the models in settings.json; /model <number or provider/id> switches."""
+        runtime = self.session.runtime
+        if not args:
+            rows = []
+            for number, model in enumerate(runtime.models, 1):
+                current = model is self.session.model
+                marker = f"{ACCENT}●{RESET}" if current else " "
+                label = f"{model['provider']}/{model['id']}"
+                rows.append(f" {marker} {number}. {ACCENT if current else ''}{label}{RESET} {DIM}{model['name']}{RESET}")
+            self.out("\n" + "\n".join(rows) + f"\n {DIM}Switch with /model <number> or /model <provider/id>.{RESET}\n")
+            return
+        model = runtime.match(args[0])
+        if model is None:
+            self.out(f"\n {ERROR}No model {args[0]} in settings.json. Type /model to list them.{RESET}\n")
+            return
+        self.session.set_model(model)  # the next request uses it; the conversation stays
+        self.out(f"\n {DIM}Model:{RESET} {ACCENT}{model['provider']}/{model['id']}{RESET}\n")
 
     def context(self):
         """/context: how full the context window is, where compaction starts, and what fills the window."""

@@ -51,10 +51,44 @@ Use private settings with `--settings settings.local.json`.
 |---|---|
 | `--cwd DIR` | Agent working directory |
 | `--settings FILE` | Settings file |
+| `--model ID` | Model as `provider/id` (or its number); default: the first in `settings.json` |
 | `-e FILE_OR_DIR` | Extension to load; repeatable |
 | `--version` | Print the version |
 
 `--cwd` is not a sandbox. `command` runs as your user, and `read` can read outside it.
+
+## Models
+
+`settings.json` lists providers, each with its models. Add more to switch between them:
+
+```json
+{
+  "agentDir": "~/.pi/agent",
+  "providers": {
+    "local": {
+      "baseUrl": "http://localhost:8000/v1",
+      "apiKey": "local",
+      "models": [
+        { "id": "local-model", "name": "Local model", "contextWindow": 32768, "maxTokens": 8192 }
+      ]
+    },
+    "remote": {
+      "baseUrl": "https://llm.example.com/v1",
+      "apiKey": "sk-REPLACE_ME",
+      "models": [
+        { "id": "example-model", "name": "Example model", "contextWindow": 32768, "maxTokens": 8192 }
+      ]
+    }
+  }
+}
+```
+ - `apiKey` may also name an environment variable, like `"apiKey": "VLLM_API_KEY"`.
+ - A session uses one model at a time.
+ - The older flat `"provider": { ... }` shape still loads as a single model.
+
+```bash
+python3 -m pi2 --model remote/example-model -e tools
+```
 
 ## Exercises
 
