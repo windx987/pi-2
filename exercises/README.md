@@ -6,12 +6,12 @@ tools: every tool comes from an extension, and every extension is a Python file 
 
 | # | Exercise | Tool to build | Playground | Format |
 |---|---|---|---|---|
-| 01 | [read](01-read.md) | `read` | `playground/01-read/` | walkthrough |
-| 02 | [write](02-write.md) | `write` | `playground/02-write/` | walkthrough |
-| 03 | [edit](03-edit.md) | `edit` | `playground/03-edit/` | build from scratch |
-| 04 | [search](04-search.md) | `grep` | `playground/04-search/` | build from scratch |
-| 05 | [execute](05-execute.md) | `bash` | `playground/05-execute/` | build from scratch |
-| 06 | [subagents](06-subagents.md) | `subagent` | `playground/06-subagents/` | build from scratch |
+| 01 | [read](01-read/01-read.md) | `read` | `playground/01-read/` | walkthrough |
+| 02 | [write](02-write/02-write.md) | `write` | `playground/02-write/` | walkthrough |
+| 03 | [edit](03-edit/03-edit.md) | `edit` | `playground/03-edit/` | build from scratch |
+| 04 | [search](04-search/04-search.md) | `grep` | `playground/04-search/` | build from scratch |
+| 05 | [execute](05-execute/05-execute.md) | `bash` | `playground/05-execute/` | build from scratch |
+| 06 | [subagents](06-subagents/06-subagents.md) | `subagent` | `playground/06-subagents/` | build from scratch |
 
 The instructor walks through 01 and 02. In 03 to 06 you get the contract, hints and checks, but not
 the full solution. Working reference implementations are in `tools/`, for the instructor and for
@@ -30,7 +30,7 @@ Python's import path, and `--cwd` tells the agent which directory to work in:
 
 ```bash
 cd /path/to/pi-2
-python3 -m pi2 --cwd playground/03-edit -e exercises/03-edit/edit.py
+python3 -m pi2 --cwd playground/03-edit -e tools/edit.py
 ```
 
 With private settings:
@@ -38,7 +38,7 @@ With private settings:
 ```bash
 python3 -m pi2 --cwd playground/03-edit \
   --settings settings.local.json \
-  -e exercises/03-edit/edit.py
+  -e tools/edit.py
 ```
 
 `--cwd`, `-e` and `--settings` are resolved from the directory where you run the command, not from
@@ -51,7 +51,8 @@ Because the agent starts inside `playground/NN-...`, the prompts stay short:
 
 ## Checking your tool
 
-Each exercise has a `test_*.py` next to its starter. Run the checks without a model:
+Each exercise has a `test_*.py` next to its instructions. With no file argument, checks use the
+working reference in `tools/`; pass your own extension file as the second argument:
 
 ```bash
 python3 exercises/check.py 03

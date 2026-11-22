@@ -8,8 +8,8 @@ From the repository root:
 
 ```bash
 python3 -m pi2 --cwd playground/05-execute \
-  -e exercises/01-read/read.py -e exercises/03-edit/edit.py \
-  -e exercises/05-execute/bash.py
+  -e tools/read.py -e tools/edit.py \
+  -e tools/bash.py
 ```
 
 Ask the agent to run the tests, fix `subtract` in `calculator.py`, and run the tests again.
@@ -32,4 +32,4 @@ stdout. Check `returncode` before returning.
 python3 exercises/check.py 05
 ```
 
-The reference implementation is [`tools/bash.py`](../tools/bash.py).
+The reference implementation is [`tools/bash.py`](../../tools/bash.py).

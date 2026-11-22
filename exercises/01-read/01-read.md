@@ -32,7 +32,7 @@ what happened.
 From the repository root:
 
 ```bash
-python3 -m pi2 --cwd playground/01-read -e exercises/01-read/read.py
+python3 -m pi2 --cwd playground/01-read -e tools/read.py
 ```
 
 `--cwd` makes `playground/01-read` the agent's working directory. `-e` loads your tool from the
@@ -40,7 +40,7 @@ repository root.
 
 ## Steps
 
-Follow the comments in [`01-read/read.py`](01-read/read.py). Add `from pathlib import Path` at the
+Use the walkthrough below to create your own extension file. Add `from pathlib import Path` at the
 top.
 
 ### 1. Resolve the path
@@ -128,7 +128,7 @@ def execute(params, ctx):
 
 </details>
 
-The reference implementation is [`tools/read.py`](../tools/read.py).
+The reference implementation is [`tools/read.py`](../../tools/read.py).
 
 ## Check your tool
 

@@ -9,7 +9,7 @@ From the repository root:
 
 ```bash
 python3 -m pi2 --cwd playground/04-search \
-  -e exercises/04-search/grep.py -e tools/find.py
+  -e tools/grep.py -e tools/find.py
 ```
 
 Ask the agent to find Python files by name, search the project for `TODO`, and repeat with
@@ -35,5 +35,5 @@ files, skip `.git`, apply `fnmatch` to `file.name`, read UTF-8, and search each 
 python3 exercises/check.py 04
 ```
 
-The reference implementation is [`tools/grep.py`](../tools/grep.py). `find_files` is in
-[`tools/find.py`](../tools/find.py).
+The reference implementation is [`tools/grep.py`](../../tools/grep.py). `find_files` is in
+[`tools/find.py`](../../tools/find.py).

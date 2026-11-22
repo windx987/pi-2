@@ -39,13 +39,13 @@ Load your `read` tool as well, so you can inspect the file before editing:
 
 ```bash
 python3 -m pi2 --cwd playground/03-edit \
-  -e exercises/01-read/read.py \
-  -e exercises/03-edit/edit.py
+  -e tools/read.py \
+  -e tools/edit.py
 ```
 
 ## Steps
 
-Follow the comments in [`03-edit/edit.py`](03-edit/edit.py).
+Create your own extension file and implement the contract below.
 
 ### 1. Resolve the path and guard the working directory
 
@@ -125,6 +125,6 @@ if you do.
 
 | File | What to look at |
 |---|---|
-| [`tools/edit.py`](../tools/edit.py) | The reference implementation |
-| [`tools/write.py`](../tools/write.py) | The same working-directory guard |
+| [`tools/edit.py`](../../tools/edit.py) | The reference implementation |
+| [`tools/write.py`](../../tools/write.py) | The same working-directory guard |
 | [`pi2/schema.py`](../pi2/schema.py) | How the arguments are validated |

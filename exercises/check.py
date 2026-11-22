@@ -3,7 +3,7 @@
 # From the repository root:
 #   python3 exercises/check.py                    # every exercise
 #   python3 exercises/check.py 03                 # one exercise
-#   python3 exercises/check.py 06 tools/subagent.py   # a specific tool file
+#   python3 exercises/check.py 06 tools/subagent.py   # check a specific tool file
 #
 # The checks for an exercise live in test_<tool>.py next to its starter.
 
@@ -145,7 +145,7 @@ def main():
     for folder in folders:
         number = folder.name.split("-", 1)[0]
         tool = TOOLS.get(number, folder.name.split("-", 1)[1])
-        path = Path(args[1]).resolve() if len(args) > 1 else folder / f"{tool}.py"
+        path = Path(args[1]).resolve() if len(args) > 1 else HERE.parent / "tools" / f"{tool}.py"
         if not path.is_file():
             sys.exit(f"Tool file not found: {path}")
         p, t = check(folder, path)

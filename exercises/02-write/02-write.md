@@ -33,12 +33,12 @@ model.
 From the repository root:
 
 ```bash
-python3 -m pi2 --cwd playground/02-write -e exercises/02-write/write.py
+python3 -m pi2 --cwd playground/02-write -e tools/write.py
 ```
 
 ## Steps
 
-Follow the comments in [`02-write/write.py`](02-write/write.py). Add `from pathlib import Path` at
+Use the walkthrough below to create your own extension file. Add `from pathlib import Path` at
 the top.
 
 ### 1. Resolve the path against the working directory
@@ -106,7 +106,7 @@ def execute(params, ctx):
 
 </details>
 
-The reference implementation is [`tools/write.py`](../tools/write.py).
+The reference implementation is [`tools/write.py`](../../tools/write.py).
 
 ## Check your tool
 
@@ -153,4 +153,4 @@ use the encoded bytes for both the write and the count, and keep the same path c
 |---|---|
 | [`pi2/schema.py`](../pi2/schema.py) | Argument validation before `execute` |
 | [`pi2/extensions.py`](../pi2/extensions.py) | `ToolContext.cwd` and `define_tool` |
-| [`tools/write.py`](../tools/write.py) | The reference implementation |
+| [`tools/write.py`](../../tools/write.py) | The reference implementation |
