@@ -3,7 +3,7 @@
 # From the repository root:
 #   python3 exercises/check.py                    # every exercise
 #   python3 exercises/check.py 03                 # one exercise
-#   python3 exercises/check.py 06 tools/subagent.py   # check a specific tool file
+#   python3 exercises/check.py 06 tools/06-subagent.py   # check a specific tool file
 #
 # The checks for an exercise live in test_<tool>.py next to its starter.
 
@@ -22,14 +22,14 @@ from pi2 import ExtensionAPI, ToolContext  # noqa: E402
 
 GREEN, RED, YELLOW, DIM, RESET = "\x1b[32m", "\x1b[31m", "\x1b[33m", "\x1b[2m", "\x1b[0m"
 
-# The tool each exercise builds. The starter file is named after it.
+# The tool each exercise builds and its numbered reference filename.
 TOOLS = {
-    "01": "read",
-    "02": "write",
-    "03": "edit",
-    "04": "grep",
-    "05": "bash",
-    "06": "subagent",
+    "01": ("read", "01-read"),
+    "02": ("write", "02-write"),
+    "03": ("edit", "03-edit"),
+    "04": ("grep", "04-grep"),
+    "05": ("bash", "05-bash"),
+    "06": ("subagent", "06-subagent"),
 }
 
 unittest.TestCase.longMessage = False  # a check's own message says what is wrong
@@ -144,8 +144,10 @@ def main():
     passed = total = 0
     for folder in folders:
         number = folder.name.split("-", 1)[0]
-        tool = TOOLS.get(number, folder.name.split("-", 1)[1])
-        path = Path(args[1]).resolve() if len(args) > 1 else HERE.parent / "tools" / f"{tool}.py"
+        tool, reference = TOOLS.get(
+            number, (folder.name.split("-", 1)[1], folder.name.split("-", 1)[1])
+        )
+        path = Path(args[1]).resolve() if len(args) > 1 else HERE.parent / "tools" / f"{reference}.py"
         if not path.is_file():
             sys.exit(f"Tool file not found: {path}")
         p, t = check(folder, path)

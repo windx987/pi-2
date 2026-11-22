@@ -30,7 +30,7 @@ Python's import path, and `--cwd` tells the agent which directory to work in:
 
 ```bash
 cd /path/to/pi-2
-python3 -m pi2 --cwd playground/03-edit -e tools/edit.py
+python3 -m pi2 --cwd playground/03-edit -e tools/03-edit.py
 ```
 
 With private settings:
@@ -38,7 +38,7 @@ With private settings:
 ```bash
 python3 -m pi2 --cwd playground/03-edit \
   --settings settings.local.json \
-  -e tools/edit.py
+  -e tools/03-edit.py
 ```
 
 `--cwd`, `-e` and `--settings` are resolved from the directory where you run the command, not from
@@ -67,7 +67,7 @@ Use `01` to `06`, or no number to run every exercise. A check shows:
 To check the reference implementation instead of your file:
 
 ```bash
-python3 exercises/check.py 03 tools/edit.py
+python3 exercises/check.py 03 tools/03-edit.py
 ```
 
 ## Resetting the playground

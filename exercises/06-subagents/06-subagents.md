@@ -8,7 +8,7 @@ From the repository root:
 
 ```bash
 python3 -m pi2 --cwd playground/06-subagents \
-  -e tools/read.py -e tools/subagent.py
+  -e tools/01-read.py -e tools/06-subagent.py
 ```
 
 Ask the agent to divide the six incident reports between three subagents, have each summarize its
@@ -35,4 +35,4 @@ Create a new `ExtensionAPI`, copy the parent's tools into it, then construct `Ag
 python3 exercises/check.py 06
 ```
 
-The reference implementation is [`tools/subagent.py`](../../tools/subagent.py).
+The reference implementation is [`tools/06-subagent.py`](../../tools/06-subagent.py).

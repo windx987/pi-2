@@ -39,8 +39,8 @@ Load your `read` tool as well, so you can inspect the file before editing:
 
 ```bash
 python3 -m pi2 --cwd playground/03-edit \
-  -e tools/read.py \
-  -e tools/edit.py
+  -e tools/01-read.py \
+  -e tools/03-edit.py
 ```
 
 ## Steps
@@ -125,6 +125,6 @@ if you do.
 
 | File | What to look at |
 |---|---|
-| [`tools/edit.py`](../../tools/edit.py) | The reference implementation |
-| [`tools/write.py`](../../tools/write.py) | The same working-directory guard |
+| [`tools/03-edit.py`](../../tools/03-edit.py) | The reference implementation |
+| [`tools/02-write.py`](../../tools/02-write.py) | The same working-directory guard |
 | [`pi2/schema.py`](../pi2/schema.py) | How the arguments are validated |

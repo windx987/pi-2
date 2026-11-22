@@ -11,7 +11,7 @@ This repository is a lean fork of pi/2, the Pi Workshop Edition, used for educat
 | Path | What it is |
 |---|---|
 | `pi2/` | The agent: CLI, UI, session, loop, provider, schema, extensions, compaction |
-| `tools/` | One extension file per tool: `math.py`, `lsdir.py`, `find.py`, `read.py`, `write.py`, `edit.py`, `bash.py`, `grep.py`, `subagent.py` |
+| `tools/` | General tools plus numbered exercise references: `math.py`, `lsdir.py`, `find.py`, `01-read.py` through `06-subagent.py` |
 | `tools/math.py` | The arithmetic tool, registered as `evaluate_equation` |
 | `tools/lsdir.py` | List a directory, defaulting to the working directory |
 | `tools/find.py` | Find files recursively by glob, defaulting to the working directory |

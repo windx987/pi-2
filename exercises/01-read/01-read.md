@@ -32,7 +32,7 @@ what happened.
 From the repository root:
 
 ```bash
-python3 -m pi2 --cwd playground/01-read -e tools/read.py
+python3 -m pi2 --cwd playground/01-read -e tools/01-read.py
 ```
 
 `--cwd` makes `playground/01-read` the agent's working directory. `-e` loads your tool from the
@@ -128,7 +128,7 @@ def execute(params, ctx):
 
 </details>
 
-The reference implementation is [`tools/read.py`](../../tools/read.py).
+The reference implementation is [`tools/01-read.py`](../../tools/01-read.py).
 
 ## Check your tool
 
