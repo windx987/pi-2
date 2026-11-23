@@ -1,34 +1,24 @@
 # Exercise 03: bash
 
-The agent can run commands, each one in a new Docker container.
+Let the agent run commands. Each one runs in a new Docker container that sees only the working folder and has no network.
 
-## What you learn
+## What you write
 
-- Running a child process and collecting its output.
-- Turning an exit code into a result the model reacts to.
-- Bounding what a command can do: time limits, ctrl+c, isolation.
+`execute(params, ctx)` in [bash.py](bash.py). The container is done for you: `command_args()` builds the `docker run ...` command line. Your part is the process around it.
 
-## How it works
+| Name | Is |
+|---|---|
+| `params["command"]` | The bash command the model wants to run, such as `npm test` |
+| `params.get("timeout")` | Seconds before it is stopped (optional) |
+| `ctx.cwd` | The working folder, mounted in the container at `/workspace` |
 
-With `bash` the agent can do anything a shell can, so where the shell runs matters. Every command runs in a new Docker container that is meant to see only the working directory (mounted at `/workspace`), to have no network, and to be removed when the command ends. `docker_args()` in [bash.py](bash.py) builds that command line for you, and `command_args()` puts `docker` in front of it; your job is the process handling around it. No Docker? See [Without Docker](#without-docker).
-
-The container reduces what a command can reach; it is not a proven sandbox. Run the [isolation checks](#isolation-checks) on your machine before relying on it.
-
-A command result has three parts the model needs: the output (stdout and stderr in the order they arrived), the exit code, and whether it was stopped. A non-zero exit code is not a failure of the tool, but the model must notice it, so it is reported as an error result together with the output.
-
-1. The model calls `bash({"command": "npm test"})`.
-2. `execute` starts `docker run ... bash -c "npm test"` with the working directory mounted.
-3. stdout and stderr arrive as one text, in order.
-4. The process ends with an exit code. The tool returns the output, or raises an exception with it when the code is not 0.
-5. A timeout stops the process with SIGTERM, and the result says the command was stopped. ctrl+c stops it too.
-
-Why SIGTERM: `docker run` passes SIGTERM on to the container, whose init process stops the command. SIGKILL, which `proc.kill()` and `subprocess.run(timeout=...)` send, ends only the `docker` client, and the container keeps running.
+Return the output. When the command fails (exit code not 0), raise with the output and the code: the model must notice it.
 
 ## Steps
 
 Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top.
 
-1. Start the process with `subprocess.Popen`; a missing Docker raises `FileNotFoundError`.
+1. Start the command.
 
    ```python
    try:
@@ -40,18 +30,16 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
        raise RuntimeError("Docker is not installed or not on PATH.") from None
    ```
 
-   `Popen` starts the process without waiting for it. `command_args()` gives the full command line, `docker run ...`, as a list, so no shell runs on your machine: the model's command reaches `bash` only inside the container. `from None` keeps the error message short for the model.
+   `stderr=subprocess.STDOUT` puts errors in the same text as the output, in order, as a terminal shows them.
 
-2. Collect stdout and stderr as one text with `communicate()`, which waits at most `timeout` seconds.
+2. Wait for it, at most `timeout` seconds.
 
    ```python
    try:
        output, _ = proc.communicate(timeout=params.get("timeout"))
    ```
 
-   `stderr=subprocess.STDOUT` in step 1 sends errors into the same pipe, so the output arrives in order, as a terminal shows it. `text=True` makes it a `str`. `communicate()` waits for the end and reads everything. Without a timeout `params.get` gives `None`, and it waits as long as the command runs.
-
-3. Stop the process when the timeout passes, and when you press ctrl+c. These `except` clauses belong to the `try` of step 2:
+3. Stop it at the timeout, or when you press ctrl+c. These belong to the `try` of step 2:
 
    ```python
    except subprocess.TimeoutExpired:
@@ -64,9 +52,9 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
        raise
    ```
 
-   `terminate()` sends SIGTERM, which stops the container (see "Why SIGTERM" above). The second `communicate()` waits until it has stopped and collects the output so far. ctrl+c needs the same, or the container keeps running after you stop the agent; `raise` then passes it on, so the agent stops too.
+   Use `terminate()`, not `kill()`: `docker run` passes it on and stops the container. `kill()` stops only the `docker` client, and the container keeps running.
 
-4. Return the output, or raise with `Command exited with code N`.
+4. Return the output, or raise when the command failed.
 
    ```python
    if proc.returncode != 0:
@@ -74,11 +62,7 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
    return output or "(no output)"
    ```
 
-   A failing command becomes an error result that still has its output, so the model sees what failed. `"(no output)"` tells it an empty result is not a broken tool.
-
-Each step adds its lines below the previous one, so the four blocks together are the whole function.
-
-The whole run, with the line of the solution each step uses:
+The four blocks, one under the other, are the whole function:
 
 <p align="center"><img alt="The bash starter, solved, with lines highlighted by step; docker_args is folded. Right: what happens when you ask 'Run the tests.': the model calls bash with npm test, execute runs it in a new container without network, the test fails with exit code 1, and the output goes back as an error result." src="../../assets/diagrams/exercise-03-bash.svg" width="900"></p>
 
@@ -116,19 +100,17 @@ def execute(params, ctx):
 
 </details>
 
-## Check your tool
-
-Before you try it with the model, check it without one:
+## Check
 
 ```bash
 python3 ~/pi-2/exercises/check.py 03
 ```
 
-Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. The checks in `test_bash.py` need no Docker: a stand-in `docker` runs the command on your machine, so they test how you handle the process. With Docker running, the checks in `test_docker.py` run as well, in a real container: the container sees your working directory, and `sleep 30` with a 2 second timeout comes back as an error and leaves no container running. Without Docker they are skipped and not counted. Whether the model uses the tool well is what the next section shows.
+Most checks need no Docker. With Docker running, a few more run in a real container; without it they are skipped.
 
 ## Try it
 
-Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Load it with your read and write tools, from your playground copy:
+Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Then, from the playground copy:
 
 ```bash
 cd ~/pi-workshop
@@ -136,24 +118,18 @@ cd ~/pi-workshop
   -e ~/pi-2/exercises/03-bash/bash.py
 ```
 
-Ask:
-
-- "Run the tests." The result shows a failing test and exit code 1.
-- "Why does the test fail?" The agent reads `math.js` and the test, and explains. Fixing it with a small change is exercise 04.
-- "Run `sleep 30` with a 2 second timeout."
-- "Run `getent hosts example.com`." It fails: the container has no network.
+| Ask | You should see |
+|---|---|
+| Run the tests. | A red `$ npm test` box: one failing test, exit code 1 |
+| Why does the test fail? | The agent reads `math.js` and the test, and explains. Fixing it is exercise 04 |
+| Run `sleep 30` with a 2 second timeout. | Stopped after 2 seconds; `docker ps` shows no container left |
+| Run `getent hosts example.com`. | It fails: the container has no network |
 
 <p align="center"><img alt="Try it for bash: Run the tests gives a red npm test with one failing test and exit code 1; Why does the test fail? reads math.js and math.test.js; sleep 30 with a 2 second timeout is stopped and no container is left; getent hosts example.com fails because the container has no network. Hint: start Docker and keep the playground under your home directory." src="../../assets/diagrams/exercise-03-try.svg" width="900"></p>
 
-## Expected result
-
-- The tool box shows `$ npm test` and the first lines of the output.
-- Failing commands come back as red error results with their output and exit code, and the agent reacts to them.
-- The timeout stops the command, and ctrl+c stops a running command. Afterwards `docker ps` shows no container.
-
 ## Without Docker
 
-Start pi2 with `PI2_NO_DOCKER=1` in front, and `command_args()` runs the command with `bash` on your machine, in the working directory, instead of in a container. The commands then use what is installed on your machine: for `npm test`, install Node.js 22 or newer (see [the install guide](../../README.md#4-docker-or-the-no-docker-mode-for-exercise-03)).
+Put `PI2_NO_DOCKER=1` in front, and the commands run with bash on your machine, as Pi's own bash tool does. Your `execute()` stays the same. You need Node.js 22 for `npm test` ([install guide](../../README.md#4-docker-or-the-no-docker-mode-for-exercise-03)).
 
 ```bash
 cd ~/pi-workshop
@@ -161,36 +137,25 @@ PI2_NO_DOCKER=1 ~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exer
   -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/examples/permission_gate.py
 ```
 
-Your `execute()` does not change. `LOCAL_RUNNER` in [bash.py](bash.py) takes the place of `docker run --init`: it starts the command in its own process group and passes SIGTERM and ctrl+c on to all of it, so `terminate()` still stops the command and whatever it started. `check.py 03` checks both ways: the "(no Docker)" checks run with `PI2_NO_DOCKER=1`, without Docker.
-
-This is how Pi's own bash tool works: on the host. Nothing isolates the command then. It sees your files, your network and everything your user may do, and a wrong `rm` is a real one. Start pi2 from the playground copy, load [the permission gate](../../examples/permission_gate.py) as above, and read what the agent runs. The [isolation checks](#isolation-checks) below fail on purpose in this mode: try `curl -sI https://example.com` and see it answer.
+Nothing isolates the commands then: they see your files and your network, and a wrong `rm` is a real one. Work only in the playground copy, keep the [permission gate](../../examples/permission_gate.py) loaded, and read what the agent runs. Try `curl -sI https://example.com`: it answers.
 
 ## Isolation checks
 
-Status: verified on 2026-11-19 with Colima (macOS, arm64) by running the Python solution directly against real containers. The same checks were verified for the TypeScript solution on 2026-11-18; `docker_args()` uses the same flags. Other runtimes, such as Docker Desktop or Linux, are not verified yet. Each check is also a command you can ask the agent to run.
+What the container should stop, and a command to check each. Verified with Colima on macOS; other setups are not verified yet.
 
 | Check | Command | Expected |
 |---|---|---|
-| No network | `getent hosts example.com`, or `node -e "fetch('https://example.com')"` (the image has no `curl`) | Fails to resolve or connect |
-| No host files outside the workspace | `ls /Users /home; cat /etc/hostname` | No host home directories; the hostname is the container's |
+| No network | `getent hosts example.com` | Fails |
+| No host files | `ls /Users /home; cat /etc/hostname` | No home folders; the container's hostname |
 | Memory limit | `node -e "const a=[]; for(;;) a.push(Buffer.alloc(1e8, 1))"` | Killed (exit code 137) at about 1 GB |
-| Process limit | `cat /sys/fs/cgroup/pids.max`, then start 400 processes | `256`; the shell cannot start them all and fails (exit code 254) |
-| Timeout stops the container | `check.py 03` with Docker running, or `sleep 300` with `timeout: 2`, then `docker ps` on the host | No container left running |
-| Cleanup after errors | a failing command, then `docker ps -a` on the host | No leftover container (`--rm`) |
-| No escape through symlinks | `ln -s / host-root && ls host-root/` | Lists the container's root, not the host's |
+| Process limit | `cat /sys/fs/cgroup/pids.max` | `256` |
+| Timeout | `sleep 300` with `timeout: 2`, then `docker ps` | No container left |
+| Symlinks | `ln -s / host-root && ls host-root/` | The container's root, not your machine's |
 
-SAFETY: the symlink check covers commands. Your `read` and `write` tools, and later `edit`, run on the host: a symlink in the workspace that points outside it makes them reach the host. Resolve paths with `Path.resolve()` before the containment check if that matters for your setup.
+The container protects only commands. Your `read`, `write` and `edit` run on your machine, and a symlink in the working folder can lead them outside it.
 
-SAFETY: the isolation depends on the mount. Mounting a home directory or the Docker socket gives the agent the host back.
+## Read more
 
-## Where to look
-
-| File | What to look at |
-|---|---|
-| [pi2/tui.py](../../pi2/tui.py) | `tool_title`: why a bash call shows as `$ command` |
-| [pi2/agent_loop.py](../../pi2/agent_loop.py) | `execute_tool_call`: ctrl+c arrives in your tool as `KeyboardInterrupt` and ends the run as aborted |
-| [examples/permission_gate.py](../../examples/permission_gate.py) | A rule that blocks dangerous commands before your tool runs |
-
-## In Pi
-
-Pi's original tool is [tools/bash.ts](https://github.com/windx987/pi-2/blob/cead615b4/packages/coding-agent/src/core/tools/bash.ts). It runs commands on the host, not in a container, streams output while the command runs, and truncates long output.
+- [examples/permission_gate.py](../../examples/permission_gate.py): a rule that blocks dangerous commands before your tool runs.
+- [pi2/agent_loop.py](../../pi2/agent_loop.py): `execute_tool_call`, where ctrl+c reaches your tool as `KeyboardInterrupt`.
+- Pi's own `bash` runs on the host and streams output: [tools/bash.ts](https://github.com/windx987/pi-2/blob/cead615b4/packages/coding-agent/src/core/tools/bash.ts).
