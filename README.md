@@ -10,12 +10,7 @@
 
 # pi/2 for Python
 
-A Python version of pi/2, the Pi Workshop Edition, with the same path from prompt to tool call as Pi:
-
-- About 1,000 lines of Python, standard library only.
-- One provider API, OpenAI-compatible `/chat/completions`, which covers Ollama and vLLM.
-- A terminal like Pi's: the editor between two borders, thinking in dim italics, tool calls in colored boxes, and a footer with tokens and model.
-- No built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `bash` and `edit` yourself, in [exercises/](exercises/).
+A small coding agent in Python, made to learn how an AI agent works. It starts with no tools: you write `read`, `write`, `bash` and `edit` yourself, in [exercises/](exercises/), and then watch the agent use them to read, run and fix code.
 
 ## Getting started
 
