@@ -61,25 +61,25 @@
 <line x1="40" y1="316" x2="1080" y2="316" stroke="#e5e7eb"/>
 <text x="40" y="344" fill="#4b5563" font-size="15" font-weight="700">At every request: where extensions act</text>
 
-<!-- Step 1 -->
+<!-- You type -->
 <rect x="90" y="360" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
 <text x="106" y="385" fill="#1a2b45" font-size="15" font-weight="700">You type a message</text>
 <text x="106" y="410" fill="#374151">interactive mode (tui.py) hands it to AgentSession.prompt</text>
 <line x1="390" y1="424" x2="390" y2="446" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-<!-- Step 2 -->
+<!-- Tools offered -->
 <rect x="90" y="450" width="600" height="64" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="106" y="475" fill="#1a2b45" font-size="15" font-weight="700">AgentSession.prompt offers every tool in pi.tools to the model</text>
 <text x="106" y="500" fill="#374151">with its name, description and the JSON Schema of its arguments</text>
 <line x1="390" y1="514" x2="390" y2="536" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-<!-- Model: steps 3 to 5 -->
+<!-- Model -->
 <rect x="90" y="540" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
 <text x="106" y="565" fill="#1a2b45" font-size="15" font-weight="700">The agent loop asks the model; it answers with a tool call</text>
 <text x="106" y="590" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">hello({"name": "Ada"})</text>
 <line x1="390" y1="604" x2="390" y2="626" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-<!-- Step 6: schema -->
+<!-- Schema check -->
 <rect x="90" y="630" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
 <text x="106" y="655" fill="#1a2b45" font-size="15" font-weight="700">pi2 checks the arguments against the tool's schema</text>
 <text x="106" y="680" fill="#374151">so execute() only ever gets arguments of the right shape</text>
@@ -90,7 +90,7 @@
 <text x="776" y="677" fill="#4b5563" font-size="13">The model reads what was wrong.</text>
 <line x1="390" y1="694" x2="390" y2="716" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-<!-- Step 6: listeners -->
+<!-- Listeners -->
 <rect x="90" y="720" width="600" height="64" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
 <text x="106" y="745" fill="#1a2b45" font-size="15" font-weight="700">Every listener in pi.handlers sees the call</text>
 <text x="106" y="770" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">h(call, args) → None: let it run · a reason: block it</text>
@@ -101,7 +101,7 @@
 <text x="776" y="767" fill="#4b5563" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">"Blocked by extension: &lt;reason&gt;"</text>
 <line x1="390" y1="784" x2="390" y2="806" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-<!-- Step 7 -->
+<!-- Tool runs -->
 <rect x="90" y="810" width="600" height="64" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="106" y="835" fill="#1a2b45" font-size="15" font-weight="700">Your tool runs</text>
 <text x="106" y="860" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">tool.execute(params, ctx)&#160;&#160; # ctx.cwd, ctx.session</text>
@@ -113,7 +113,7 @@
 <text x="776" y="869" fill="#1f2328"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">raise ...</tspan> → error result with the message</text>
 <line x1="390" y1="874" x2="390" y2="896" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-<!-- Step 8 -->
+<!-- Result back -->
 <rect x="90" y="900" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
 <text x="106" y="925" fill="#1a2b45" font-size="15" font-weight="700">The result goes back to the model as the next message</text>
 <text x="106" y="950" fill="#374151">every result and error result above ends here, and is saved</text>
