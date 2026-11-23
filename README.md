@@ -53,7 +53,29 @@ It should end with `OK`.
 
 ### 3. A model
 
-Run a model with Ollama or vLLM, give it a context of at least 32k tokens, and add it to `~/.pi/agent/models.json`, the same file Pi uses. [docs/models.md](docs/models.md) has both setups, step by step. At a workshop, the instructor gives you the address and key of a shared server: put them in `models.json` as in the vLLM example.
+pi2 talks to any server with an OpenAI-compatible `POST /chat/completions` endpoint, such as Ollama or vLLM. Tell it where in `~/.pi/agent/models.json`, the same file Pi uses:
+
+```json
+{
+  "providers": {
+    "vllm": {
+      "baseUrl": "http://localhost:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "none",
+      "models": [
+        { "id": "Qwen/Qwen3-8B", "name": "Qwen3 8B", "contextWindow": 32768, "maxTokens": 8192 }
+      ]
+    }
+  }
+}
+```
+
+Replace `baseUrl`, `apiKey`, `id` and the limits with your server's values. At a workshop, the instructor gives you the address, key and model id of a shared server. Create the folder first (`mkdir -p ~/.pi/agent`), and keep the file to yourself (`chmod 600 ~/.pi/agent/models.json`): it holds your key.
+
+- `contextWindow` is how many tokens the model takes: at least 32k, and what the server really allows. pi2 compacts when the conversation nears it.
+- `maxTokens` caps each answer.
+
+[docs/models.md](docs/models.md) has the setups step by step: Ollama on your machine, vLLM on a GPU server, and several models in one file.
 
 ### 4. Docker, or the no-Docker mode (for exercise 03)
 
