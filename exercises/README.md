@@ -1,13 +1,16 @@
 # Exercises
 
-| # | Tool | Instructions | Playground |
-|---|---|---|---|
-| 01 | `read` | [README](01-read/01-read.md) | `playground/01-read` |
-| 02 | `write` | [README](02-write/02-write.md) | `playground/02-write` |
-| 03 | `edit` | [README](03-edit/03-edit.md) | `playground/03-edit` |
-| 04 | `grep` | [README](04-search/04-search.md) | `playground/04-search` |
-| 05 | `command` | [README](05-command/05-command.md) | `playground/05-command` |
-| 06 | `subagent` | [README](06-subagents/06-subagents.md) | `playground/06-subagents` |
+| # | Tool | Edit this file | Instructions | Playground |
+|---|---|---|---|---|
+| 01 | `read` | `tools/01-read.py` | [README](01-read/01-read.md) | `playground/01-read` |
+| 02 | `write` | `tools/02-write.py` | [README](02-write/02-write.md) | `playground/02-write` |
+| 03 | `edit` | `tools/03-edit.py` | [README](03-edit/03-edit.md) | `playground/03-edit` |
+| 04 | `grep` | `tools/04-grep.py` | [README](04-search/04-search.md) | `playground/04-search` |
+| 05 | `command` | `tools/05-command.py` | [README](05-command/05-command.md) | `playground/05-command` |
+| 06 | `subagent` | `tools/06-subagent.py` | [README](06-subagents/06-subagents.md) | `playground/06-subagents` |
+
+Each starter in `tools/` already registers its tool and raises
+`NotImplementedError`; fill in that file's `execute`.
 
 ## Run checks
 
@@ -20,6 +23,9 @@ python3 exercises/check.py 01
 # Check every exercise:
 python3 exercises/check.py
 ```
+
+The checks read `tools/<NN>-<name>.py` unless you pass another file:
+`python3 exercises/check.py 06 tools/06-subagent.py`.
 
 ## How a tool works
 
@@ -50,6 +56,9 @@ the tool reads `/home/user/pi-2/playground/01-read/todo.md`.
 
 The agent may also send an absolute path. That same line handles it: an
 absolute right side replaces the left side.
+
+`ctx.session` is the running session, for a tool that needs more than a
+directory. Exercise 06 uses it to start a child session.
 
 ### Output
 
