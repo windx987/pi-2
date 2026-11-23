@@ -13,10 +13,10 @@ The first tool: the agent can look at files in the directory it works in.
 The model cannot touch your machine. It can only answer with text or with a tool call: a tool name and JSON arguments. pi2 runs the tool and sends the result back as the next message. A tool is therefore a contract: the description and schema tell the model what it may ask for, and the result tells it what happened.
 
 1. pi2 starts, loads `read.py` with `-e`, and calls its `extension(pi)`.
-2. `pi.register_tool(read_tool)` adds `read`. The next request to the model lists it with its schema (step 2 of [the eight steps](../../README.md#the-eight-steps-in-the-code)).
+2. `pi.register_tool(read_tool)` adds `read`. The next request to the model lists it with its schema.
 3. The model answers with a call such as `read({"path": "math.js"})`.
-4. pi2 checks the arguments against `parameters`, then calls `execute(params, ctx)` (steps 6 and 7).
-5. The string `execute` returns, or the message of the exception it raises, becomes the tool result. pi2 sends it to the model, which answers or calls another tool (step 8).
+4. pi2 checks the arguments against `parameters`, then calls `execute(params, ctx)`.
+5. The string `execute` returns, or the message of the exception it raises, becomes the tool result. pi2 sends it to the model, which answers or calls another tool.
 
 ## Steps
 
@@ -68,7 +68,7 @@ Each step adds its lines below the previous one, so the four blocks together are
 
 The whole run, with the line of the solution each step uses:
 
-<p align="center"><img alt="The read starter, solved, with lines highlighted by step: define_tool's name, description and parameters (steps 2 and 6), execute (step 7), its return and raises (step 8), extension and register_tool (start). Right: what happens when you ask 'What is in package.json?', from loading the file to the tool result." src="../../assets/diagrams/exercise-01-read.svg" width="900"></p>
+<p align="center"><img alt="The read starter, solved, with lines highlighted by step: extension and register_tool (step 1), define_tool's name, description and parameters (steps 3 and 5), execute (step 6), its return and raises (step 7). Right: what happens when you ask 'What is in package.json?', from loading the file to the tool result." src="../../assets/diagrams/exercise-01-read.svg" width="900"></p>
 
 <details>
 <summary>The whole function</summary>

@@ -84,7 +84,7 @@ Load read, and type each step in order:
 
 <p align="center"><img alt="Scenario 4, a permission gate: Delete the incidents folder with rm -rf gives a bash call that is blocked before it runs, with the reason Dangerous command blocked, and the folder stays; sudo ls is blocked as well; ls incidents runs. Hint: the gate matches the text of the command, so it is a way to ask first, not a wall; the container is what keeps the machine safe." src="../assets/diagrams/playground-4-gate.svg" width="900"></p>
 
-[examples/permission_gate.py](../examples/permission_gate.py) registers no tool. It listens to every tool call (step 6 of [the eight steps](../README.md#the-eight-steps-in-the-code)) and blocks bash commands that are hard to undo: `rm -rf`, `sudo`, `chmod 777`. A blocked call never runs; the model gets the reason as an error result.
+[examples/permission_gate.py](../examples/permission_gate.py) registers no tool. It listens to every tool call, after the arguments are checked and before the tool runs, and blocks bash commands that are hard to undo: `rm -rf`, `sudo`, `chmod 777`. A blocked call never runs; the model gets the reason as an error result.
 
 Why these tools:
 

@@ -8,13 +8,13 @@
 <text x="164" y="147" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
 <rect x="41" y="154" width="878" height="22" fill="#eaf5ef"/>
 <rect x="41" y="154" width="4" height="22" fill="#2f7d5b"/>
-<rect x="108.0" y="156.0" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="117.0" y="169.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<rect x="108.0" y="156.0" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="117.0" y="169.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
 <text x="164" y="169" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"><tspan fill="#cf222e">def</tspan> <tspan fill="#8250df">execute</tspan>(params, ctx):</text>
 <text x="164" y="191" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;path = Path(ctx.cwd) / params[<tspan fill="#0a3069">&quot;path&quot;</tspan>]</text>
 <text x="164" y="213" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#cf222e">if</tspan> <tspan fill="#cf222e">not</tspan> path.<tspan fill="#8250df">is_file</tspan>():</text>
 <rect x="41" y="220" width="878" height="22" fill="#fdf5e4"/>
 <rect x="41" y="220" width="4" height="22" fill="#9a6700"/>
-<rect x="108.0" y="222.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="235.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
+<rect x="108.0" y="222.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="235.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
 <text x="164" y="235" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;raise FileNotFoundError(<tspan fill="#0a3069">f&quot;File not found: {params[&#x27;path&#x27;]}&quot;</tspan>)</text>
 <text x="164" y="257" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;lines = path.<tspan fill="#8250df">read_text</tspan>(encoding=<tspan fill="#0a3069">&quot;utf-8&quot;</tspan>).<tspan fill="#8250df">split</tspan>(<tspan fill="#0a3069">&quot;\n&quot;</tspan>)</text>
 <text x="164" y="279" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
@@ -22,7 +22,7 @@
 <text x="164" y="323" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#cf222e">if</tspan> offset &gt; <tspan fill="#8250df">len</tspan>(lines):</text>
 <rect x="41" y="330" width="878" height="22" fill="#fdf5e4"/>
 <rect x="41" y="330" width="4" height="22" fill="#9a6700"/>
-<rect x="108.0" y="332.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="345.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
+<rect x="108.0" y="332.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="345.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
 <text x="164" y="345" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;raise ValueError(<tspan fill="#0a3069">f&quot;Offset {offset} is beyond the end of the file ({len(lines)} lines).&quot;</tspan>)</text>
 <text x="164" y="367" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;end = <tspan fill="#8250df">len</tspan>(lines)</text>
 <text x="164" y="389" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#cf222e">if</tspan> params.<tspan fill="#8250df">get</tspan>(<tspan fill="#0a3069">&quot;limit&quot;</tspan>) is <tspan fill="#cf222e">not</tspan> <tspan fill="#cf222e">None</tspan>:</text>
@@ -33,19 +33,19 @@
 <text x="164" y="499" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;text += <tspan fill="#0a3069">f&quot;\n\n[{len(lines) - end} more lines. Use offset={end + 1} to continue.]&quot;</tspan></text>
 <rect x="41" y="506" width="878" height="22" fill="#eaf5ef"/>
 <rect x="41" y="506" width="4" height="22" fill="#2f7d5b"/>
-<rect x="108.0" y="508.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="521.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
-<rect x="86.0" y="508.0" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="95.0" y="521.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<rect x="108.0" y="508.0" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="117.0" y="521.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<rect x="86.0" y="508.0" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="95.0" y="521.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
 <text x="164" y="521" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;<tspan fill="#cf222e">return</tspan> text</text>
 <text x="164" y="543" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
 <text x="164" y="565" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">read_tool = <tspan fill="#8250df">define_tool</tspan>(</text>
 <rect x="41" y="572" width="878" height="22" fill="#eef3fa"/>
 <rect x="41" y="572" width="4" height="22" fill="#2f5a96"/>
-<rect x="108.0" y="574.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="117.0" y="587.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<rect x="108.0" y="574.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="117.0" y="587.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">3</text>
 <text x="164" y="587" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;name=<tspan fill="#0a3069">&quot;read&quot;</tspan>,</text>
 <text x="164" y="609" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;label=<tspan fill="#0a3069">&quot;read&quot;</tspan>,</text>
 <rect x="41" y="616" width="878" height="22" fill="#eef3fa"/>
 <rect x="41" y="616" width="4" height="22" fill="#2f5a96"/>
-<rect x="108.0" y="618.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="117.0" y="631.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<rect x="108.0" y="618.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="117.0" y="631.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">3</text>
 <text x="164" y="631" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;description=(</text>
 <text x="164" y="653" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;Read the contents of a text file. Use offset and limit to read part of a large file; &quot;</tspan></text>
 <text x="164" y="675" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;offset is the first line to read, starting at 1.&quot;</tspan></text>
@@ -54,8 +54,8 @@
 <text x="164" y="741" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;prompt_guidelines=[<tspan fill="#0a3069">&quot;Use read to examine files instead of cat or sed.&quot;</tspan>],</text>
 <rect x="41" y="748" width="878" height="22" fill="#eef3fa"/>
 <rect x="41" y="748" width="4" height="22" fill="#2f5a96"/>
-<rect x="108.0" y="750.0" width="18.0" height="18" rx="9" fill="#6d4bb3"/><text x="117.0" y="763.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
-<rect x="86.0" y="750.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="95.0" y="763.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<rect x="108.0" y="750.0" width="18.0" height="18" rx="9" fill="#6d4bb3"/><text x="117.0" y="763.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">5</text>
+<rect x="86.0" y="750.0" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="95.0" y="763.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">3</text>
 <text x="164" y="763" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;parameters={</text>
 <text x="164" y="785" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;type&quot;</tspan>: <tspan fill="#0a3069">&quot;object&quot;</tspan>,</text>
 <text x="164" y="807" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<tspan fill="#0a3069">&quot;properties&quot;</tspan>: {</text>
@@ -70,48 +70,48 @@
 <text x="164" y="1005" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"></text>
 <rect x="41" y="1012" width="878" height="22" fill="#fbeeee"/>
 <rect x="41" y="1012" width="4" height="22" fill="#b03a37"/>
-<rect x="81.5" y="1014.0" width="44.5" height="18" rx="9" fill="#b03a37"/><text x="103.8" y="1027.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">start</text>
+<rect x="108.0" y="1014.0" width="18.0" height="18" rx="9" fill="#b03a37"/><text x="117.0" y="1027.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">1</text>
 <text x="164" y="1027" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12"><tspan fill="#cf222e">def</tspan> <tspan fill="#8250df">extension</tspan>(pi: ExtensionAPI):</text>
 <rect x="41" y="1034" width="878" height="22" fill="#fbeeee"/>
 <rect x="41" y="1034" width="4" height="22" fill="#b03a37"/>
-<rect x="81.5" y="1036.0" width="44.5" height="18" rx="9" fill="#b03a37"/><text x="103.8" y="1049.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">start</text>
+<rect x="108.0" y="1036.0" width="18.0" height="18" rx="9" fill="#b03a37"/><text x="117.0" y="1049.0" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">1</text>
 <text x="164" y="1049" fill="#8c959f" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;&#160;&#160;pi.<tspan fill="#8250df">register_tool</tspan>(read_tool)</text>
 <text x="950" y="38" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You ask: "What is in package.json?"</text>
 <rect x="950" y="52" width="430" height="81" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
-<rect x="966.0" y="65" width="44.5" height="18" rx="9" fill="#b03a37"/><text x="988.2" y="78" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">start</text>
-<text x="1020.5" y="79" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You start pi2 with read</text>
+<rect x="966.0" y="65" width="18.0" height="18" rx="9" fill="#b03a37"/><text x="975.0" y="78" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">1</text>
+<text x="994" y="79" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You start pi2 with read</text>
 <text x="968" y="104" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">./pi2.sh -e exercises/01-read/read.py</text>
 <text x="968" y="123" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">extension(pi) runs and registers the read tool.</text>
 <rect x="950" y="143" width="430" height="80" rx="10" fill="#ffffff" stroke="#6b7280" stroke-width="1.5"/>
-<rect x="966.0" y="156" width="18.0" height="18" rx="9" fill="#6b7280"/><text x="975.0" y="169" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">1</text>
+<rect x="966.0" y="156" width="18.0" height="18" rx="9" fill="#6b7280"/><text x="975.0" y="169" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
 <text x="994" y="170" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You type the question</text>
 <text x="968" y="195" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Interactive mode hands it to AgentSession.prompt. No</text>
 <text x="968" y="213" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">extension code runs.</text>
 <rect x="950" y="233" width="430" height="118" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<rect x="966.0" y="246" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="975.0" y="259" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+<rect x="966.0" y="246" width="18.0" height="18" rx="9" fill="#2f5a96"/><text x="975.0" y="259" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">3</text>
 <text x="994" y="260" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">pi2 offers read to the model</text>
 <text x="968" y="285" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&quot;read&quot;: &quot;Read the contents of a text file…&quot;</text>
 <text x="968" y="304" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">parameters: path required; offset, limit</text>
 <text x="968" y="323" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">From define_tool: the model sees only this, never your</text>
 <text x="968" y="341" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">code.</text>
 <rect x="950" y="361" width="430" height="81" rx="10" fill="#ffffff" stroke="#6b7280" stroke-width="1.5"/>
-<rect x="966.0" y="374" width="31.5" height="18" rx="9" fill="#6b7280"/><text x="981.8" y="387" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">3–5</text>
-<text x="1007.5" y="388" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">The model answers with a tool call</text>
+<rect x="966.0" y="374" width="18.0" height="18" rx="9" fill="#6b7280"/><text x="975.0" y="387" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">4</text>
+<text x="994" y="388" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">The model answers with a tool call</text>
 <text x="968" y="413" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">read({&quot;path&quot;: &quot;package.json&quot;})</text>
 <text x="968" y="432" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Agent loop, model runtime and provider.</text>
 <rect x="950" y="452" width="430" height="81" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
-<rect x="966.0" y="465" width="18.0" height="18" rx="9" fill="#6d4bb3"/><text x="975.0" y="478" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
+<rect x="966.0" y="465" width="18.0" height="18" rx="9" fill="#6d4bb3"/><text x="975.0" y="478" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">5</text>
 <text x="994" y="479" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">pi2 checks the arguments</text>
 <text x="968" y="504" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&quot;package.json&quot; is a string: matches parameters</text>
 <text x="968" y="523" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">No offset or limit: both are optional.</text>
 <rect x="950" y="543" width="430" height="100" rx="10" fill="#eaf5ef" stroke="#2f7d5b" stroke-width="1.5"/>
-<rect x="966.0" y="556" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="975.0" y="569" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
+<rect x="966.0" y="556" width="18.0" height="18" rx="9" fill="#2f7d5b"/><text x="975.0" y="569" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">6</text>
 <text x="994" y="570" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">Your execute runs</text>
 <text x="968" y="595" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">Path(ctx.cwd) / &quot;package.json&quot;</text>
 <text x="968" y="614" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">read_text → the whole file, no offset</text>
 <text x="968" y="633" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">A missing file raises FileNotFoundError instead.</text>
 <rect x="950" y="653" width="430" height="99" rx="10" fill="#fdf5e4" stroke="#9a6700" stroke-width="1.5"/>
-<rect x="966.0" y="666" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="975.0" y="679" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">8</text>
+<rect x="966.0" y="666" width="18.0" height="18" rx="9" fill="#9a6700"/><text x="975.0" y="679" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">7</text>
 <text x="994" y="680" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">The result goes back to the model</text>
 <text x="968" y="705" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">tool result: the text of package.json</text>
 <text x="968" y="724" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">An exception would go back as an error result. The model</text>

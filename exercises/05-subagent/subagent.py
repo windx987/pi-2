@@ -8,8 +8,8 @@
 # Every file the agent reads stays in its messages and is sent again with each request, until the
 # context window is full. A subagent is a second AgentSession with an empty message list. It does the
 # reading in its own context and returns only its final answer, so the parent's context grows by one
-# tool result instead of every file. To the parent it is just a tool: step 7, whose execute() happens
-# to run steps 2 to 8 again.
+# tool result instead of every file. To the parent it is just a tool, whose execute() happens to run a
+# whole agent loop again.
 #
 # TRACE:
 # pi2/session.py      AgentSession.prompt()   (what the subagent runs)

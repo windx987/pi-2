@@ -5,7 +5,7 @@
 # Then ask: "Delete the node_modules folder with rm -rf."
 #
 # pi2 gives every "tool_call" listener each call after the arguments are validated and before the tool
-# runs (step 6). A listener that returns a reason blocks the call: the tool never runs, and the model
+# runs. A listener that returns a reason blocks the call: the tool never runs, and the model
 # gets the reason as an error result, so it can choose another way. The listener sees calls of every
 # tool, including the ones other extensions register.
 #

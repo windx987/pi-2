@@ -1,8 +1,8 @@
-"""Step 2: the agent session, the center of the application.
+"""The agent session, the center of the application.
 
 Turns your text into a message and starts the agent loop. It owns the conversation, offers the tools
 that extensions registered to the model, lets extensions see each tool call, and saves every finished
-message to a session file (step 8). pi/2 has no built-in tools: without -e the model gets none.
+message to a session file. pi/2 has no built-in tools: without -e the model gets none.
 Around the loop it keeps the conversation inside the context window: see compaction.py.
 """
 
@@ -131,7 +131,7 @@ class AgentSession:
         return message
 
     def before_tool_call(self, call, args):
-        """Step 6: extensions see the call (the "tool_call" event); one returning a reason blocks it."""
+        """Extensions see the call (the "tool_call" event); one returning a reason blocks it."""
         for handler in self.extensions.handlers.get("tool_call", []):
             reason = handler(call, args)
             if reason:
@@ -156,7 +156,7 @@ class AgentSession:
             listener(event)
 
     def save(self, message):
-        """Step 8: append the finished message to the session file, one JSON object per line."""
+        """Append the finished message to the session file, one JSON object per line."""
         new = not self.session_file.exists()
         self.session_file.parent.mkdir(parents=True, exist_ok=True)
         with self.session_file.open("a") as file:

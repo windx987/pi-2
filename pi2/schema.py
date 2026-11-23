@@ -1,4 +1,4 @@
-"""Step 6: checks the model's tool arguments against the tool's JSON Schema.
+"""Checks the model's tool arguments against the tool's JSON Schema.
 
 Pi does this with pi-schema (`validateToolArguments` in Pi's packages/ai). This version covers the parts of
 JSON Schema the tools use: object, properties, required, string, number, integer, boolean, array, items.

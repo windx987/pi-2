@@ -1,4 +1,4 @@
-"""Step 5: the provider.
+"""The provider.
 
 Converts Pi's messages and tools to the OpenAI chat format, sends the request, and turns the streamed
 answer back into Pi events: thinking, text and tool calls. Works with any OpenAI-compatible endpoint,

@@ -4,14 +4,14 @@
 # w where you work; r read and run; o other.
 d pi-2/ (python branch) -- Lobotomized: pi/2 in Python
 ## the agent
-a ├── pi2/ -- the agent, one file per step
+a ├── pi2/ -- the agent, one file per part
 a │   ├── cli.py -- options, loads extensions (-e)
-a │   ├── tui.py -- 1 · interactive mode: editor, footer, tool boxes
-a │   ├── session.py -- 2 · AgentSession; 8 · saves messages
-l │   ├── agent_loop.py -- 3 · ask, run tool calls, repeat (6, 7, 8)
-a │   ├── model_runtime.py -- 4 · models.json, API key, stream_fn
-m │   ├── ai.py -- 5 · OpenAI-compatible streaming provider
-m │   ├── schema.py -- 6 · checks tool arguments
+a │   ├── tui.py -- interactive mode: editor, footer, tool boxes
+a │   ├── session.py -- AgentSession: runs the loop, saves messages
+l │   ├── agent_loop.py -- ask, run tool calls, repeat
+a │   ├── model_runtime.py -- models.json, API key, stream_fn
+m │   ├── ai.py -- OpenAI-compatible streaming provider
+m │   ├── schema.py -- checks tool arguments
 a │   ├── compaction.py -- summarizes old messages when the context fills up
 a │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
 ## your work

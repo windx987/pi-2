@@ -69,15 +69,21 @@ def highlight(text):
     return "&#160;" * indent + line[indent:]
 
 
+# Each image numbers its own steps 1, 2, 3, ... in the order of its run. Steps are keyed by the label they have
+# in the code ("start", "2", "3–5", ...); write_svg fills this with the number each one shows.
+SHOWN = {}
+
+
 def badge_width(label):
-    return 18 if len(label) == 1 else 12 + len(label) * 6.5
+    shown = SHOWN.get(label, label)
+    return 18 if len(shown) == 1 else 12 + len(shown) * 6.5
 
 
 def badge(x, y, label):
     """A step badge centred at (x, y): a circle, or a pill for longer labels."""
     width = badge_width(label)
     shape = f'<rect x="{x - width / 2:.1f}" y="{y - 9}" width="{width:.1f}" height="18" rx="9" fill="{STEP_COLORS[label]}"/>'
-    text = f'<text x="{x:.1f}" y="{y + 4}" text-anchor="middle" fill="#fff" font-family="{SANS}" font-size="11" font-weight="700">{label}</text>'
+    text = f'<text x="{x:.1f}" y="{y + 4}" text-anchor="middle" fill="#fff" font-family="{SANS}" font-size="11" font-weight="700">{SHOWN.get(label, label)}</text>'
     return shape + text
 
 
@@ -163,6 +169,8 @@ def render_run(y, heading, run):
 
 def write_svg(out, panels, heading, run):
     """Write one example: code panels on the left, the run on the right."""
+    SHOWN.clear()
+    SHOWN.update({label: str(i + 1) for i, (label, *_) in enumerate(run)})
     code, code_bottom = render_code(48, panels)
     steps, run_bottom = render_run(38, heading, run)
     height = max(code_bottom, run_bottom) + 40

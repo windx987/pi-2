@@ -10,7 +10,7 @@
 
 # Lobotomized: pi/2 in Python
 
-Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follows the same eight steps as Pi, one file per step, in about 1,000 lines of standard-library Python. Its terminal looks and behaves like Pi's: the logo header, the editor between two borders, thinking in dim italics, tool calls in colored boxes, and the footer with tokens and model.
+Lobotomized is a small Python version of pi/2, the Pi Workshop Edition. It follows the same path from your prompt to a tool call as Pi, in about 1,000 lines of standard-library Python. Its terminal looks and behaves like Pi's: the logo header, the editor between two borders, thinking in dim italics, tool calls in colored boxes, and the footer with tokens and model.
 
 Like pi/2 it has no built-in tools. Every tool comes from an [extension](#extensions): you write `read`, `write`, `edit` and `bash` yourself, in [exercises/](exercises/).
 
@@ -125,34 +125,19 @@ Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works
 
 Text you type while the agent works waits in the editor for the next message.
 
-## The eight steps in the code
-
-What Pi does with one prompt, step by step, and where Lobotomized does the same in Python:
-
-| Step | Pi (TypeScript) | Lobotomized (Python) |
-|---|---|---|
-| 1. Interactive mode | [`modes/interactive/interactive-mode.ts`](https://github.com/windx987/pi-2/blob/main/packages/coding-agent/src/modes/interactive/interactive-mode.ts) | [pi2/tui.py](pi2/tui.py) `InteractiveMode.run` |
-| 2. AgentSession | [`core/agent-session.ts`](https://github.com/windx987/pi-2/blob/main/packages/coding-agent/src/core/agent-session.ts) | [pi2/session.py](pi2/session.py) `AgentSession.prompt` |
-| 3. Agent loop | [`packages/agent/src/agent-loop.ts`](https://github.com/windx987/pi-2/blob/main/packages/agent/src/agent-loop.ts) | [pi2/agent_loop.py](pi2/agent_loop.py) `run` |
-| 4. streamFn and ModelRuntime | `core/sdk.ts`, `core/model-runtime.ts` | [pi2/model_runtime.py](pi2/model_runtime.py) `stream_fn` |
-| 5. Provider → LLM | [`packages/ai/src/api/openai-completions.ts`](https://github.com/windx987/pi-2/blob/main/packages/ai/src/api/openai-completions.ts) | [pi2/ai.py](pi2/ai.py) `stream` |
-| 6. Validate, then ask extensions | `validateToolArguments`, `beforeToolCall` | [pi2/schema.py](pi2/schema.py), `AgentSession.before_tool_call` |
-| 7. Tool runs | your extension's `execute()` | your extension's `execute()`, called in `agent_loop.execute_tool_call` |
-| 8. Result back, saved | `currentContext.messages.push`, `appendMessage` | `agent_loop.run`, `AgentSession.save` |
-
-Read them in that order. [pi2/extensions.py](pi2/extensions.py) is how [extensions](#extensions) get in, and [pi2/cli.py](pi2/cli.py) starts everything.
-
 ## Architecture
 
 <p align="center"><img alt="Architecture of pi2: you talk to tui.py, which calls prompt() on session.py (AgentSession) and gets events back. The session runs agent_loop.py, which checks arguments with schema.py, calls your extensions' execute(params, ctx), and asks the model through model_runtime.py and ai.py, which streams from the LLM server. When the context fills up, the session has compaction.py summarize the older messages. cli.py loads your extension files into extensions.py, whose tools and handlers the session uses. The session saves messages and the runtime reads models.json, both in ~/.pi/agent." src="./assets/diagrams/architecture.svg" width="900"></p>
 
 Each module knows only its neighbours. `tui.py` talks only to the session. `agent_loop.py` knows no terminal and no provider: it gets `stream_fn` and `before_tool_call` from the session, and reports everything through `emit(event)`. `model_runtime.py` turns a model from `models.json` into a request for `ai.py`, the only module that speaks HTTP. Your extensions come in through `extensions.py` only. Pi has the same split across its packages: see [its architecture](https://github.com/windx987/pi-2#architecture) on `main`.
 
+Start reading with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). [extensions.py](pi2/extensions.py) is how [extensions](#extensions) get in, and [cli.py](pi2/cli.py) starts everything.
+
 ## How a request becomes a tool call
 
-<p align="center"><img alt="Sequence of one request: you type in tui.py, which calls AgentSession.prompt; the session runs agent_loop.run. In a loop until an answer has no tool calls: the loop calls stream_fn, model_runtime.py and ai.py send POST /chat/completions to the LLM server and stream back text, thinking and tool calls; events go to the session, which saves finished messages, and on to tui.py, which draws them. Then the loop validates the arguments (step 6), calls before_tool_call so every tool_call listener can block the call (step 6), calls your tool's execute(params, ctx) (step 7), and emits the result, which joins the messages for the next request (step 8). After the tool results, prepare_next_turn() lets the session compact if the context is over the threshold: compaction.py asks the model for a summary of the older messages, and the messages become the summary plus the newest ones. The session checks the same before the prompt. At the end the session gets agent_end and you see the answer." src="./assets/diagrams/request-sequence.svg" width="900"></p>
+<p align="center"><img alt="Sequence of one request: you type in tui.py, which calls AgentSession.prompt; the session runs agent_loop.run. In a loop until an answer has no tool calls: the loop calls stream_fn, model_runtime.py and ai.py send POST /chat/completions to the LLM server and stream back text, thinking and tool calls; events go to the session, which saves finished messages, and on to tui.py, which draws them. Then the loop validates the arguments, calls before_tool_call so every tool_call listener can block the call, calls your tool's execute(params, ctx), and emits the result, which joins the messages for the next request. After the tool results, prepare_next_turn() lets the session compact if the context is over the threshold: compaction.py asks the model for a summary of the older messages, and the messages become the summary plus the newest ones. The session checks the same before the prompt. At the end the session gets agent_end and you see the answer." src="./assets/diagrams/request-sequence.svg" width="900"></p>
 
-The numbers are [the eight steps](#the-eight-steps-in-the-code). The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
+The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
 
 ## Context length and compaction
 
@@ -162,9 +147,9 @@ Every request sends the whole conversation, so it grows with every tool result. 
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per part (cli.py, tui.py, session.py, agent_loop.py, model_runtime.py, ai.py, schema.py, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
-The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages: blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). The numbers are [the eight steps](#the-eight-steps-in-the-code): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
+The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages: blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
 
 ## Extensions
 
@@ -174,10 +159,10 @@ An extension is any Python file you load with `-e`. It has one function, `extens
 
 Through `pi`, an extension can do two things:
 
-| Call | Does | Step |
-|---|---|---|
-| `pi.register_tool(tool)` | Offers a tool to the model. Its `execute(params, ctx)` runs when the model calls it | 2, 7 |
-| `pi.on("tool_call", handler)` | Sees every tool call before it runs. `handler(call, args)` returns a reason to block it, or `None` | 6 |
+| Call | Does |
+|---|---|
+| `pi.register_tool(tool)` | Offers a tool to the model. Its `execute(params, ctx)` runs when the model calls it |
+| `pi.on("tool_call", handler)` | Sees every tool call before it runs. `handler(call, args)` returns a reason to block it, or `None` |
 
 So one file can add a tool, put a rule on other files' tools, or both. These are all the extensions in this branch:
 
@@ -228,7 +213,7 @@ def extension(pi):
 
 Load several with repeated `-e`; they work together. Here is one run with both kinds, step by step: the real `examples/hello.py` and `examples/permission_gate.py` on the left, each line highlighted with the step that uses it, and what happens when you ask "Greet Ada." on the right.
 
-<p align="center"><img alt="One example, step by step. Left: the code of examples/hello.py and part of examples/permission_gate.py, with lines highlighted by step. Start: def extension(pi) with pi.register_tool(hello) in hello.py, and pi.on('tool_call', on_tool_call) in permission_gate.py. Step 2: name, description and parameters of define_tool, which the model sees. Step 6: parameters, which pi2 checks the arguments against, and on_tool_call, which returns None for a call that is not bash. Step 7: def execute(params, ctx). Step 8: its return value. Right: start, both files loaded; 1, you type Greet Ada.; 2, pi2 offers hello to the model; 3 to 5, the model answers hello({'name': 'Ada'}); 6, the arguments match and the listener lets the call run; 7, execute returns 'Hello, Ada!'; 8, the result goes back to the model." src="./assets/diagrams/extension-example.svg" width="900"></p>
+<p align="center"><img alt="One example, step by step. Left: the code of examples/hello.py and part of examples/permission_gate.py, with lines highlighted by step. Step 1: def extension(pi) with pi.register_tool(hello) in hello.py, and pi.on('tool_call', on_tool_call) in permission_gate.py. Step 3: name, description and parameters of define_tool, which the model sees. Step 5: parameters, which pi2 checks the arguments against, and on_tool_call, which returns None for a call that is not bash. Step 6: def execute(params, ctx). Step 7: its return value. Right: 1, you start pi2 and both files load; 2, you type Greet Ada.; 3, pi2 offers hello to the model; 4, the model answers hello({'name': 'Ada'}); 5, the arguments match and the listener lets the call run; 6, execute returns 'Hello, Ada!'; 7, the result goes back to the model." src="./assets/diagrams/extension-example.svg" width="900"></p>
 
 In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](https://github.com/windx987/pi-2/tree/main/packages/coding-agent/examples/extensions).
 

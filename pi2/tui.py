@@ -1,4 +1,4 @@
-"""Step 1: interactive mode, the terminal app.
+"""Interactive mode, the terminal app.
 
 Waits for your input between two border lines, hands it to the session, and renders every event the
 session emits while the answer streams in: thinking, text, and tool calls in colored boxes. The layout

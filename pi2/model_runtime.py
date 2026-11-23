@@ -1,7 +1,7 @@
-"""Step 4: the model runtime.
+"""The model runtime.
 
 The agent loop does not know any provider. It calls `stream_fn`, which looks up the model's provider in
-models.json, resolves its API key, and calls the provider (step 5). Uses the same models.json as Pi.
+models.json, resolves its API key, and calls the provider (ai.py). Uses the same models.json as Pi.
 """
 
 import json
