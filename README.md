@@ -132,9 +132,9 @@ Load it with `./pi-test.sh -e hello.ts` and ask Pi to greet you.
 
 Start with [education/exercises/README.md](education/exercises/README.md). The full roadmap is in [education/README.md](education/README.md).
 
-## Lobotomized: pi/2 in Python
+## pi/2 for Python
 
-[Lobotomized](https://github.com/windx987/pi-2/tree/python) is pi/2 cut down to about 1,000 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, and providers other than OpenAI-compatible ones such as Ollama. It keeps a simpler compaction, with `/compact` and `/context`: see its [docs/compaction.md](https://github.com/windx987/pi-2/blob/python/docs/compaction.md). It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: a subagent, a tool that runs a second agent with its own context. Each exercise has checks you run without a model, which show PASS, FAIL or TODO for every step: `python3 exercises/check.py 01`.
+[pi/2 for Python](https://github.com/windx987/pi-2/tree/python) is pi/2 cut down to about 1,000 lines of standard-library Python, on the `python` branch. It keeps the same eight steps as [the big picture](#the-big-picture), one file per step, and the same terminal look, so you can read the whole agent in one sitting. It drops what the path of one prompt does not need: Markdown rendering, session resume, and providers other than OpenAI-compatible ones such as Ollama. It keeps a simpler compaction, with `/compact` and `/context`: see its [docs/compaction.md](https://github.com/windx987/pi-2/blob/python/docs/compaction.md). It has the exercises 01 to 04 as Python starters, plus a Python-only exercise 05: a subagent, a tool that runs a second agent with its own context. Each exercise has checks you run without a model, which show PASS, FAIL or TODO for every step: `python3 exercises/check.py 01`.
 
 It uses the same `~/.pi/agent/models.json` as Pi ([its model setup](https://github.com/windx987/pi-2/blob/python/docs/models.md)) and starts like `./pi-test.sh`:
 
