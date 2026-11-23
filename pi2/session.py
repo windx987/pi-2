@@ -8,6 +8,7 @@ Around the loop it keeps the conversation inside the context window: see compact
 
 import json
 import os
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -34,7 +35,8 @@ class AgentSession:
         # Model tokens per estimated token, from the model's last count. Four characters per token is
         # right for prose, but logs, numbers and IDs have about twice as many tokens.
         self.ratio = 1.0
-        slug = self.cwd.strip(os.sep).replace(os.sep, "-") or "root"
+        # /Users/me/app -> Users-me-app; on Windows C:\Users\me\app -> C-Users-me-app.
+        slug = re.sub(r"[\\/:]+", "-", self.cwd).strip("-") or "root"
         folder = self.agent_dir / "python-sessions" / slug
         self.session_file = folder / f"{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}.jsonl"
         self.header = {"type": "session", "cwd": self.cwd, "timestamp": datetime.now().isoformat()}

@@ -21,7 +21,7 @@ import os
 import sys
 import textwrap
 
-from pi2 import ExtensionAPI, define_tool
+from pi2 import ExtensionAPI, define_tool, windows
 
 # Image the commands run in. It must have bash.
 WORKSHOP_IMAGE = "node:22-bookworm-slim"
@@ -65,6 +65,11 @@ def no_docker():
 
 def command_args(command, workspace):
     """The command line that runs `command`: docker run ..., or with PI2_NO_DOCKER=1 bash on this machine."""
+    if os.name == "nt":
+        # Windows: terminate() ends one process and sends no signal; pi2/windows.py stops the rest.
+        if no_docker():
+            return windows.command_args(workspace, command=command)
+        return windows.command_args(workspace, docker_args(command, workspace))
     if no_docker():
         # SAFETY: no container. The command sees your files, your network and your user's rights.
         return [sys.executable, "-c", LOCAL_RUNNER, workspace, command]

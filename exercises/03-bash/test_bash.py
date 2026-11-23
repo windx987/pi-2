@@ -1,6 +1,7 @@
 # Checks for exercise 03, one or more per step of README.md. Run: python3 exercises/check.py 03
 #
-# They need no Docker: a stand-in `docker` on PATH runs the command with bash in the mounted workspace.
+# They need no Docker: a stand-in `docker` on PATH runs the command with bash in the mounted workspace
+# (on Windows: docker.cmd, which runs the stand-in with Python, and Git Bash).
 # That checks your process handling, not the container. test_docker.py checks the real container and
 # its timeout when Docker is running.
 
@@ -13,15 +14,21 @@ import time
 from pathlib import Path
 
 from check import Workspace, call, error_of, load_tool
+from pi2 import windows
+
+BASH = windows.git_bash() if os.name == "nt" else "bash"
 
 FAKE_DOCKER = f"""#!{sys.executable}
 # Stand-in for `docker run --init ... --volume <workspace>:/workspace ... bash -c <command>`.
 import os, signal, subprocess, sys
 args = sys.argv[1:]
+if args[0] == "rm":  # docker rm -f <name>, from the Windows watchdog: nothing to remove here
+    sys.exit(0)
 workspace = args[args.index("--volume") + 1].rsplit(":/workspace", 1)[0]
 # Like --init: the command gets its own process group, and SIGTERM stops all of it.
-proc = subprocess.Popen(args[-3:], cwd=workspace, start_new_session=True)
-signal.signal(signal.SIGTERM, lambda *_: os.killpg(proc.pid, signal.SIGTERM))
+proc = subprocess.Popen([{BASH!r}, *args[-2:]], cwd=workspace, start_new_session=True)
+if hasattr(os, "killpg"):  # on Windows, pi2/windows.py stops the process tree instead
+    signal.signal(signal.SIGTERM, lambda *_: os.killpg(proc.pid, signal.SIGTERM))
 sys.exit(proc.wait())
 """
 
@@ -38,6 +45,8 @@ class BashTest(Workspace):
         docker = bin_dir / "docker"
         docker.write_text(FAKE_DOCKER)
         docker.chmod(docker.stat().st_mode | stat.S_IEXEC)
+        if os.name == "nt":  # Windows ignores the #! line: docker.cmd runs the stand-in with Python
+            (bin_dir / "docker.cmd").write_text(f'@"{sys.executable}" "%~dp0docker" %*\n')
         self.path = os.environ["PATH"]
         os.environ["PATH"] = f"{bin_dir}{os.pathsep}{self.path}"
         self.addCleanup(os.environ.__setitem__, "PATH", self.path)
@@ -101,9 +110,10 @@ class NoDockerTest(Workspace):
 
     def test_1_in_the_workspace(self):
         """Step 1 (no Docker): the command runs in ctx.cwd. Start it with command_args(), not ["docker", ...]."""
-        text = call(self.bash, {"command": "pwd"}, self.cwd)
-        self.assertEqual(Path(text.strip()).resolve(), self.cwd.resolve(),
-                         f"use command_args(params['command'], ctx.cwd), not docker: {text.strip()[:200]}")
+        (self.cwd / "marker.txt").write_text("found me\n")
+        text = call(self.bash, {"command": "cat marker.txt; pwd"}, self.cwd)
+        self.assertTrue("found me" in text and "/workspace" not in text,
+                        f"use command_args(params['command'], ctx.cwd), not docker: {text.strip()[:200]}")
 
     def test_3_timeout_stops_everything(self):
         """Step 3 (no Docker): the timeout stops the command and what it started, with terminate()."""

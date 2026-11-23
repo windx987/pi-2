@@ -14,7 +14,7 @@ A small coding agent in Python, made to learn how an AI agent works. It starts w
 
 ## Getting started
 
-You need Python 3.10 or newer (no packages), git, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and, for exercise 03, Docker or the no-Docker mode (step 4). It runs on macOS and Linux; on Windows, use [WSL](https://learn.microsoft.com/windows/wsl/install) and follow the Linux steps inside it.
+You need Python 3.10 or newer (no packages), git, a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai), and, for exercise 03, Docker or the no-Docker mode (step 4). It runs on macOS and Linux; on Windows, follow [docs/windows.md](docs/windows.md) instead, in PowerShell.
 
 ### 1. Python
 
@@ -27,7 +27,7 @@ If it says 3.10 or newer, go on. Otherwise install a newer one:
 | System | Install |
 |---|---|
 | macOS | `brew install python@3.12`, or the installer from [python.org](https://www.python.org/downloads/) |
-| Ubuntu, Debian, WSL | `sudo apt install python3`; on an older release that still gives 3.9 or less, use [the deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) or [pyenv](https://github.com/pyenv/pyenv) |
+| Ubuntu, Debian | `sudo apt install python3`; on an older release that still gives 3.9 or less, use [the deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) or [pyenv](https://github.com/pyenv/pyenv) |
 | Fedora | `sudo dnf install python3` |
 
 pi2 uses only the standard library: no `pip install`, no virtual environment. If `python3` is still an older version, run pi2 with the new one: `python3.12 ~/pi-2/pi2.py`.
@@ -103,7 +103,7 @@ The commands run on your machine, so what they call must be installed there. The
 # macOS (Homebrew), or the installer from nodejs.org
 brew install node
 
-# Linux and WSL: nvm, since distribution packages (apt install nodejs) are often too old
+# Linux: nvm, since distribution packages (apt install nodejs) are often too old
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 nvm install 22                # in a new terminal
 
@@ -136,7 +136,7 @@ Ask it to greet someone. `pi2.py` works from any directory, so from a playground
 |---|---|
 | Enter | Send the message |
 | ctrl+c | While the agent works: stop it. In the editor: clear it |
-| ctrl+d | Exit |
+| ctrl+d | Exit (on Windows: ctrl+z, then Enter) |
 | `/model` | List the models in `models.json`; `/model <number>` or `/model <provider/id>` switches |
 | `/compact [focus]` | Summarize the older messages now to free context; the optional text says what the summary must keep. See [docs/compaction.md](docs/compaction.md) |
 | `/context` | Show how full the context window is, where compaction starts, and what fills it. See [docs/compaction.md](docs/compaction.md) |

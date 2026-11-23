@@ -157,5 +157,6 @@ The container protects only commands. Your `read`, `write` and `edit` run on you
 ## Read more
 
 - [examples/permission_gate.py](../../examples/permission_gate.py): a rule that blocks dangerous commands before your tool runs.
+- [pi2/windows.py](../../pi2/windows.py): on Windows `terminate()` sends no signal, so a watchdog stops the container and the commands. [docs/windows.md](../../docs/windows.md) has the Windows setup.
 - [pi2/agent_loop.py](../../pi2/agent_loop.py): `execute_tool_call`, where ctrl+c reaches your tool as `KeyboardInterrupt`.
 - Pi's own `bash` runs on the host and streams output: [tools/bash.ts](https://github.com/windx987/pi-2/blob/cead615b4/packages/coding-agent/src/core/tools/bash.ts).

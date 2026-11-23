@@ -72,6 +72,18 @@ def exit_on_signal(signum, frame):
     sys.exit(128 + signum)
 
 
+def enable_ansi():
+    """On Windows, ask the console to draw ANSI escape codes. Windows Terminal always does; cmd.exe may not."""
+    if os.name != "nt":
+        return
+    import ctypes
+    kernel32 = ctypes.windll.kernel32
+    stdout = kernel32.GetStdHandle(-11)  # STD_OUTPUT_HANDLE
+    mode = ctypes.c_uint32()
+    if kernel32.GetConsoleMode(stdout, ctypes.byref(mode)):
+        kernel32.SetConsoleMode(stdout, mode.value | 0x0004)  # ENABLE_VIRTUAL_TERMINAL_PROCESSING
+
+
 def write(text):
     sys.stdout.write(text)
     sys.stdout.flush()
@@ -94,6 +106,7 @@ class InteractiveMode:
             # SIGTERM and SIGHUP (terminal closed) would end Python at once and leave the echo off.
             signal.signal(signal.SIGTERM, exit_on_signal)
             signal.signal(signal.SIGHUP, exit_on_signal)
+        enable_ansi()
         self.print_header()
         while True:
             text = self.read_input()
