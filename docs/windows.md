@@ -27,10 +27,10 @@ Git for Windows also brings Git Bash, which the no-Docker mode of exercise 03 us
 ```powershell
 git clone -b python https://github.com/windx987/pi-2.git $HOME\pi-2
 cd $HOME\pi-2
-py -m unittest discover tests
+py pi2.py --version
 ```
 
-It should end with `OK`. The guides write the clone as `~/pi-2`; in PowerShell it is `$HOME\pi-2`.
+It should print `0.1.0`. The guides write the clone as `~/pi-2`; in PowerShell it is `$HOME\pi-2`.
 
 ## 3. A model
 

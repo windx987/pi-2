@@ -26,6 +26,5 @@ r ├── docs/ -- connecting a model; compaction; Windows
 r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
 r ├── pi2.py -- starts pi2: python3 pi2.py -e ...
 ## outside the workshop
-o ├── tests/ -- unit tests, no model needed
 o ├── pyproject.toml -- pip install -e . gives a pi2 command
 o └── assets/ -- logo, diagrams, the playground's generator
