@@ -1,6 +1,6 @@
 # Source for python-structure.svg; render with: node render-tree.mjs python-structure
 # Format: <role> <tree path> -- <explanation>. "## <label>" starts a section, drawn as a tinted band.
-# Roles: d directory; a app, l agent loop, m talks to the model (the package colors of the big picture);
+# Roles: d directory; a app, l agent loop, m talks to the model (the colors of Pi's packages);
 # w where you work; r read and run; o other.
 d pi-2/ (python branch) -- Lobotomized: pi/2 in Python
 ## the agent

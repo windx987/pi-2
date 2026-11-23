@@ -125,13 +125,9 @@ Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works
 
 Text you type while the agent works waits in the editor for the next message.
 
-## The big picture
-
-What the original Pi does with one prompt, step by step, with the code that does each step. Lobotomized has the same steps in Python (see [the table below](#the-eight-steps-in-the-code)).
-
-<p align="center"><img alt="The original Pi: 1 interactive mode reads your input, 2 AgentSession starts the agent and declares the tools, 3 the agent loop asks the model, 4 streamFn and ModelRuntime route the request, 5 the provider calls the LLM, 6 the arguments are validated and extensions see the call, 7 the tool's execute runs, 8 the result goes back to the model and is saved; the loop repeats while the model calls tools." src="./assets/diagrams/big-picture.svg" width="900"></p>
-
 ## The eight steps in the code
+
+What Pi does with one prompt, step by step, and where Lobotomized does the same in Python:
 
 | Step | Pi (TypeScript) | Lobotomized (Python) |
 |---|---|---|
@@ -156,7 +152,7 @@ Each module knows only its neighbours. `tui.py` talks only to the session. `agen
 
 <p align="center"><img alt="Sequence of one request: you type in tui.py, which calls AgentSession.prompt; the session runs agent_loop.run. In a loop until an answer has no tool calls: the loop calls stream_fn, model_runtime.py and ai.py send POST /chat/completions to the LLM server and stream back text, thinking and tool calls; events go to the session, which saves finished messages, and on to tui.py, which draws them. Then the loop validates the arguments (step 6), calls before_tool_call so every tool_call listener can block the call (step 6), calls your tool's execute(params, ctx) (step 7), and emits the result, which joins the messages for the next request (step 8). After the tool results, prepare_next_turn() lets the session compact if the context is over the threshold: compaction.py asks the model for a summary of the older messages, and the messages become the summary plus the newest ones. The session checks the same before the prompt. At the end the session gets agent_end and you see the answer." src="./assets/diagrams/request-sequence.svg" width="900"></p>
 
-The numbers are the steps of [the big picture](#the-big-picture). The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
+The numbers are [the eight steps](#the-eight-steps-in-the-code). The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
 
 ## Context length and compaction
 
@@ -168,7 +164,7 @@ Every request sends the whole conversation, so it grows with every tool result. 
 
 <p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per step (cli.py, tui.py step 1, session.py steps 2 and 8, agent_loop.py step 3, model_runtime.py step 4, ai.py step 5, schema.py step 6, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
-The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages in [the big picture](#the-big-picture): blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). The numbers are the big picture's steps: start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
+The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages: blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). The numbers are [the eight steps](#the-eight-steps-in-the-code): start with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
 
 ## Extensions
 

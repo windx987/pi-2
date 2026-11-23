@@ -13,7 +13,7 @@ The first tool: the agent can look at files in the directory it works in.
 The model cannot touch your machine. It can only answer with text or with a tool call: a tool name and JSON arguments. pi2 runs the tool and sends the result back as the next message. A tool is therefore a contract: the description and schema tell the model what it may ask for, and the result tells it what happened.
 
 1. pi2 starts, loads `read.py` with `-e`, and calls its `extension(pi)`.
-2. `pi.register_tool(read_tool)` adds `read`. The next request to the model lists it with its schema (step 2 in [the big picture](../../README.md#the-big-picture)).
+2. `pi.register_tool(read_tool)` adds `read`. The next request to the model lists it with its schema (step 2 of [the eight steps](../../README.md#the-eight-steps-in-the-code)).
 3. The model answers with a call such as `read({"path": "math.js"})`.
 4. pi2 checks the arguments against `parameters`, then calls `execute(params, ctx)` (steps 6 and 7).
 5. The string `execute` returns, or the message of the exception it raises, becomes the tool result. pi2 sends it to the model, which answers or calls another tool (step 8).

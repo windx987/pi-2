@@ -15,7 +15,7 @@ Like the tools in 01 to 04, this is an extension that registers one tool. What i
 - **Without a subagent:** the parent reads 10 files. Their full text stays in its context for the rest of the conversation.
 - **With a subagent:** the subagent reads the 10 files in its own context and answers in one paragraph. The parent's context grows by that paragraph only.
 
-1. The parent model calls `subagent({"task": "..."})`. For the parent this is step 7 of [the big picture](../../README.md#the-big-picture), like any tool.
+1. The parent model calls `subagent({"task": "..."})`. For the parent this is step 7 of [the eight steps](../../README.md#the-eight-steps-in-the-code), like any tool.
 2. `execute()` gives a new `ExtensionAPI` the parent's tools, without `subagent`, and starts an `AgentSession` with the parent's runtime and model and no messages.
 3. `child.prompt(task)` runs steps 2 to 8 again, in the child's own context. Nothing listens to the child's events, so the terminal shows only the parent's `subagent` box while it works.
 4. The text of the child's last message becomes the tool result. The parent sees one result, not the files behind it.

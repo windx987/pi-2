@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 
 const dir = import.meta.dirname;
 const name = process.argv[2] ?? "python-structure";
-// The package colors of the big picture: coding-agent blue, agent purple, ai green, your code red.
+// The colors of Pi's packages: coding-agent blue, agent purple, ai green, your code red.
 const colors = {
 	d: { path: "#1a2b45", note: "#1a2b45" },
 	a: { path: "#2f5a96", note: "#1a2b45" },
