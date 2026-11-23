@@ -71,6 +71,6 @@ A summary loses detail: exact file contents, long outputs, earlier reasoning. Th
 | `compaction.reserveTokens` | 16384, at most half the window | Room left for the answer |
 | `compaction.keepRecentTokens` | 20000, at most an eighth of the window | Newest messages kept word for word |
 
-Pi uses 16384 and 20000 for every model. Lobotomized caps them for small windows, so that a 32k model compacts at 16k and keeps 4k: with Pi's numbers, the kept messages alone would be over the threshold and it would compact again on every turn. Keeping only 4k also leaves `/compact` something to summarize long before the threshold.
+Pi uses 16384 and 20000 for every model. pi2 caps them for small windows, so that a 32k model compacts at 16k and keeps 4k: with Pi's numbers, the kept messages alone would be over the threshold and it would compact again on every turn. Keeping only 4k also leaves `/compact` something to summarize long before the threshold.
 
 The code is [pi2/compaction.py](../pi2/compaction.py), called from `AgentSession` in [pi2/session.py](../pi2/session.py). Pi's version, with split turns, branch summaries and extension hooks, is described in [its compaction reference](https://github.com/windx987/pi-2/blob/main/packages/coding-agent/docs/compaction.md).

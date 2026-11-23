@@ -4,7 +4,7 @@
 <rect x="14" y="291" width="949" height="117" rx="8" fill="#fcf3f3"/><text x="953" y="308" text-anchor="end" fill="#b03a37" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="0.6">YOUR WORK</text>
 <rect x="14" y="411" width="949" height="69" rx="8" fill="#fcf7ec"/><text x="953" y="428" text-anchor="end" fill="#b7791f" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="0.6">READ AND RUN</text>
 <rect x="14" y="483" width="949" height="69" rx="8" fill="#f6f7f8"/><text x="953" y="500" text-anchor="end" fill="#6b7280" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="0.6">OUTSIDE THE WORKSHOP</text>
-<text x="24" y="42"><tspan fill="#9aa7b8"></tspan><tspan fill="#1a2b45" font-weight="600">pi-2/ (python branch)</tspan></text><text x="301.7" y="42" fill="#1a2b45">Lobotomized: pi/2 in Python</text>
+<text x="24" y="42"><tspan fill="#9aa7b8"></tspan><tspan fill="#1a2b45" font-weight="600">pi-2/ (python branch)</tspan></text><text x="301.7" y="42" fill="#1a2b45">pi/2 for Python</text>
 <text x="24" y="66"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#2f5a96" font-weight="600">pi2/</tspan></text><text x="301.7" y="66" fill="#1a2b45">the agent, one file per part</text>
 <text x="24" y="90"><tspan fill="#9aa7b8">│   ├── </tspan><tspan fill="#2f5a96" font-weight="600">cli.py</tspan></text><text x="301.7" y="90" fill="#1a2b45">options, loads extensions (-e)</text>
 <text x="24" y="114"><tspan fill="#9aa7b8">│   ├── </tspan><tspan fill="#2f5a96" font-weight="600">tui.py</tspan></text><text x="301.7" y="114" fill="#1a2b45">interactive mode: editor, footer, tool boxes</text>
@@ -22,7 +22,7 @@
 <text x="24" y="402"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#b03a37" font-weight="600">playground/</tspan></text><text x="301.7" y="402" fill="#4a1a18">for the agent: a failing test, 30 incident reports</text>
 <text x="24" y="426"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#b7791f" font-weight="600">docs/</tspan></text><text x="301.7" y="426" fill="#4a3510">connecting a model; context length and compaction</text>
 <text x="24" y="450"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#b7791f" font-weight="600">examples/</tspan></text><text x="301.7" y="450" fill="#4a3510">hello.py (a tool), permission_gate.py (a listener)</text>
-<text x="24" y="474"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#b7791f" font-weight="600">pi2.sh</tspan></text><text x="301.7" y="474" fill="#4a3510">starts Lobotomized from the clone</text>
+<text x="24" y="474"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#b7791f" font-weight="600">pi2.sh</tspan></text><text x="301.7" y="474" fill="#4a3510">starts pi2 from the clone</text>
 <text x="24" y="498"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#6b7280" font-weight="600">tests/</tspan></text><text x="301.7" y="498" fill="#6b7280">unit tests, no model needed</text>
 <text x="24" y="522"><tspan fill="#9aa7b8">├── </tspan><tspan fill="#6b7280" font-weight="600">pyproject.toml</tspan></text><text x="301.7" y="522" fill="#6b7280">pip install -e . gives a pi2 command</text>
 <text x="24" y="546"><tspan fill="#9aa7b8">└── </tspan><tspan fill="#6b7280" font-weight="600">assets/</tspan></text><text x="301.7" y="546" fill="#6b7280">logo, diagrams, the playground's generator</text>

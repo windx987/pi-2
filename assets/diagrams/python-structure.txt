@@ -2,7 +2,7 @@
 # Format: <role> <tree path> -- <explanation>. "## <label>" starts a section, drawn as a tinted band.
 # Roles: d directory; a app, l agent loop, m talks to the model (the colors of Pi's packages);
 # w where you work; r read and run; o other.
-d pi-2/ (python branch) -- Lobotomized: pi/2 in Python
+d pi-2/ (python branch) -- pi/2 for Python
 ## the agent
 a ├── pi2/ -- the agent, one file per part
 a │   ├── cli.py -- options, loads extensions (-e)
@@ -23,7 +23,7 @@ w ├── playground/ -- for the agent: a failing test, 30 incident reports
 ## read and run
 r ├── docs/ -- connecting a model; context length and compaction
 r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
-r ├── pi2.sh -- starts Lobotomized from the clone
+r ├── pi2.sh -- starts pi2 from the clone
 ## outside the workshop
 o ├── tests/ -- unit tests, no model needed
 o ├── pyproject.toml -- pip install -e . gives a pi2 command

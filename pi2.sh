@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs Lobotomized (pi/2 in Python) from this checkout, the way pi-test.sh runs the TypeScript pi/2.
+# Runs pi2 (pi/2 for Python) from this checkout, the way pi-test.sh runs the TypeScript pi/2.
 # Works from any directory:  ~/pi-2/pi2.sh --model ollama/gemma4-workshop:12b -e path/to/extension.py
 set -euo pipefail
 
