@@ -36,15 +36,14 @@ pi2 uses only the standard library: no `pip install`, no virtual environment. If
 
 ### 2. The code
 
-Clone the `python` branch and remember where it is: the exercises and the playground use `$REPO` for the path of your clone.
+Clone the `python` branch into `~/pi-2`. Every command in the guides uses that path; if you clone somewhere else, change `~/pi-2` in them to your path.
 
 ```bash
-git clone -b python https://github.com/windx987/pi-2.git
-cd pi-2
-export REPO="$PWD"
+git clone -b python https://github.com/windx987/pi-2.git ~/pi-2
+cd ~/pi-2
 ```
 
-Add the `export REPO=...` line, with the full path, to `~/.zshrc` or `~/.bashrc` so new terminals have it too. Check that everything is in place, without a model:
+Check that everything is in place, without a model:
 
 ```bash
 python3 -m unittest discover tests
@@ -65,7 +64,7 @@ Exercise 03's bash tool runs the commands the model writes. Choose where; you ca
 | Commands run | in a new container that sees only the working directory, without network | with bash on your machine, in the working directory, as Pi's own bash tool does |
 | A wrong command can | change the working directory only | reach your files, your network, everything your user may do |
 | Setup | option 1 below | option 2 below |
-| Start pi2 with | `"$REPO/pi2.sh" ...` | `PI2_NO_DOCKER=1 "$REPO/pi2.sh" ...` |
+| Start pi2 with | `~/pi-2/pi2.sh ...` | `PI2_NO_DOCKER=1 ~/pi-2/pi2.sh ...` |
 
 **Option 1: Docker (recommended)**
 
@@ -90,7 +89,7 @@ nvm install 22                # in a new terminal
 
 node --version                # v22 or newer
 npm --version
-(cd "$REPO/playground" && npm test)    # runs the tests: pass 1, fail 1
+(cd ~/pi-2/playground && npm test)    # runs the tests: pass 1, fail 1
 ```
 
 The failing test is the bug the agent fixes in exercise 04. Then turn the mode on:
@@ -230,11 +229,11 @@ In Pi it is the same idea in TypeScript: `export default function (pi: Extension
 Each README says what the tool does, the steps, what to ask the agent and what you should see; the starter's comments name the Python functions to use. Work in a copy of the playground under your home directory, never in the repository:
 
 ```bash
-cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py"
+cp -R ~/pi-2/playground ~/pi-workshop && cd ~/pi-workshop
+~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py
 ```
 
-`REPO` is the path of your clone. After each exercise, add the next file with another `-e`; type `/new` to start over.
+After each exercise, add the next file with another `-e`; type `/new` to start over.
 
 Check a tool without a model before you try it: `python3 exercises/check.py 01` runs the checks of exercise 01 against its `read.py` and shows PASS, FAIL or TODO for each step. `python3 exercises/check.py` checks all five, and `python3 exercises/check.py 01 path/to/my_read.py` checks another file.
 

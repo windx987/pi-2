@@ -103,18 +103,18 @@ def execute(params, ctx):
 Before you try it with the model, check it without one:
 
 ```bash
-python3 "$REPO/exercises/check.py" 01
+python3 ~/pi-2/exercises/check.py 01
 ```
 
 Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. Whether the model uses the tool well is what the next section shows.
 
 ## Try it
 
-Work in a copy of the playground, never in the repository (`REPO` is the path of your clone):
+Work in a copy of the playground, never in the repository:
 
 ```bash
-cp -R "$REPO/playground" ~/pi-workshop && cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py"
+cp -R ~/pi-2/playground ~/pi-workshop && cd ~/pi-workshop
+~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py
 ```
 
 Ask: "What does math.js export?", then "Show me lines 5 to 7 of math.js.", then "Read missing.txt."

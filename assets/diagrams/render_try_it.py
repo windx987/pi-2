@@ -123,7 +123,7 @@ def exercises():
          [("edit", "math.js", "error"), ("read", "math.js", "ok"), ("edit", "math.js", "ok")],
          "edits[0] occurs 2 times: refused. The agent reads the file and retries with more context, or asks you which one.", None),
     ], ["Each oldText must occur exactly once in the original file. If your playground copy is already fixed, copy it "
-        "again first: rm -rf ~/pi-workshop && cp -R \"$REPO/playground\" ~/pi-workshop"])
+        "again first: rm -rf ~/pi-workshop && cp -R ~/pi-2/playground ~/pi-workshop"])
     figure("exercise-05-try.svg", [
         ("The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents … one line per report … numbered.",
          [("subagent", "INC-2601 … INC-2610", "ok"), ("subagent", "INC-2611 … INC-2620", "ok"), ("subagent", "INC-2621 … INC-2630", "ok")],

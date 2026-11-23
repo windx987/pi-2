@@ -47,7 +47,7 @@ From your playground copy, load your read tool and the subagent (your read tool 
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/05-subagent/subagent.py"
+~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/05-subagent/subagent.py
 ```
 
 The playground's [incidents/](../../playground/incidents/) has 30 incident reports, about 25k tokens: past the 16k where a 32k model compacts, while each subagent's 10 reports, about 9k, fit. Ask:

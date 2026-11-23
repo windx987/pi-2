@@ -33,7 +33,7 @@ Follow EXERCISE 1 to 4 in [edit.py](edit.py):
 Before you try it with the model, check it without one:
 
 ```bash
-python3 "$REPO/exercises/check.py" 04
+python3 ~/pi-2/exercises/check.py 04
 ```
 
 Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. Whether the model uses the tool well is what the next section shows.
@@ -44,8 +44,8 @@ Start Docker as in exercise 03, and load it with your read, write and bash tools
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py" \
-  -e "$REPO/exercises/03-bash/bash.py" -e "$REPO/exercises/04-edit/edit.py"
+~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
+  -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/exercises/04-edit/edit.py
 ```
 
 Ask: "Fix the failing test." The agent reads `math.js`, edits it, and runs the tests again: all four tools in one task. Then ask: "Rename add to sum in math.js and update its callers." Then copy the line `return a + b;` once more into `math.js` yourself and ask: "In math.js, replace `return a + b;` with `return a - b;`."

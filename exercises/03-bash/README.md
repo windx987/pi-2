@@ -121,7 +121,7 @@ def execute(params, ctx):
 Before you try it with the model, check it without one:
 
 ```bash
-python3 "$REPO/exercises/check.py" 03
+python3 ~/pi-2/exercises/check.py 03
 ```
 
 Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. The checks in `test_bash.py` need no Docker: a stand-in `docker` runs the command on your machine, so they test how you handle the process. With Docker running, the checks in `test_docker.py` run as well, in a real container: the container sees your working directory, and `sleep 30` with a 2 second timeout comes back as an error and leaves no container running. Without Docker they are skipped and not counted. Whether the model uses the tool well is what the next section shows.
@@ -132,8 +132,8 @@ Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docke
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py" \
-  -e "$REPO/exercises/03-bash/bash.py"
+~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
+  -e ~/pi-2/exercises/03-bash/bash.py
 ```
 
 Ask:
@@ -157,8 +157,8 @@ Start pi2 with `PI2_NO_DOCKER=1` in front, and `command_args()` runs the command
 
 ```bash
 cd ~/pi-workshop
-PI2_NO_DOCKER=1 "$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py" \
-  -e "$REPO/exercises/03-bash/bash.py" -e "$REPO/examples/permission_gate.py"
+PI2_NO_DOCKER=1 ~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
+  -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/examples/permission_gate.py
 ```
 
 Your `execute()` does not change. `LOCAL_RUNNER` in [bash.py](bash.py) takes the place of `docker run --init`: it starts the command in its own process group and passes SIGTERM and ctrl+c on to all of it, so `terminate()` still stops the command and whatever it started. `check.py 03` checks both ways: the "(no Docker)" checks run with `PI2_NO_DOCKER=1`, without Docker.

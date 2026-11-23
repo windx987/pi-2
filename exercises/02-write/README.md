@@ -87,7 +87,7 @@ def execute(params, ctx):
 Before you try it with the model, check it without one:
 
 ```bash
-python3 "$REPO/exercises/check.py" 02
+python3 ~/pi-2/exercises/check.py 02
 ```
 
 Each step of the list above has checks that call your `execute()` directly. A check shows PASS, FAIL with what went wrong, or TODO while `execute()` still raises `NotImplementedError`. When all checks pass, the tool does what the steps ask. Whether the model uses the tool well is what the next section shows.
@@ -98,7 +98,7 @@ Load it together with your read tool, from your playground copy:
 
 ```bash
 cd ~/pi-workshop
-"$REPO/pi2.sh" -e "$REPO/exercises/01-read/read.py" -e "$REPO/exercises/02-write/write.py"
+~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py
 ```
 
 Ask: "Create notes/todo.md with three workshop goals, then read it back." Then: "Write a file to /tmp/outside.txt."
