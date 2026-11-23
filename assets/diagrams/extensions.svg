@@ -49,37 +49,31 @@
 <rect x="880" y="116" width="200" height="86" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
 <text x="894" y="139" fill="#2f5a96" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">pi.register_tool(t)</text>
 <text x="894" y="160" fill="#1f2328" font-size="13">adds a tool the model</text>
-<text x="894" y="178" fill="#1f2328" font-size="13">can call (steps 2 and 7)</text>
+<text x="894" y="178" fill="#1f2328" font-size="13">can call</text>
 <text x="894" y="196" fill="#4b5563" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">→ pi.tools</text>
 <rect x="880" y="210" width="200" height="86" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
 <text x="894" y="233" fill="#6d4bb3" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">pi.on("tool_call", h)</text>
 <text x="894" y="254" fill="#1f2328" font-size="13">adds a rule that sees every</text>
-<text x="894" y="272" fill="#1f2328" font-size="13">call before it runs (step 6)</text>
+<text x="894" y="272" fill="#1f2328" font-size="13">call before it runs</text>
 <text x="894" y="290" fill="#4b5563" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">→ pi.handlers</text>
 
 <!-- At every request -->
 <line x1="40" y1="316" x2="1080" y2="316" stroke="#e5e7eb"/>
-<text x="40" y="344" fill="#4b5563" font-size="15" font-weight="700">At every request: the eight steps of the big picture, and where extensions act</text>
+<text x="40" y="344" fill="#4b5563" font-size="15" font-weight="700">At every request: where extensions act</text>
 
 <!-- Step 1 -->
 <rect x="90" y="360" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
-<circle cx="60" cy="392" r="13" fill="#2f5a96"/>
-<text x="60" y="397" text-anchor="middle" fill="#fff" font-weight="700">1</text>
 <text x="106" y="385" fill="#1a2b45" font-size="15" font-weight="700">You type a message</text>
 <text x="106" y="410" fill="#374151">interactive mode (tui.py) hands it to AgentSession.prompt</text>
 <line x1="390" y1="424" x2="390" y2="446" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
 <!-- Step 2 -->
 <rect x="90" y="450" width="600" height="64" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<circle cx="60" cy="482" r="13" fill="#2f5a96"/>
-<text x="60" y="487" text-anchor="middle" fill="#fff" font-weight="700">2</text>
 <text x="106" y="475" fill="#1a2b45" font-size="15" font-weight="700">AgentSession.prompt offers every tool in pi.tools to the model</text>
 <text x="106" y="500" fill="#374151">with its name, description and the JSON Schema of its arguments</text>
 <line x1="390" y1="514" x2="390" y2="536" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 
 <!-- Model: steps 3 to 5 -->
-<rect x="38" y="557" width="44" height="26" rx="13" fill="#2f5a96"/>
-<text x="60" y="575" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">3–5</text>
 <rect x="90" y="540" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
 <text x="106" y="565" fill="#1a2b45" font-size="15" font-weight="700">The agent loop asks the model; it answers with a tool call</text>
 <text x="106" y="590" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">hello({"name": "Ada"})</text>
@@ -87,8 +81,6 @@
 
 <!-- Step 6: schema -->
 <rect x="90" y="630" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
-<circle cx="60" cy="662" r="13" fill="#2f5a96"/>
-<text x="60" y="667" text-anchor="middle" fill="#fff" font-weight="700">6</text>
 <text x="106" y="655" fill="#1a2b45" font-size="15" font-weight="700">pi2 checks the arguments against the tool's schema</text>
 <text x="106" y="680" fill="#374151">so execute() only ever gets arguments of the right shape</text>
 <line x1="690" y1="662" x2="756" y2="662" stroke="#cf222e" stroke-width="1.5" marker-end="url(#arrowRed)"/>
@@ -100,8 +92,6 @@
 
 <!-- Step 6: listeners -->
 <rect x="90" y="720" width="600" height="64" rx="10" fill="#f3effa" stroke="#6d4bb3" stroke-width="1.5"/>
-<circle cx="60" cy="752" r="13" fill="#2f5a96"/>
-<text x="60" y="757" text-anchor="middle" fill="#fff" font-weight="700">6</text>
 <text x="106" y="745" fill="#1a2b45" font-size="15" font-weight="700">Every listener in pi.handlers sees the call</text>
 <text x="106" y="770" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">h(call, args) → None: let it run · a reason: block it</text>
 <line x1="690" y1="752" x2="756" y2="752" stroke="#cf222e" stroke-width="1.5" marker-end="url(#arrowRed)"/>
@@ -113,8 +103,6 @@
 
 <!-- Step 7 -->
 <rect x="90" y="810" width="600" height="64" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.5"/>
-<circle cx="60" cy="842" r="13" fill="#2f5a96"/>
-<text x="60" y="847" text-anchor="middle" fill="#fff" font-weight="700">7</text>
 <text x="106" y="835" fill="#1a2b45" font-size="15" font-weight="700">Your tool runs</text>
 <text x="106" y="860" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13">tool.execute(params, ctx)&#160;&#160; # ctx.cwd, ctx.session</text>
 <line x1="690" y1="826" x2="756" y2="820" stroke="#2f7d5b" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
@@ -127,8 +115,6 @@
 
 <!-- Step 8 -->
 <rect x="90" y="900" width="600" height="64" rx="10" fill="#f6f8fa" stroke="#6b7280" stroke-width="1.5"/>
-<circle cx="60" cy="932" r="13" fill="#2f5a96"/>
-<text x="60" y="937" text-anchor="middle" fill="#fff" font-weight="700">8</text>
 <text x="106" y="925" fill="#1a2b45" font-size="15" font-weight="700">The result goes back to the model as the next message</text>
 <text x="106" y="950" fill="#374151">every result and error result above ends here, and is saved</text>
 <path d="M 90 954 H 22 V 590 H 86" fill="none" stroke="#6d4bb3" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrowLoop)"/>
