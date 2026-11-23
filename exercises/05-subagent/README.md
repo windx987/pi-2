@@ -17,7 +17,7 @@ Like the tools in 01 to 04, this is an extension that registers one tool. What i
 
 1. The parent model calls `subagent({"task": "..."})`. For the parent this is a tool call like any other.
 2. `execute()` gives a new `ExtensionAPI` the parent's tools, without `subagent`, and starts an `AgentSession` with the parent's runtime and model and no messages.
-3. `child.prompt(task)` runs steps 2 to 8 again, in the child's own context. Nothing listens to the child's events, so the terminal shows only the parent's `subagent` box while it works.
+3. `child.prompt(task)` runs a whole agent loop again, in the child's own context. Nothing listens to the child's events, so the terminal shows only the parent's `subagent` box while it works.
 4. The text of the child's last message becomes the tool result. The parent sees one result, not the files behind it.
 
 The subagent does not see the conversation, so the task it gets must be complete. Compaction ([`/compact`](../../docs/compaction.md)) is the other way to keep the context small: it summarizes after the fact, and the summary loses detail. A subagent keeps the files out of the parent's context from the start.
