@@ -18,19 +18,22 @@ You need Python 3.10 or newer (no packages), git, a model served by [Ollama](htt
 
 ### 1. Python
 
+You need Python 3.10 or newer:
+
 ```bash
 python3 --version
 ```
 
-If it says 3.10 or newer, go on. Otherwise install a newer one:
+If it is older or missing, install it:
 
-| System | Install |
+| System | Command |
 |---|---|
-| macOS | `brew install python@3.12`, or the installer from [python.org](https://www.python.org/downloads/) |
-| Ubuntu, Debian | `sudo apt install python3`; on an older release that still gives 3.9 or less, use [the deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) or [pyenv](https://github.com/pyenv/pyenv) |
+| macOS | `brew install python@3.12` |
+| Ubuntu, Debian | `sudo apt install python3` |
 | Fedora | `sudo dnf install python3` |
+| Windows | see [docs/windows.md](docs/windows.md) |
 
-pi2 uses only the standard library: no `pip install`, no virtual environment. If `python3` is still an older version, run pi2 with the new one: `python3.12 ~/pi-2/pi2.py`.
+Nothing else to install: pi2 uses only the standard library. If `python3` still shows the old version, use `python3.12` in its place.
 
 ### 2. The code
 
@@ -152,21 +155,11 @@ Each module knows only its neighbours. `tui.py` talks only to the session. `agen
 
 Start reading with [session.py](pi2/session.py) and [agent_loop.py](pi2/agent_loop.py). [extensions.py](pi2/extensions.py) is how [extensions](#extensions) get in, and [cli.py](pi2/cli.py) starts everything.
 
-## How a request becomes a tool call
-
-<p align="center"><img alt="Sequence of one request: you type in tui.py, which calls AgentSession.prompt; the session runs agent_loop.run. In a loop until an answer has no tool calls: the loop calls stream_fn, model_runtime.py and ai.py send POST /chat/completions to the LLM server and stream back text, thinking and tool calls; events go to the session, which saves finished messages, and on to tui.py, which draws them. Then the loop validates the arguments, calls before_tool_call so every tool_call listener can block the call, calls your tool's execute(params, ctx), and emits the result, which joins the messages for the next request. After the tool results, prepare_next_turn() lets the session compact if the context is over the threshold: compaction.py asks the model for a summary of the older messages, and the messages become the summary plus the newest ones. The session checks the same before the prompt. At the end the session gets agent_end and you see the answer." src="./assets/diagrams/request-sequence.svg" width="900"></p>
-
-The loop box repeats once per model answer: the conversation ends when the model answers without a tool call.
-
-## Context length and compaction
-
-Every request sends the whole conversation, so it grows with every tool result. When it nears the model's `contextWindow`, [compaction.py](pi2/compaction.py) asks the model to summarize the older messages and keeps only the summary and the newest ones, as Pi does. `/context` shows what fills the window, and `/compact [focus]` compacts by hand.
-
-[docs/compaction.md](docs/compaction.md) explains when it happens, what is kept, what you see, and the settings.
+[docs/request.md](docs/request.md) follows one request through these modules, step by step. [docs/compaction.md](docs/compaction.md) explains what happens when the conversation fills the model's context.
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per part (cli.py, tui.py, session.py, agent_loop.py, model_runtime.py, ai.py, schema.py, compaction.py, windows.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.py starts it; docs/ explains connecting a model, compaction and Windows. pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per part (cli.py, tui.py, session.py, agent_loop.py, model_runtime.py, ai.py, schema.py, compaction.py, windows.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.py starts it; docs/ explains connecting a model, a request step by step, compaction and Windows. pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages: blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
 

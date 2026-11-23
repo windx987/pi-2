@@ -22,7 +22,7 @@ w │   ├── 05-subagent/ -- a tool that runs a second agent
 w │   └── check.py -- checks your tools without a model
 w ├── playground/ -- for the agent: a failing test, 30 incident reports
 ## read and run
-r ├── docs/ -- connecting a model; compaction; Windows
+r ├── docs/ -- models, a request step by step, compaction, Windows
 r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
 r ├── pi2.py -- starts pi2: python3 pi2.py -e ...
 ## outside the workshop
