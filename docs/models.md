@@ -61,7 +61,7 @@ Add it to `~/.pi/agent/models.json` next to (or instead of) `ollama`. The `id` i
 pi2 starts with the first model in `models.json`. Start with another one with `--model`, as `provider/id`:
 
 ```bash
-./pi2.sh -e examples/hello.py --model vllm/Qwen/Qwen3-8B
+python3 pi2.py -e examples/hello.py --model vllm/Qwen/Qwen3-8B
 ```
 
 Inside pi2, `/model` lists the models and `/model 2` or `/model <provider/id>` switches. The conversation stays; the next request goes to the new model.

@@ -30,7 +30,7 @@ If it says 3.10 or newer, go on. Otherwise install a newer one:
 | Ubuntu, Debian, WSL | `sudo apt install python3`; on an older release that still gives 3.9 or less, use [the deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) or [pyenv](https://github.com/pyenv/pyenv) |
 | Fedora | `sudo dnf install python3` |
 
-pi2 uses only the standard library: no `pip install`, no virtual environment. If `python3` is still an older version, point pi2 at the new one with `export PYTHON=/path/to/python3.12`.
+pi2 uses only the standard library: no `pip install`, no virtual environment. If `python3` is still an older version, run pi2 with the new one: `python3.12 ~/pi-2/pi2.py`.
 
 ### 2. The code
 
@@ -84,7 +84,7 @@ Exercise 03's bash tool runs the commands the model writes. Choose where; you ca
 | Commands run | in a new container that sees only the working directory, without network | with bash on your machine, in the working directory, as Pi's own bash tool does |
 | A wrong command can | change the working directory only | reach your files, your network, everything your user may do |
 | Setup | option 1 below | option 2 below |
-| Start pi2 with | `~/pi-2/pi2.sh ...` | `PI2_NO_DOCKER=1 ~/pi-2/pi2.sh ...` |
+| Start pi2 with | `python3 ~/pi-2/pi2.py ...` | `PI2_NO_DOCKER=1 python3 ~/pi-2/pi2.py ...` |
 
 **Option 1: Docker (recommended)**
 
@@ -122,15 +122,15 @@ The bash tool then runs each command with bash on your machine, in the working d
 
 ### 5. Start pi2
 
-Start it from the clone with the example tool, the way the TypeScript edition starts with `./pi-test.sh`:
+Start it from the clone with the example tool:
 
 ```bash
-./pi2.sh -e examples/hello.py
+python3 pi2.py -e examples/hello.py
 ```
 
-It starts with the first model in `models.json`. Type `/model` to list the others and `/model 2` to switch, or start with one: `./pi2.sh --model ollama/gemma4-workshop:12b`.
+It starts with the first model in `models.json`. Type `/model` to list the others and `/model 2` to switch, or start with one: `python3 pi2.py --model ollama/gemma4-workshop:12b`.
 
-Ask it to greet someone. `pi2.sh` runs `python3 -m pi2` from the clone and works from any directory; set `PYTHON` to use another interpreter. To get a `pi2` command instead, run `pip install -e .` once.
+Ask it to greet someone. `pi2.py` works from any directory, so from a playground copy you start it as `python3 ~/pi-2/pi2.py`. For another Python, run it with that one, such as `python3.12 pi2.py`. To get a `pi2` command instead, run `pip install -e .` once.
 
 | Key or command | Does |
 |---|---|
@@ -166,7 +166,7 @@ Every request sends the whole conversation, so it grows with every tool result. 
 
 ## Project structure
 
-<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per part (cli.py, tui.py, session.py, agent_loop.py, model_runtime.py, ai.py, schema.py, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.sh starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
+<p align="center"><img alt="Project structure of the python branch, in four sections: the agent, your work, read and run, outside the workshop. pi2/ holds the agent, one file per part (cli.py, tui.py, session.py, agent_loop.py, model_runtime.py, ai.py, schema.py, compaction.py, extensions.py). exercises/ holds your extensions 01-read to 04-edit and 05-subagent, each with a README and checks, and check.py, which runs the checks; examples/ has hello.py and permission_gate.py; playground/ has what the agent works on: a failing test and 30 incident reports; pi2.py starts it; docs/ explains connecting a model and compaction. tests/, pyproject.toml and assets/ are outside the workshop path." src="./assets/diagrams/python-structure.svg" width="760"></p>
 
 The four sections are the agent, your work, what you read and run, and what the workshop does not need. In the agent, the files have the colors of Pi's packages: blue for the app (coding-agent), purple for the loop (agent), green for what talks to the model (ai). You work in red: your extensions, their checks, and a copy of the [playground](playground/).
 
@@ -174,7 +174,7 @@ The four sections are the agent, your work, what you read and run, and what the 
 
 An extension is any Python file you load with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. Everything the model can do comes from extensions: pi2 itself contains no tools. Start it without `-e` and the model cannot read, write or run anything.
 
-<p align="center"><img alt="Extensions in pi2. At startup: you start ./pi2.sh with -e files, cli.py creates an ExtensionAPI and loads each file, your file's extension(pi) runs and calls pi.register_tool (stored in pi.tools) or pi.on('tool_call') (stored in pi.handlers). At every request: you type a message and interactive mode hands it to AgentSession.prompt; it offers every tool in pi.tools to the model; the agent loop asks the model, which answers with a tool call; pi2 checks the arguments against the schema (wrong shape: error result, the tool does not run) and then every listener in pi.handlers sees the call (a returned reason blocks it: error result 'Blocked by extension'); tool.execute(params, ctx) runs, where a return value is the result and an exception an error result; the result goes back to the model, which answers or calls another tool." src="./assets/diagrams/extensions.svg" width="900"></p>
+<p align="center"><img alt="Extensions in pi2. At startup: you start python3 pi2.py with -e files, cli.py creates an ExtensionAPI and loads each file, your file's extension(pi) runs and calls pi.register_tool (stored in pi.tools) or pi.on('tool_call') (stored in pi.handlers). At every request: you type a message and interactive mode hands it to AgentSession.prompt; it offers every tool in pi.tools to the model; the agent loop asks the model, which answers with a tool call; pi2 checks the arguments against the schema (wrong shape: error result, the tool does not run) and then every listener in pi.handlers sees the call (a returned reason blocks it: error result 'Blocked by extension'); tool.execute(params, ctx) runs, where a return value is the result and an exception an error result; the result goes back to the model, which answers or calls another tool." src="./assets/diagrams/extensions.svg" width="900"></p>
 
 Through `pi`, an extension can do two things:
 
@@ -250,7 +250,7 @@ Each README says what the tool does, the steps, what to ask the agent and what y
 
 ```bash
 cp -R ~/pi-2/playground ~/pi-workshop && cd ~/pi-workshop
-~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py
+python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py
 ```
 
 After each exercise, add the next file with another `-e`; type `/new` to start over.

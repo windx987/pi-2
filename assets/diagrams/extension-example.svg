@@ -96,7 +96,7 @@
 <rect x="950" y="52" width="430" height="118" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
 <rect x="966.0" y="65" width="18.0" height="18" rx="9" fill="#b03a37"/><text x="975.0" y="78" text-anchor="middle" fill="#fff" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="700">1</text>
 <text x="994" y="79" fill="#1a2b45" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700">You start pi2 with both files</text>
-<text x="968" y="104" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">./pi2.sh -e examples/hello.py \</text>
+<text x="968" y="104" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">python3 pi2.py -e examples/hello.py \</text>
 <text x="968" y="123" fill="#1f2328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12">&#160;&#160;-e examples/permission_gate.py</text>
 <text x="968" y="142" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Each extension(pi) runs: hello.py registers the hello</text>
 <text x="968" y="160" fill="#4b5563" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">tool, permission_gate.py adds a listener.</text>

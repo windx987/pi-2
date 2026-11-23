@@ -1,6 +1,6 @@
 # Exercise 01: the read tool. Lets the agent look at files in its working directory.
 #
-# Load it:  ./pi2.sh -e exercises/01-read/read.py
+# Load it:  python3 pi2.py -e exercises/01-read/read.py
 # Then ask: "What is in package.json?"
 #
 # LEARN:

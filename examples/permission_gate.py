@@ -1,7 +1,7 @@
 # An extension that registers no tool, only a rule for other tools: it blocks dangerous bash commands.
 #
 # Load it with your tools:
-#   ./pi2.sh -e exercises/03-bash/bash.py -e examples/permission_gate.py
+#   python3 pi2.py -e exercises/03-bash/bash.py -e examples/permission_gate.py
 # Then ask: "Delete the node_modules folder with rm -rf."
 #
 # pi2 gives every "tool_call" listener each call after the arguments are validated and before the tool

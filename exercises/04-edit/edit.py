@@ -1,7 +1,7 @@
 # Exercise 04: the edit tool. Lets the agent change part of a file without rewriting all of it.
 #
 # Load it with the earlier tools (bash needs Docker; leave it out to try edit alone):
-#   ./pi2.sh -e exercises/01-read/read.py -e exercises/02-write/write.py \
+#   python3 pi2.py -e exercises/01-read/read.py -e exercises/02-write/write.py \
 #     -e exercises/03-bash/bash.py -e exercises/04-edit/edit.py
 # Then ask: "Rename the function add to sum in math.js."
 #

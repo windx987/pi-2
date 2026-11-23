@@ -117,7 +117,7 @@ def render_code(y, panels):
 
 RUN_X, RUN_W = 950, 430
 RUN = [
-    ("start", "You start pi2 with both files", ["./pi2.sh -e examples/hello.py \\", "  -e examples/permission_gate.py"],
+    ("start", "You start pi2 with both files", ["python3 pi2.py -e examples/hello.py \\", "  -e examples/permission_gate.py"],
      "Each extension(pi) runs: hello.py registers the hello tool, permission_gate.py adds a listener."),
     ("1", "You type: Greet Ada.", [], "Interactive mode hands it to AgentSession.prompt. No extension code runs."),
     ("2", "pi2 offers hello to the model", ['"hello": "Greet someone by name"', 'parameters: {"name": string}, required'],

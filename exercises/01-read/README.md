@@ -99,7 +99,7 @@ Each check calls your `execute()` without a model and shows PASS, FAIL or TODO.
 
 ```bash
 cp -R ~/pi-2/playground ~/pi-workshop && cd ~/pi-workshop
-~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py
+python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py
 ```
 
 | Ask | You should see |

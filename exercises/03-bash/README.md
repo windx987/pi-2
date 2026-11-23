@@ -114,7 +114,7 @@ Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docke
 
 ```bash
 cd ~/pi-workshop
-~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
+python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
   -e ~/pi-2/exercises/03-bash/bash.py
 ```
 
@@ -133,7 +133,7 @@ Put `PI2_NO_DOCKER=1` in front, and the commands run with bash on your machine, 
 
 ```bash
 cd ~/pi-workshop
-PI2_NO_DOCKER=1 ~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
+PI2_NO_DOCKER=1 python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
   -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/examples/permission_gate.py
 ```
 

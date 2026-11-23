@@ -89,7 +89,7 @@ Load it with your read tool, from the playground copy:
 
 ```bash
 cd ~/pi-workshop
-~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py
+python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py
 ```
 
 | Ask | You should see |

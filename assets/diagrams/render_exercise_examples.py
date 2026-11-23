@@ -92,7 +92,7 @@ EXAMPLES = {
     "01-read": {
         "ask": "What is in package.json?",
         "run": [
-            ("start", "You start pi2 with read", ["./pi2.sh -e exercises/01-read/read.py"],
+            ("start", "You start pi2 with read", ["python3 pi2.py -e exercises/01-read/read.py"],
              "extension(pi) runs and registers the read tool."),
             ("1", "You type the question", [], "Interactive mode hands it to AgentSession.prompt. No extension code runs."),
             ("2", "pi2 offers read to the model", ['"read": "Read the contents of a text file…"', "parameters: path required; offset, limit"],
@@ -108,7 +108,7 @@ EXAMPLES = {
     "02-write": {
         "ask": "Create notes/todo.md with three items.",
         "run": [
-            ("start", "You start pi2 with read and write", ["./pi2.sh -e exercises/01-read/read.py \\", "  -e exercises/02-write/write.py"],
+            ("start", "You start pi2 with read and write", ["python3 pi2.py -e exercises/01-read/read.py \\", "  -e exercises/02-write/write.py"],
              "Each extension(pi) registers its tool."),
             ("1", "You type the request", [], "Interactive mode hands it to AgentSession.prompt."),
             ("2", "pi2 offers read and write", ['"write": "Write content to a file…"', "parameters: path, content (both required)"],
@@ -127,7 +127,7 @@ EXAMPLES = {
         "ask": "Run the tests.",
         "fold": ["def docker_args", "LOCAL_RUNNER", "def no_docker", "def command_args"],
         "run": [
-            ("start", "You start pi2 with three tools", ["pi2.sh -e …/01-read/read.py \\", "  -e …/02-write/write.py -e …/03-bash/bash.py"],
+            ("start", "You start pi2 with three tools", ["python3 pi2.py -e …/01-read/read.py \\", "  -e …/02-write/write.py -e …/03-bash/bash.py"],
              "From a playground copy under your home directory, with Docker running."),
             ("1", "You type the request", [], "Interactive mode hands it to AgentSession.prompt."),
             ("2", "pi2 offers read, write and bash", ['"bash": "Execute a bash command in the…"', "parameters: command required; timeout"],

@@ -37,7 +37,7 @@ Load all four tools, from the playground copy (Docker on, as in exercise 03):
 
 ```bash
 cd ~/pi-workshop
-~/pi-2/pi2.sh -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
+python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
   -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/exercises/04-edit/edit.py
 ```
 
