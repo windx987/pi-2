@@ -26,12 +26,18 @@ python3 --version
 
 If it is older or missing, install it:
 
-| System | Command |
-|---|---|
-| macOS | `brew install python@3.12` |
-| Ubuntu, Debian | `sudo apt install python3` |
-| Fedora | `sudo dnf install python3` |
-| Windows | see [docs/windows.md](docs/windows.md) |
+```bash
+# macOS
+brew install python@3.12
+
+# Ubuntu, Debian
+sudo apt install python3
+
+# Fedora
+sudo dnf install python3
+```
+
+On Windows, follow [docs/windows.md](docs/windows.md).
 
 Nothing else to install: pi2 uses only the standard library. If `python3` still shows the old version, use `python3.12` in its place.
 
