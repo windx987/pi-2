@@ -1,7 +1,7 @@
 [project]
 name = "pi2"
 version = "0.1.0"
-description = "pi/2 in Python: a small coding agent with the same eight steps as Pi, for workshops"
+description = "pi/2 in Python: a small coding agent that works the way Pi does, for workshops"
 requires-python = ">=3.10"
 license = "MIT"
 dependencies = []

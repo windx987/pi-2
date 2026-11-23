@@ -155,7 +155,7 @@ def playground():
          "Blocked by extension: Dangerous command blocked … Ask the user to run it themselves. The folder is still there.", None),
         ("Run sudo ls.", [("bash", "sudo ls", "blocked")], "Blocked as well: the gate matches sudo.", None),
         ("List the files in incidents/.", [("bash", "ls incidents", "ok")], "Runs: the gate lets every other command through.", None),
-    ], ["The gate reads the text of the command, before it runs (step 6). It is a way to ask first, not a wall: "
+    ], ["The gate reads the text of the command, before it runs. It is a way to ask first, not a wall: "
         "\"find incidents -delete\" gets through. The container of exercise 03 is what keeps your machine safe."],
        note="⊘ blocked before it ran: the tool's execute() never runs, and the model gets the reason as an error result.")
 
