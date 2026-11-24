@@ -59,6 +59,7 @@ python3 pi2.py --version
 
 ```bash
 python3 pi2.py -e examples/hello.py
+python3 pi2.py -e examples/hello.py --agent-dir .
 ```
 
 In the playground, run from the clone:
