@@ -11,16 +11,9 @@
 
 A small coding agent in Python, made to learn how an AI agent works. It starts with no tools: you write `read`, `write`, `bash` and `edit` yourself, in [exercises/](exercises/), and then watch the agent use them to read, run and fix code.
 
-## Requirements
-
-- Python 3.10 or newer (standard library only, no packages)
-- git
-- a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai)
-- bash, for exercise 03: already on macOS and Linux; on Windows it comes with Git for Windows
+## Setup
 
 Install steps are in [docs/setup.md](docs/setup.md). Model setup is in [docs/models.md](docs/models.md).
-
-## Setup
 
 Clone the `python` branch:
 
