@@ -81,11 +81,11 @@ python3 pi2.py --cwd playground -e exercises/01-read/read.py
 
 | Exercise | Tool | Instructions |
 |---|---|---|
-| [01-read](exercises/01-read/read.py) | `read` | [README](exercises/01-read/README.md) |
-| [02-write](exercises/02-write/write.py) | `write` | [README](exercises/02-write/README.md) |
-| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); the commands run on your machine, so keep the permission gate loaded |
-| [04-edit](exercises/04-edit/edit.py) | `edit` | [README](exercises/04-edit/README.md) |
-| [05-subagent](exercises/05-subagent/subagent.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
+| [01](exercises/01-read/read.py) | `read` | [README](exercises/01-read/README.md) |
+| [02](exercises/02-write/write.py) | `write` | [README](exercises/02-write/README.md) |
+| [03](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md) |
+| [04](exercises/04-edit/edit.py) | `edit` | [README](exercises/04-edit/README.md) |
+| [05](exercises/05-subagent/subagent.py) | `subagent` | [README](exercises/05-subagent/README.md) |
 
 Run each from the clone; `--cwd playground` keeps the agent's work there:
 
