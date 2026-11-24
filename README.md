@@ -26,8 +26,8 @@ Install steps, including Docker and Node.js, are in [docs/setup.md](docs/setup.m
 Clone the `python` branch:
 
 ```bash
-git clone -b python https://github.com/windx987/pi-2.git ~/pi-2
-cd ~/pi-2
+git clone -b python https://github.com/windx987/pi-2.git ./pi-2
+cd ./pi-2
 ```
 
 pi2 reads `~/.pi/agent/models.json`, the same file Pi uses. To use a different folder, pass `--agent-dir DIR`; that folder holds `models.json` (and `settings.json`). The file lists providers, each with its models:
