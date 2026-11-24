@@ -117,8 +117,8 @@ def exercises():
     figure("exercise-04-try.svg", [
         ("Fix the failing test.", [("bash", "python3 -m unittest", "error"), ("read", "calc.py", "ok"), ("edit", "calc.py", "ok"), ("bash", "python3 -m unittest", "ok")],
          "All four tools in one task: the edit changes one line of average(), and the tests pass.", None),
-        ("Rename add to plus in calc.py and update its callers.", [("edit", "calc.py  2 edits", "ok")],
-         "One edit call with two replacements, and the diff. grep -n plus calc.py shows both.", None),
+        ("Rename add to plus in calc.py and update its callers.", [("edit", "calc.py  2 edits", "ok"), ("edit", "test_calc.py", "ok")],
+         "Two replacements in calc.py, and the import in test_calc.py, each with its diff. grep -n plus *.py shows them.", None),
         ("In calc.py, replace return a + b with return a - b  (after you copied that line once more)",
          [("edit", "calc.py", "error"), ("read", "calc.py", "ok"), ("edit", "calc.py", "ok")],
          "edits[0] occurs 2 times: refused. The agent reads the file and retries with more context, or asks you which one.", None),

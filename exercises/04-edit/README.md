@@ -43,10 +43,10 @@ python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-wri
 | Ask | You should see |
 |---|---|
 | Fix the failing test. | `python3 -m unittest` fails, `read`, a green `edit calc.py`, then the tests pass |
-| Rename add to plus in calc.py and update its callers. | One `edit` with two replacements, and the diff |
+| Rename add to plus in calc.py and update its callers. | One `edit` of `calc.py` with two replacements, and one of `test_calc.py`, which imports `add`; each with its diff |
 | In calc.py, replace `return a + b` with `return a - b` (copy that line once more first) | Red: the text occurs twice. The agent reads the file and retries with more context |
 
-<p align="center"><img alt="Try it for edit: Fix the failing test runs python3 -m unittest (red), read, edit and the tests again (green); renaming add to plus is one edit call with two replacements; replacing a line that occurs twice is refused, and the agent reads the file and retries with more context. Hint: each oldText must occur once in the original file." src="../../assets/diagrams/exercise-04-try.svg" width="900"></p>
+<p align="center"><img alt="Try it for edit: Fix the failing test runs python3 -m unittest (red), read, edit and the tests again (green); renaming add to plus is one edit call with two replacements in calc.py and one in test_calc.py; replacing a line that occurs twice is refused, and the agent reads the file and retries with more context. Hint: each oldText must occur once in the original file." src="../../assets/diagrams/exercise-04-try.svg" width="900"></p>
 
 If the playground is already fixed, reset it: `git restore playground && git clean -fd playground`.
 

@@ -4,7 +4,7 @@ import re
 
 from check import Workspace, call, error_of, load_tool
 
-MATH = "def add(a, b):\n    return a + b\n\n\nprint(add(1, 2))\n"
+CALC = "def add(a, b):\n    return a + b\n\n\nprint(add(1, 2))\n"
 
 
 class EditTest(Workspace):
@@ -12,13 +12,13 @@ class EditTest(Workspace):
         super().setUp()
         self.edit = load_tool("edit")
         self.file = self.cwd / "calc.py"
-        self.file.write_text(MATH, encoding="utf-8")
+        self.file.write_text(CALC, encoding="utf-8")
 
     def edits(self, *pairs, path="calc.py"):
         return {"path": path, "edits": [{"oldText": old, "newText": new} for old, new in pairs]}
 
     def assert_unchanged(self):
-        self.assertEqual(self.file.read_text(encoding="utf-8"), MATH, "a failed edit must leave the file as it was")
+        self.assertEqual(self.file.read_text(encoding="utf-8"), CALC, "a failed edit must leave the file as it was")
 
     def test_1_relative_path(self):
         """Step 1: the file is found from ctx.cwd and changed."""
@@ -56,12 +56,12 @@ class EditTest(Workspace):
     def test_3_several_edits(self):
         """Step 3: several disjoint edits are all applied, in one call."""
         call(self.edit, self.edits(("def add", "def plus"), ("add(1, 2)", "plus(1, 2)")), self.cwd)
-        self.assertEqual(self.file.read_text(encoding="utf-8"), MATH.replace("add", "plus"))
+        self.assertEqual(self.file.read_text(encoding="utf-8"), CALC.replace("add", "plus"))
 
     def test_3_edits_in_any_order(self):
         """Step 3: edits listed from the end of the file to the start work as well."""
         call(self.edit, self.edits(("add(1, 2)", "plus(1, 2)"), ("def add", "def plus")), self.cwd)
-        self.assertEqual(self.file.read_text(encoding="utf-8"), MATH.replace("add", "plus"))
+        self.assertEqual(self.file.read_text(encoding="utf-8"), CALC.replace("add", "plus"))
 
     def test_3_overlap(self):
         """Step 3: overlapping edits raise, and the file stays as it was."""
