@@ -2,6 +2,8 @@
 
 pi2 talks to any server with an OpenAI-compatible `/v1/chat/completions` endpoint. It finds them in `~/.pi/agent/models.json`, the same file Pi uses: one entry per provider, with its address, its key and its models. Run the model with [Ollama](#ollama) on your machine or a shared server, or with [vLLM](#vllm) on a GPU server.
 
+Use another folder with `--agent-dir DIR` (or the `PI_CODING_AGENT_DIR` environment variable), such as a project-local `.pi-agent/`. On Windows the default is `$HOME\.pi\agent\models.json`.
+
 ## Ollama
 
 Pull the model and give it a 32k context (Ollama's default of 4096 tokens is too small and cuts requests without an error):

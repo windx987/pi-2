@@ -28,17 +28,16 @@ Match every edit against the original file, not one after another: the model pla
 ## Check
 
 ```bash
-python3 ~/pi-2/exercises/check.py 04
+python3 exercises/check.py 04
 ```
 
 ## Try it
 
-Load all four tools, from the playground copy (Docker on, as in exercise 03):
+Load all four tools from the repository root (Docker on, as in exercise 03):
 
 ```bash
-cd ~/pi-workshop
-python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
-  -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/exercises/04-edit/edit.py
+python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py \
+  -e exercises/03-bash/bash.py -e exercises/04-edit/edit.py
 ```
 
 | Ask | You should see |
@@ -49,7 +48,7 @@ python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02
 
 <p align="center"><img alt="Try it for edit: Fix the failing test runs npm test (red), read, edit and npm test (green); renaming add to sum is one edit call with two replacements; replacing a line that occurs twice is refused, and the agent reads the file and retries with more context. Hint: each oldText must occur once in the original file." src="../../assets/diagrams/exercise-04-try.svg" width="900"></p>
 
-If your playground copy is already fixed, copy it again: `rm -rf ~/pi-workshop && cp -R ~/pi-2/playground ~/pi-workshop`.
+If the playground is already fixed, reset it: `git restore playground && git clean -fd playground`.
 
 ## Read more
 

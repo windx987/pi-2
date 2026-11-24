@@ -2,8 +2,8 @@
 #
 # Needs Docker running and the image pulled once:  docker pull node:22-bookworm-slim
 # No Docker? Start pi2 with PI2_NO_DOCKER=1 to run the commands on this machine instead (see command_args).
-# Load it with the earlier tools, from a playground copy under your home directory:
-#   python3 ~/pi-2/pi2.py -e .../01-read/read.py -e .../02-write/write.py -e .../03-bash/bash.py
+# Load it with the earlier tools, from the repository root:
+#   python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py -e exercises/03-bash/bash.py
 # Then ask: "Run the tests and tell me what fails."
 #
 # LEARN:

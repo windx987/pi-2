@@ -90,16 +90,17 @@ def execute(params, ctx):
 ## Check
 
 ```bash
-python3 ~/pi-2/exercises/check.py 01
+python3 exercises/check.py 01
 ```
 
 Each check calls your `execute()` without a model and shows PASS, FAIL or TODO.
 
 ## Try it
 
+From the repository root:
+
 ```bash
-cp -R ~/pi-2/playground ~/pi-workshop && cd ~/pi-workshop
-python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py
+python3 pi2.py --cwd playground -e exercises/01-read/read.py
 ```
 
 | Ask | You should see |

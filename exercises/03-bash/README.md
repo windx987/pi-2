@@ -103,20 +103,29 @@ def execute(params, ctx):
 ## Check
 
 ```bash
-python3 ~/pi-2/exercises/check.py 03
+python3 exercises/check.py 03
 ```
 
 Most checks need no Docker. With Docker running, a few more run in a real container; without it they are skipped.
 
 ## Try it
 
-Start Docker (Docker Desktop, or `colima start`) and pull the image once: `docker pull node:22-bookworm-slim`. Then, from the playground copy:
+With Docker:
 
 ```bash
-cd ~/pi-workshop
-python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
-  -e ~/pi-2/exercises/03-bash/bash.py
+docker pull node:22-bookworm-slim
+python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py \
+  -e exercises/03-bash/bash.py
 ```
+
+Without Docker (needs Node.js 22 for the tests; [install guide](../../docs/setup.md#4-docker-or-the-no-docker-mode-for-exercise-03)):
+
+```bash
+PI2_NO_DOCKER=1 python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py \
+  -e exercises/03-bash/bash.py -e examples/permission_gate.py
+```
+
+Without Docker the commands run on your machine: keep the permission gate loaded and read what the agent runs.
 
 | Ask | You should see |
 |---|---|
@@ -125,19 +134,7 @@ python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02
 | Run `sleep 30` with a 2 second timeout. | Stopped after 2 seconds; `docker ps` shows no container left |
 | Run `getent hosts example.com`. | It fails: the container has no network |
 
-<p align="center"><img alt="Try it for bash: Run the tests gives a red npm test with one failing test and exit code 1; Why does the test fail? reads math.js and math.test.js; sleep 30 with a 2 second timeout is stopped and no container is left; getent hosts example.com fails because the container has no network. Hint: start Docker and keep the playground under your home directory." src="../../assets/diagrams/exercise-03-try.svg" width="900"></p>
-
-## Without Docker
-
-Put `PI2_NO_DOCKER=1` in front, and the commands run with bash on your machine, as Pi's own bash tool does. Your `execute()` stays the same. You need Node.js 22 for `npm test` ([install guide](../../README.md#4-docker-or-the-no-docker-mode-for-exercise-03)).
-
-```bash
-cd ~/pi-workshop
-PI2_NO_DOCKER=1 python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py \
-  -e ~/pi-2/exercises/03-bash/bash.py -e ~/pi-2/examples/permission_gate.py
-```
-
-Nothing isolates the commands then: they see your files and your network, and a wrong `rm` is a real one. Work only in the playground copy, keep the [permission gate](../../examples/permission_gate.py) loaded, and read what the agent runs. Try `curl -sI https://example.com`: it answers.
+<p align="center"><img alt="Try it for bash: Run the tests gives a red npm test with one failing test and exit code 1; Why does the test fail? reads math.js and math.test.js; sleep 30 with a 2 second timeout is stopped and no container is left; getent hosts example.com fails because the container has no network. Hint: start Docker and keep the playground work inside the repository." src="../../assets/diagrams/exercise-03-try.svg" width="900"></p>
 
 ## Isolation checks
 

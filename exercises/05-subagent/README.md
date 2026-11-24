@@ -30,18 +30,17 @@ Follow EXERCISE 1 to 4 in [subagent.py](subagent.py):
 ## Check
 
 ```bash
-python3 ~/pi-2/exercises/check.py 05
+python3 exercises/check.py 05
 ```
 
 A fake model plays the subagent, so no model is needed.
 
 ## Try it
 
-Load your read tool and the subagent, from the playground copy. The subagent has only the tools you load, so `read` must work first.
+Load your read tool and the subagent from the repository root. The subagent has only the tools you load, so `read` must work first.
 
 ```bash
-cd ~/pi-workshop
-python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/05-subagent/subagent.py
+python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/05-subagent/subagent.py
 ```
 
 [incidents/](../../playground/incidents/) has 30 reports, about 25k tokens: too many for one 32k context, while 10 fit in each subagent. Ask:

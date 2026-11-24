@@ -80,16 +80,15 @@ def execute(params, ctx):
 ## Check
 
 ```bash
-python3 ~/pi-2/exercises/check.py 02
+python3 exercises/check.py 02
 ```
 
 ## Try it
 
-Load it with your read tool, from the playground copy:
+Load it with your read tool, from the repository root:
 
 ```bash
-cd ~/pi-workshop
-python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py -e ~/pi-2/exercises/02-write/write.py
+python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py
 ```
 
 | Ask | You should see |

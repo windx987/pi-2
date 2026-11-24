@@ -71,6 +71,6 @@
 <line x1="30" y1="355" x2="1070" y2="355" stroke="#eef0f3"/>
 <rect x="30" y="368" width="1040" height="62" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
 <text x="48" y="394" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
-<text x="96" y="394" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">Each oldText must occur exactly once in the original file. If your playground copy is already fixed, copy it again first: rm -rf ~/pi-workshop &amp;&amp; cp</text>
-<text x="96" y="414" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">-R ~/pi-2/playground ~/pi-workshop</text>
+<text x="96" y="394" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">Each oldText must occur exactly once in the original file. If the playground is already fixed, reset it first: git restore playground &amp;&amp; git clean</text>
+<text x="96" y="414" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">-fd playground</text>
 </svg>

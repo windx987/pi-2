@@ -2,7 +2,7 @@
   <img alt="pi/2 logo" src="../assets/logo.svg" width="128">
 </p>
 
-> The Windows version of the [README](../README.md), with PowerShell commands. Tested on Windows 11 with PowerShell 5.1, Python 3.12, Git for Windows 2.56, Node.js 26 and Docker Desktop 29.
+> The Windows setup guide, in PowerShell. The [README](../README.md) has the short version. Tested on Windows 11 with PowerShell 5.1, Python 3.12, Git for Windows 2.56, Node.js 26 and Docker Desktop 29.
 
 # pi/2 for Python on Windows
 
@@ -73,6 +73,14 @@ notepad $HOME\.pi\agent\models.json
 
 Paste the example and replace `baseUrl`, `apiKey`, `id` and the limits with your server's values. At a workshop, the instructor gives you the address, key and model id of a shared server. The file holds your key: keep it out of shared folders.
 
+To keep the config with the project instead, put it in `.pi-agent\models.json` (it is in `.gitignore`) and pass `--agent-dir .pi-agent`:
+
+```powershell
+New-Item -ItemType Directory -Force .pi-agent
+Copy-Item $HOME\.pi\agent\models.json .pi-agent\models.json
+py pi2.py --agent-dir .pi-agent -e examples\hello.py
+```
+
 - `contextWindow` is how many tokens the model takes: at least 32k, and what the server really allows. pi2 compacts when the conversation nears it.
 - `maxTokens` caps each answer.
 
@@ -87,7 +95,7 @@ Exercise 03's bash tool runs the commands the model writes. Choose where; you ca
 | Commands run | in a new container that sees only the working directory, without network | in Git Bash on your machine, in the working directory |
 | A wrong command can | change the working directory only | reach your files, your network, everything your user may do |
 | Setup | option 1 below | option 2 below |
-| Start pi2 with | `py $HOME\pi-2\pi2.py ...` | `$env:PI2_NO_DOCKER = "1"`, then `py $HOME\pi-2\pi2.py ...` |
+| Start pi2 with | `py pi2.py ...` | `$env:PI2_NO_DOCKER = "1"`, then `py pi2.py ...` |
 
 **Option 1: Docker Desktop (recommended)**
 
@@ -124,7 +132,7 @@ If PowerShell says running scripts is disabled, run `npm.cmd test` instead: it i
 $env:PI2_NO_DOCKER = "1"     # for this PowerShell window; Remove-Item env:PI2_NO_DOCKER turns it off
 ```
 
-The bash tool then runs each command in Git Bash, in the working directory: not in `C:\Windows\System32\bash.exe`, which is WSL's Linux. `py exercises\check.py 03` always runs the "(no Docker)" checks, with or without Docker installed; they show TODO until you write the tool. Because nothing isolates the commands, work only in the playground copy, load [the permission gate](../playground/README.md#4-a-permission-gate) with your tools, and read each command before the agent's next step. [Exercise 03](../exercises/03-bash/README.md#without-docker) has the details.
+The bash tool then runs each command in Git Bash, in the working directory: not in `C:\Windows\System32\bash.exe`, which is WSL's Linux. `py exercises\check.py 03` always runs the "(no Docker)" checks, with or without Docker installed; they show TODO until you write the tool. Because nothing isolates the commands, work only in `playground\`, load [the permission gate](../playground/README.md#4-a-permission-gate) with your tools, and read each command before the agent's next step. [Exercise 03](../exercises/03-bash/README.md#try-it) has the details.
 
 ### 5. Start pi2
 
@@ -136,7 +144,13 @@ py pi2.py -e examples\hello.py
 
 It starts with the first model in `models.json`. Type `/model` to list the others and `/model 2` to switch, or start with one: `py pi2.py --model ollama/gemma4-workshop:12b`.
 
-Ask it to greet someone. `pi2.py` works from any directory, so from a playground copy you start it as `py $HOME\pi-2\pi2.py`. Windows Terminal, the default on Windows 11, shows the colors and boxes; the older console windows do too.
+Ask it to greet someone. For the workshop, work in the repository playground:
+
+```powershell
+py pi2.py --cwd playground -e exercises\01-read\read.py
+```
+
+Reset between exercises with `git restore playground; git clean -fd playground`. Windows Terminal, the default on Windows 11, shows the colors and boxes; the older console windows do too.
 
 | Key or command | Does |
 |---|---|
@@ -152,79 +166,28 @@ Text you type while the agent works waits for the next message.
 
 ## Architecture
 
-<p align="center"><img alt="Architecture of pi2: you talk to tui.py, which calls prompt() on session.py (AgentSession) and gets events back. The session runs agent_loop.py, which checks arguments with schema.py, calls your extensions' execute(params, ctx), and asks the model through model_runtime.py and ai.py, which streams from the LLM server. When the context fills up, the session has compaction.py summarize the older messages. cli.py loads your extension files into extensions.py, whose tools and handlers the session uses. The session saves messages and the runtime reads models.json, both in ~/.pi/agent." src="../assets/diagrams/architecture.svg" width="900"></p>
+How the modules fit together, and where to start reading: [architecture.md](architecture.md).
 
-Each module knows only its neighbours. `tui.py` talks only to the session. `agent_loop.py` knows no terminal and no provider: it gets `stream_fn` and `before_tool_call` from the session, and reports everything through `emit(event)`. `model_runtime.py` turns a model from `models.json` into a request for `ai.py`, the only module that speaks HTTP. Your extensions come in through `extensions.py` only. Pi has the same split across its packages: see [its architecture](https://github.com/windx987/pi-2#architecture) on `main`.
-
-Start reading with [session.py](../pi2/session.py) and [agent_loop.py](../pi2/agent_loop.py). [extensions.py](../pi2/extensions.py) is how [extensions](#extensions) get in, and [cli.py](../pi2/cli.py) starts everything.
-
-[structure.md](structure.md) shows where each file is. [request.md](request.md) follows one request through these modules, step by step. [compaction.md](compaction.md) explains what happens when the conversation fills the model's context.
+[Structure](structure.md) shows where each file is, [request.md](request.md) follows one request step by step, and [compaction.md](compaction.md) explains what happens when the conversation fills the model's context.
 
 ## Extensions
 
-An extension is any Python file you load with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. Everything the model can do comes from extensions: pi2 itself contains no tools. Start it without `-e` and the model cannot read, write or run anything.
-
-<p align="center"><img alt="Extensions in pi2. At startup: you start pi2.py with -e files, cli.py creates an ExtensionAPI and loads each file, your file's extension(pi) runs and calls pi.register_tool (stored in pi.tools) or pi.on('tool_call') (stored in pi.handlers). At every request: you type a message and interactive mode hands it to AgentSession.prompt; it offers every tool in pi.tools to the model; the agent loop asks the model, which answers with a tool call; pi2 checks the arguments against the schema (wrong shape: error result, the tool does not run) and then every listener in pi.handlers sees the call (a returned reason blocks it: error result 'Blocked by extension'); tool.execute(params, ctx) runs, where a return value is the result and an exception an error result; the result goes back to the model, which answers or calls another tool." src="../assets/diagrams/extensions.svg" width="900"></p>
-
-Through `pi`, an extension can do two things:
+An extension is any Python file you load with `-e`. It has one function, `extension(pi)`, which pi2 calls at startup with an `ExtensionAPI`. Everything the model can do comes from extensions: pi2 itself contains no tools.
 
 | Call | Does |
 |---|---|
 | `pi.register_tool(tool)` | Offers a tool to the model. Its `execute(params, ctx)` runs when the model calls it |
 | `pi.on("tool_call", handler)` | Sees every tool call before it runs. `handler(call, args)` returns a reason to block it, or `None` |
 
-So one file can add a tool, put a rule on other files' tools, or both. These are all the extensions in this branch:
-
-| File | Kind | What it shows |
-|---|---|---|
-| [examples/hello.py](../examples/hello.py) | tool | The smallest tool |
-| [examples/permission_gate.py](../examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
-| [exercises/01-read](../exercises/01-read/read.py) to [04-edit](../exercises/04-edit/edit.py) | tool | The four coding tools, which you write; 01 to 03 show the solution in the Steps of their README |
-| [exercises/05-subagent](../exercises/05-subagent/subagent.py) | tool | A tool that runs a second agent through `ctx.session` |
-
-A tool extension:
-
 ```python
-from pi2 import ExtensionAPI, define_tool
-
-
-def execute(params, ctx):
-    return f"Hello, {params['name']}!"
-
-
-hello = define_tool(
-    name="hello",
-    label="hello",
-    description="Greet someone by name",
-    parameters={"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]},
-    execute=execute,
-)
+from pi2 import ExtensionAPI
 
 
 def extension(pi: ExtensionAPI):
-    pi.register_tool(hello)
+    pi.register_tool(my_tool)
 ```
 
-`define_tool` describes the tool to the model: its name, a description, and the JSON Schema of its arguments. pi2 checks the model's arguments against that schema before `execute` runs, so `params` always has the right shape. `ctx.cwd` is the directory the agent works in, and `ctx.session` is the running `AgentSession`. Return a string; raise an exception for an error result, whose message the model reads.
-
-A listener extension:
-
-```python
-def on_tool_call(call, args):
-    if call["name"] == "bash" and "rm -rf" in args["command"]:
-        return "Dangerous command blocked"   # the tool does not run; the model reads this
-    return None                              # let the call run
-
-
-def extension(pi):
-    pi.on("tool_call", on_tool_call)
-```
-
-Load several with repeated `-e`; they work together. Here is one run with both kinds, step by step: the real `examples/hello.py` and `examples/permission_gate.py` on the left, each line highlighted with the step that uses it, and what happens when you ask "Greet Ada." on the right.
-
-<p align="center"><img alt="One example, step by step. Left: the code of examples/hello.py and part of examples/permission_gate.py, with lines highlighted by step. Step 1: def extension(pi) with pi.register_tool(hello) in hello.py, and pi.on('tool_call', on_tool_call) in permission_gate.py. Step 3: name, description and parameters of define_tool, which the model sees. Step 5: parameters, which pi2 checks the arguments against, and on_tool_call, which returns None for a call that is not bash. Step 6: def execute(params, ctx). Step 7: its return value. Right: 1, you start pi2 and both files load; 2, you type Greet Ada.; 3, pi2 offers hello to the model; 4, the model answers hello({'name': 'Ada'}); 5, the arguments match and the listener lets the call run; 6, execute returns 'Hello, Ada!'; 7, the result goes back to the model." src="../assets/diagrams/extension-example.svg" width="900"></p>
-
-In Pi it is the same idea in TypeScript: `export default function (pi: ExtensionAPI)` with `pi.registerTool` and `pi.on("tool_call")`, and [about 70 example extensions](https://github.com/windx987/pi-2/tree/main/packages/coding-agent/examples/extensions).
+See [examples/hello.py](../examples/hello.py) for the smallest tool, [examples/permission_gate.py](../examples/permission_gate.py) for a listener, and [exercises/](../exercises/) for the tools you write. How the modules fit together is in [architecture.md](architecture.md).
 
 ## Exercises
 
@@ -236,21 +199,19 @@ In Pi it is the same idea in TypeScript: `export default function (pi: Extension
 | [04-edit](../exercises/04-edit/edit.py) | `edit` | [README](../exercises/04-edit/README.md) |
 | [05-subagent](../exercises/05-subagent/subagent.py) | `subagent` | [README](../exercises/05-subagent/README.md) (not in the TypeScript edition) |
 
-Each README says what the tool does, the steps, what to ask the agent and what you should see; the starter's comments name the Python functions to use. The READMEs show macOS and Linux commands: [Reading the guides on Windows](#reading-the-guides-on-windows) translates them. Work in a copy of the playground under your home directory, never in the repository:
+Each README says what the tool does, the steps, what to ask the agent and what you should see; the starter's comments name the Python functions to use. Work in the repository playground, from the clone:
 
 ```powershell
-Copy-Item -Recurse $HOME\pi-2\playground $HOME\pi-workshop
-cd $HOME\pi-workshop
-py $HOME\pi-2\pi2.py -e $HOME\pi-2\exercises\01-read\read.py
+py pi2.py --cwd playground -e exercises\01-read\read.py
 ```
 
-After each exercise, add the next file with another `-e`; type `/new` to start over.
+After each exercise, add the next file with another `-e`; type `/new` to start over. Reset between exercises with `git restore playground; git clean -fd playground`.
 
-Check a tool without a model before you try it: `py $HOME\pi-2\exercises\check.py 01` runs the checks of exercise 01 against its `read.py` and shows PASS, FAIL or TODO for each step. `py $HOME\pi-2\exercises\check.py` checks all five, and `py $HOME\pi-2\exercises\check.py 01 path\to\my_read.py` checks another file.
+Check a tool without a model before you try it: `py exercises\check.py 01` runs the checks of exercise 01 against its `read.py` and shows PASS, FAIL or TODO for each step. `py exercises\check.py` checks all five, and `py exercises\check.py 01 path\to\my_read.py` checks another file.
 
 ## Playground
 
-[playground/](../playground/README.md) is what the agent works on, from a small project to more than one context can hold. Copy it under your home directory first, as above.
+[playground/](../playground/README.md) is what the agent works on, from a small project to more than one context can hold.
 
 | Scenario | Tools | What it shows |
 |---|---|---|
@@ -267,14 +228,13 @@ The exercise and playground guides show macOS and Linux commands. In PowerShell:
 
 | Guide | PowerShell |
 |---|---|
-| `python3 ~/pi-2/pi2.py -e ~/pi-2/exercises/01-read/read.py` | `py $HOME\pi-2\pi2.py -e $HOME\pi-2\exercises\01-read\read.py` |
-| `python3 ~/pi-2/exercises/check.py 01` | `py $HOME\pi-2\exercises\check.py 01` |
+| `python3 pi2.py --cwd playground -e exercises/01-read/read.py` | `py pi2.py --cwd playground -e exercises\01-read\read.py` |
+| `python3 exercises/check.py 01` | `py exercises\check.py 01` |
 | `PI2_NO_DOCKER=1 python3 ...` | `$env:PI2_NO_DOCKER = "1"`, then `py ...` |
-| `cp -R ~/pi-2/playground ~/pi-workshop` | `Copy-Item -Recurse $HOME\pi-2\playground $HOME\pi-workshop` |
-| `rm -rf ~/pi-workshop` | `Remove-Item -Recurse -Force $HOME\pi-workshop` |
+| `git restore playground && git clean -fd playground` | `git restore playground; git clean -fd playground` |
 | `\` at the end of a line | `` ` `` (backtick) at the end of a line |
 
-Write `$HOME`, not `~`: PowerShell does not turn `~` into your folder in the arguments of `py`.
+The guides use relative paths from the clone. If you do use a home path in PowerShell, write `$HOME`, not `~`.
 
 The commands the agent runs with the bash tool stay bash commands, such as `npm test`: they run in the container or in Git Bash.
 

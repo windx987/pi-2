@@ -127,8 +127,8 @@ EXAMPLES = {
         "ask": "Run the tests.",
         "fold": ["def docker_args", "LOCAL_RUNNER", "def no_docker", "def command_args"],
         "run": [
-            ("start", "You start pi2 with three tools", ["python3 pi2.py -e …/01-read/read.py \\", "  -e …/02-write/write.py -e …/03-bash/bash.py"],
-             "From a playground copy under your home directory, with Docker running."),
+            ("start", "You start pi2 with three tools", ["python3 pi2.py --cwd playground \\", "  -e …/01-read/read.py -e …/02-write/write.py", "  -e …/03-bash/bash.py"],
+             "From the repository root, with Docker running."),
             ("1", "You type the request", [], "Interactive mode hands it to AgentSession.prompt."),
             ("2", "pi2 offers read, write and bash", ['"bash": "Execute a bash command in the…"', "parameters: command required; timeout"],
              "From define_tool: the model sees only this, never your code."),

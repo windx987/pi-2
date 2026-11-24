@@ -112,8 +112,8 @@ def exercises():
          "Command stopped after 2 seconds. docker ps shows no container left.", None),
         ("Run getent hosts example.com.", [("bash", "getent hosts example.com", "error")],
          "It fails: the container has no network.", None),
-    ], ["Start Docker first (Docker Desktop, or colima start) and keep the playground copy under your home directory: "
-        "Docker shares only that with its containers. ctrl+c stops a running command."])
+    ], ["Start Docker first (Docker Desktop, or colima start) and run from the repository root with --cwd playground. "
+        "ctrl+c stops a running command."])
     figure("exercise-04-try.svg", [
         ("Fix the failing test.", [("bash", "npm test", "error"), ("read", "math.js", "ok"), ("edit", "math.js", "ok"), ("bash", "npm test", "ok")],
          "All four tools in one task: the edit changes one line of average(), and the tests pass.", None),
@@ -122,8 +122,8 @@ def exercises():
         ("In math.js, replace return a + b; with return a - b;  (after you copied that line once more)",
          [("edit", "math.js", "error"), ("read", "math.js", "ok"), ("edit", "math.js", "ok")],
          "edits[0] occurs 2 times: refused. The agent reads the file and retries with more context, or asks you which one.", None),
-    ], ["Each oldText must occur exactly once in the original file. If your playground copy is already fixed, copy it "
-        "again first: rm -rf ~/pi-workshop && cp -R ~/pi-2/playground ~/pi-workshop"])
+    ], ["Each oldText must occur exactly once in the original file. If the playground is already fixed, reset it "
+        "first: git restore playground && git clean -fd playground"])
     figure("exercise-05-try.svg", [
         ("The reports in incidents/ are INC-2601.md to INC-2630.md. Use three subagents … one line per report … numbered.",
          [("subagent", "INC-2601 … INC-2610", "ok"), ("subagent", "INC-2611 … INC-2620", "ok"), ("subagent", "INC-2621 … INC-2630", "ok")],

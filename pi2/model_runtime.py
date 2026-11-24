@@ -32,7 +32,7 @@ class ModelRuntime:
     def find(self, reference=None):
         """Find a model by "provider/id" or "id". Without a reference, the first model in models.json."""
         if not self.models:
-            raise SystemExit("No models configured. Add one to models.json (see Getting started in README.md).")
+            raise SystemExit("No models configured. Add one to models.json (see docs/models.md).")
         if reference is None:
             return self.models[0]
         model = self.match(reference)

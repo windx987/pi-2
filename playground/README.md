@@ -1,11 +1,12 @@
 # Workshop playground
 
-Projects for the agent to work on, from small to too big to read. Work on a copy, so the agent's changes never touch the repository:
+Projects for the agent to work on, from small to too big to read. Run the agent here, from the repository root:
 
 ```bash
-cp -R playground ~/pi-workshop
-cd ~/pi-workshop
+python3 pi2.py --cwd playground -e exercises/01-read/read.py
 ```
+
+Reset after a scenario with `git restore playground && git clean -fd playground`.
 
 | Scenario | Tools | What it shows |
 |---|---|---|
@@ -98,7 +99,7 @@ Load read, write, bash and `examples/permission_gate.py`, and ask:
 2. "Run sudo ls." Blocked as well.
 3. "List the files in incidents/." Allowed: the gate lets every other command through.
 
-What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, your playground copy loses the folder: copy it again. The real protection is the container of exercise 03, which sees only the working directory; with `PI2_NO_DOCKER=1` there is none. The gate is for asking first, not for safety.
+What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, reset the playground with `git restore playground && git clean -fd playground`. The real protection is the container of exercise 03, which sees only the working directory; with `PI2_NO_DOCKER=1` there is none. The gate is for asking first, not for safety.
 
 ## Making the reports again
 

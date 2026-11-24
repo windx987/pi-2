@@ -70,7 +70,7 @@ class Workspace(unittest.TestCase):
     """A test case with an empty working directory in self.cwd, and the process somewhere else."""
 
     def setUp(self):
-        # Under the home directory, like the playground copy; macOS /tmp is a symlink that hides bugs.
+        # Under the home directory, like the repository playground; macOS /tmp is a symlink that hides bugs.
         self.cwd = Path(tempfile.mkdtemp(dir=Path.home(), prefix="pi2-check-")).resolve()
         self.addCleanup(shutil.rmtree, self.cwd, ignore_errors=True)
         previous = os.getcwd()
