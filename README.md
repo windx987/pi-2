@@ -108,16 +108,7 @@ Through `pi`, an extension can do two things:
 | `pi.register_tool(tool)` | Offers a tool to the model. Its `execute(params, ctx)` runs when the model calls it |
 | `pi.on("tool_call", handler)` | Sees every tool call before it runs. `handler(call, args)` returns a reason to block it, or `None` |
 
-These are all the extensions in this branch:
-
-| File | Kind | What it shows |
-|---|---|---|
-| [examples/hello.py](examples/hello.py) | tool | The smallest tool |
-| [examples/permission_gate.py](examples/permission_gate.py) | listener | Blocks dangerous commands sent to the `bash` tool |
-| [exercises/01-read](exercises/01-read/read.py) to [04-edit](exercises/04-edit/edit.py) | tool | The four coding tools, which you write; 01 to 03 show the solution in the Steps of their README |
-| [exercises/05-subagent](exercises/05-subagent/subagent.py) | tool | A tool that runs a second agent through `ctx.session` |
-
-A tool extension:
+[examples/hello.py](examples/hello.py) is the smallest tool: it greets someone by name. Load it with `python3 pi2.py -e examples/hello.py` and ask "Greet Ada." This is all of it:
 
 ```python
 from pi2 import ExtensionAPI, define_tool
