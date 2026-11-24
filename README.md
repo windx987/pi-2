@@ -62,13 +62,13 @@ python3 pi2.py --cwd playground -e exercises/01-read/read.py
 
 ## Options
 
-| Option | Meaning |
-|---|---|
-| `--model ID` | Model as `provider/id` (or its number); default: the first in `models.json` |
-| `--cwd DIR` | Directory the agent works in; default: the current directory |
-| `--agent-dir DIR` | Directory holding `models.json` and `settings.json`; default: `~/.pi/agent` |
-| `-e FILE` | Extension to load; repeatable |
-| `--version` | Print the version |
+| Long | Short | Meaning |
+|---|---|---|
+| `--model ID` | `-m ID` | Model as `provider/id` (or its number); default: the first in `models.json` |
+| `--cwd DIR` | `-C DIR` | Directory the agent works in; default: the current directory |
+| `--agent-dir DIR` | `-d DIR` | Directory holding `models.json` and `settings.json`; default: `~/.pi/agent` |
+| `--extension FILE` | `-e FILE` | Extension file to load, such as a tool you wrote; repeat to load several |
+| `--version` | `-v` | Print the version and exit, to check the install |
 
 ## Exercises
 

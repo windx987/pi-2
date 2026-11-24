@@ -28,17 +28,17 @@ def resolve_dir(value):
 
 def main():
     parser = argparse.ArgumentParser(prog="pi2", description="pi/2, the Pi Workshop Edition in Python")
-    parser.add_argument("--model", help='model as "provider/id" from models.json (default: the first one)')
+    parser.add_argument("-m", "--model", help='model as "provider/id" from models.json (default: the first one)')
     parser.add_argument(
-        "--cwd",
+        "-C", "--cwd",
         help="directory the agent works in (default: the current directory)",
     )
     parser.add_argument(
-        "--agent-dir",
+        "-d", "--agent-dir",
         help="directory holding models.json and settings.json (default: ~/.pi/agent)",
     )
     parser.add_argument("-e", "--extension", action="append", default=[], help="load an extension file (repeatable)")
-    parser.add_argument("--version", action="version", version=__version__)
+    parser.add_argument("-v", "--version", action="version", version=__version__)
     args = parser.parse_args()
 
     # The same agent directory and models.json as Pi, unless --agent-dir or PI_CODING_AGENT_DIR says otherwise.
