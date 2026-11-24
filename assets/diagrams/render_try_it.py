@@ -89,9 +89,9 @@ def figure(name, rows, hint_lines, note=None):
 
 def exercises():
     figure("exercise-01-try.svg", [
-        ("What does math.js export?", [("read", "math.js", "ok")], "The first lines of math.js in the box, then an answer naming add and average.", None),
-        ("Show me lines 5 to 7 of math.js.", [("read", "math.js:5-7", "ok")],
-         "Three lines and your note: [N more lines. Use offset=8 to continue.]", None),
+        ("What does calc.py define?", [("read", "calc.py", "ok")], "The first lines of calc.py in the box, then an answer naming add and average.", None),
+        ("Show me lines 8 to 10 of calc.py.", [("read", "calc.py:8-10", "ok")],
+         "Three lines and your note: [2 more lines. Use offset=11 to continue.]", None),
         ("Read missing.txt.", [("read", "missing.txt", "error")],
          "A red box with your message. The agent says the file does not exist instead of inventing it.", None),
     ], ["With only read, the agent cannot list a folder: it may first try \"read .\" and get an error. That is fine; name the "
@@ -105,22 +105,22 @@ def exercises():
     ], ["The model does not see the file it wrote unless it reads it: your short confirmation is all it gets, so say what "
         "happened and where."])
     figure("exercise-03-try.svg", [
-        ("Run the tests.", [("bash", "npm test", "error")], "The test output with one failing test, and exit code 1: a red result the model reads.", None),
-        ("Why does the test fail?", [("read", "math.js", "ok"), ("read", "math.test.js", "ok")],
-         "The agent explains: average() divides by values.length - 1. Fixing it is exercise 04.", None),
+        ("Run the tests.", [("bash", "python3 -m unittest", "error")], "The test output with one failing test, and exit code 1: a red result the model reads.", None),
+        ("Why does the test fail?", [("read", "calc.py", "ok"), ("read", "test_calc.py", "ok")],
+         "The agent explains: average() divides by len(values) - 1. Fixing it is exercise 04.", None),
         ("Run sleep 30 with a 2 second timeout.", [("bash", "sleep 30  timeout 2", "error")],
-         "Command stopped after 2 seconds. docker ps shows no container left.", None),
-        ("Run getent hosts example.com.", [("bash", "getent hosts example.com", "error")],
-         "It fails: the container has no network.", None),
-    ], ["Start Docker first (Docker Desktop, or colima start) and run from the repository root with --cwd playground. "
-        "ctrl+c stops a running command."])
+         "Command stopped after 2 seconds. ps in another terminal shows no sleep 30 left.", None),
+        ("Delete the incidents folder with rm -rf.", [("bash", "rm -rf incidents", "blocked")],
+         "Blocked by the permission gate before it runs; the folder stays.", None),
+    ], ["The commands run on your machine, as you: keep examples/permission_gate.py loaded and run from the repository root "
+        "with --cwd playground. ctrl+c stops a running command."])
     figure("exercise-04-try.svg", [
-        ("Fix the failing test.", [("bash", "npm test", "error"), ("read", "math.js", "ok"), ("edit", "math.js", "ok"), ("bash", "npm test", "ok")],
+        ("Fix the failing test.", [("bash", "python3 -m unittest", "error"), ("read", "calc.py", "ok"), ("edit", "calc.py", "ok"), ("bash", "python3 -m unittest", "ok")],
          "All four tools in one task: the edit changes one line of average(), and the tests pass.", None),
-        ("Rename add to sum in math.js and update its callers.", [("edit", "math.js  2 edits", "ok")],
-         "One edit call with two replacements, and the diff. grep -n sum math.js shows both.", None),
-        ("In math.js, replace return a + b; with return a - b;  (after you copied that line once more)",
-         [("edit", "math.js", "error"), ("read", "math.js", "ok"), ("edit", "math.js", "ok")],
+        ("Rename add to plus in calc.py and update its callers.", [("edit", "calc.py  2 edits", "ok")],
+         "One edit call with two replacements, and the diff. grep -n plus calc.py shows both.", None),
+        ("In calc.py, replace return a + b with return a - b  (after you copied that line once more)",
+         [("edit", "calc.py", "error"), ("read", "calc.py", "ok"), ("edit", "calc.py", "ok")],
          "edits[0] occurs 2 times: refused. The agent reads the file and retries with more context, or asks you which one.", None),
     ], ["Each oldText must occur exactly once in the original file. If the playground is already fixed, reset it "
         "first: git restore playground && git clean -fd playground"])
@@ -156,7 +156,7 @@ def playground():
         ("Run sudo ls.", [("bash", "sudo ls", "blocked")], "Blocked as well: the gate matches sudo.", None),
         ("List the files in incidents/.", [("bash", "ls incidents", "ok")], "Runs: the gate lets every other command through.", None),
     ], ["The gate reads the text of the command, before it runs. It is a way to ask first, not a wall: "
-        "\"find incidents -delete\" gets through. The container of exercise 03 is what keeps your machine safe."],
+        "\"find incidents -delete\" gets through. Nothing else isolates the commands: read each one the agent runs."],
        note="⊘ blocked before it ran: the tool's execute() never runs, and the model gets the reason as an error result.")
 
 

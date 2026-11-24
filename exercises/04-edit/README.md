@@ -33,7 +33,7 @@ python3 exercises/check.py 04
 
 ## Try it
 
-Load all four tools from the repository root (Docker on, as in exercise 03):
+Load all four tools from the repository root:
 
 ```bash
 python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py \
@@ -42,11 +42,11 @@ python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-wri
 
 | Ask | You should see |
 |---|---|
-| Fix the failing test. | `npm test` fails, `read`, a green `edit math.js`, then `npm test` passes |
-| Rename add to sum in math.js and update its callers. | One `edit` with two replacements, and the diff |
-| In math.js, replace `return a + b;` with `return a - b;` (copy that line once more first) | Red: the text occurs twice. The agent reads the file and retries with more context |
+| Fix the failing test. | `python3 -m unittest` fails, `read`, a green `edit calc.py`, then the tests pass |
+| Rename add to plus in calc.py and update its callers. | One `edit` with two replacements, and the diff |
+| In calc.py, replace `return a + b` with `return a - b` (copy that line once more first) | Red: the text occurs twice. The agent reads the file and retries with more context |
 
-<p align="center"><img alt="Try it for edit: Fix the failing test runs npm test (red), read, edit and npm test (green); renaming add to sum is one edit call with two replacements; replacing a line that occurs twice is refused, and the agent reads the file and retries with more context. Hint: each oldText must occur once in the original file." src="../../assets/diagrams/exercise-04-try.svg" width="900"></p>
+<p align="center"><img alt="Try it for edit: Fix the failing test runs python3 -m unittest (red), read, edit and the tests again (green); renaming add to plus is one edit call with two replacements; replacing a line that occurs twice is refused, and the agent reads the file and retries with more context. Hint: each oldText must occur once in the original file." src="../../assets/diagrams/exercise-04-try.svg" width="900"></p>
 
 If the playground is already fixed, reset it: `git restore playground && git clean -fd playground`.
 

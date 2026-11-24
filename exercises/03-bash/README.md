@@ -1,16 +1,16 @@
 # Exercise 03: bash
 
-Let the agent run commands. Each one runs in a new Docker container that sees only the working folder and has no network.
+Let the agent run commands. Each one runs with bash on your machine, in the working folder, as Pi's own bash tool does.
 
 ## What you write
 
-`execute(params, ctx)` in [bash.py](bash.py). The container is done for you: `command_args()` builds the `docker run ...` command line. Your part is the process around it.
+`execute(params, ctx)` in [bash.py](bash.py). `command_args()` is done for you: it builds the command line that runs bash in the working folder. Your part is the process around it.
 
 | Name | Is |
 |---|---|
-| `params["command"]` | The bash command the model wants to run, such as `npm test` |
+| `params["command"]` | The bash command the model wants to run, such as `python3 -m unittest` |
 | `params.get("timeout")` | Seconds before it is stopped (optional) |
-| `ctx.cwd` | The working folder, mounted in the container at `/workspace` |
+| `ctx.cwd` | The working folder, where the command runs |
 
 Return the output. When the command fails (exit code not 0), raise with the output and the code: the model must notice it.
 
@@ -21,13 +21,10 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
 1. Start the command.
 
    ```python
-   try:
-       proc = subprocess.Popen(
-           command_args(params["command"], ctx.cwd),
-           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-       )
-   except FileNotFoundError:
-       raise RuntimeError("Docker is not installed or not on PATH.") from None
+   proc = subprocess.Popen(
+       command_args(params["command"], ctx.cwd),
+       stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+   )
    ```
 
    `stderr=subprocess.STDOUT` puts errors in the same text as the output, in order, as a terminal shows them.
@@ -52,7 +49,7 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
        raise
    ```
 
-   Use `terminate()`, not `kill()`: `docker run` passes it on and stops the container. `kill()` stops only the `docker` client, and the container keeps running.
+   Use `terminate()`, not `kill()`: the runner in `command_args()` passes it on and stops the command and everything it started. `kill()` stops only the runner, and the command keeps running.
 
 4. Return the output, or raise when the command failed.
 
@@ -64,7 +61,7 @@ Follow EXERCISE 1 to 4 in [bash.py](bash.py). Add `import subprocess` at the top
 
 The four blocks, one under the other, are the whole function:
 
-<p align="center"><img alt="The bash starter, solved, with lines highlighted by step; docker_args is folded. Right: what happens when you ask 'Run the tests.': the model calls bash with npm test, execute runs it in a new container without network, the test fails with exit code 1, and the output goes back as an error result." src="../../assets/diagrams/exercise-03-bash.svg" width="900"></p>
+<p align="center"><img alt="The bash starter, solved, with lines highlighted by step; the runner and command_args are folded. Right: what happens when you ask 'Run the tests.': the model calls bash with python3 -m unittest, execute runs it with bash in the playground, one test fails with exit code 1, and the output goes back as an error result." src="../../assets/diagrams/exercise-03-bash.svg" width="900"></p>
 
 <details>
 <summary>The whole function</summary>
@@ -74,22 +71,19 @@ import subprocess
 
 
 def execute(params, ctx):
-    try:
-        proc = subprocess.Popen(
-            command_args(params["command"], ctx.cwd),
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-        )
-    except FileNotFoundError:
-        raise RuntimeError("Docker is not installed or not on PATH.") from None
+    proc = subprocess.Popen(
+        command_args(params["command"], ctx.cwd),
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+    )
     try:
         output, _ = proc.communicate(timeout=params.get("timeout"))
     except subprocess.TimeoutExpired:
-        # SIGTERM, not kill(): docker run passes SIGTERM on to the container, SIGKILL leaves it running.
+        # SIGTERM, not kill(): the runner passes SIGTERM on to the command, SIGKILL leaves it running.
         proc.terminate()
         output, _ = proc.communicate()
         raise RuntimeError(f"{output}\nCommand stopped after {params['timeout']} seconds.") from None
     except KeyboardInterrupt:
-        # ctrl+c in pi2: stop the container too, then let pi2 handle the interrupt.
+        # ctrl+c in pi2: stop the command too, then let pi2 handle the interrupt.
         proc.terminate()
         proc.communicate()
         raise
@@ -106,54 +100,29 @@ def execute(params, ctx):
 python3 exercises/check.py 03
 ```
 
-Most checks need no Docker. With Docker running, a few more run in a real container; without it they are skipped.
+The checks run real commands with bash in a temporary folder, including one that starts a child process and must be stopped at the timeout.
 
 ## Try it
 
-With Docker:
-
 ```bash
-docker pull node:22-bookworm-slim
 python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py \
-  -e exercises/03-bash/bash.py
-```
-
-Without Docker (needs Node.js 22 for the tests; [install guide](../../docs/setup.md#4-docker-or-the-no-docker-mode-for-exercise-03)):
-
-```bash
-PI2_NO_DOCKER=1 python3 pi2.py --cwd playground -e exercises/01-read/read.py -e exercises/02-write/write.py \
   -e exercises/03-bash/bash.py -e examples/permission_gate.py
 ```
 
-Without Docker the commands run on your machine: keep the permission gate loaded and read what the agent runs.
+The commands run on your machine, as you: they can change your files and use your network. Keep the [permission gate](../../examples/permission_gate.py) loaded, work in the playground, and read each command the agent runs.
 
 | Ask | You should see |
 |---|---|
-| Run the tests. | A red `$ npm test` box: one failing test, exit code 1 |
-| Why does the test fail? | The agent reads `math.js` and the test, and explains. Fixing it is exercise 04 |
-| Run `sleep 30` with a 2 second timeout. | Stopped after 2 seconds; `docker ps` shows no container left |
-| Run `getent hosts example.com`. | It fails: the container has no network |
+| Run the tests. | A red `$ python3 -m unittest` box: one failing test, exit code 1 |
+| Why does the test fail? | The agent reads `calc.py` and the test, and explains. Fixing it is exercise 04 |
+| Run `sleep 30` with a 2 second timeout. | Stopped after 2 seconds; `ps` in another terminal shows no `sleep 30` left |
+| Delete the incidents folder with rm -rf. | Blocked by the permission gate before it runs; the folder stays |
 
-<p align="center"><img alt="Try it for bash: Run the tests gives a red npm test with one failing test and exit code 1; Why does the test fail? reads math.js and math.test.js; sleep 30 with a 2 second timeout is stopped and no container is left; getent hosts example.com fails because the container has no network. Hint: start Docker and keep the playground work inside the repository." src="../../assets/diagrams/exercise-03-try.svg" width="900"></p>
-
-## Isolation checks
-
-What the container should stop, and a command to check each. Verified with Colima on macOS; other setups are not verified yet.
-
-| Check | Command | Expected |
-|---|---|---|
-| No network | `getent hosts example.com` | Fails |
-| No host files | `ls /Users /home; cat /etc/hostname` | No home folders; the container's hostname |
-| Memory limit | `node -e "const a=[]; for(;;) a.push(Buffer.alloc(1e8, 1))"` | Killed (exit code 137) at about 1 GB |
-| Process limit | `cat /sys/fs/cgroup/pids.max` | `256` |
-| Timeout | `sleep 300` with `timeout: 2`, then `docker ps` | No container left |
-| Symlinks | `ln -s / host-root && ls host-root/` | The container's root, not your machine's |
-
-The container protects only commands. Your `read`, `write` and `edit` run on your machine, and a symlink in the working folder can lead them outside it.
+<p align="center"><img alt="Try it for bash: Run the tests gives a red python3 -m unittest with one failing test and exit code 1; Why does the test fail? reads calc.py and test_calc.py; sleep 30 with a 2 second timeout is stopped and nothing is left running; rm -rf incidents is blocked by the permission gate. Hint: the commands run as you, so keep the gate loaded and run from the repository root with --cwd playground." src="../../assets/diagrams/exercise-03-try.svg" width="900"></p>
 
 ## Read more
 
 - [examples/permission_gate.py](../../examples/permission_gate.py): a rule that blocks dangerous commands before your tool runs.
-- [pi2/windows.py](../../pi2/windows.py): on Windows `terminate()` sends no signal, so a watchdog stops the container and the commands. [docs/windows.md](../../docs/windows.md) has the Windows setup.
+- [pi2/windows.py](../../pi2/windows.py): on Windows `terminate()` sends no signal, so a watchdog stops the commands, in Git Bash.
 - [pi2/agent_loop.py](../../pi2/agent_loop.py): `execute_tool_call`, where ctrl+c reaches your tool as `KeyboardInterrupt`.
-- Pi's own `bash` runs on the host and streams output: [tools/bash.ts](https://github.com/windx987/pi-2/blob/cead615b4/packages/coding-agent/src/core/tools/bash.ts).
+- Pi's own `bash` also runs on your machine, and streams output: [tools/bash.ts](https://github.com/windx987/pi-2/blob/cead615b4/packages/coding-agent/src/core/tools/bash.ts).

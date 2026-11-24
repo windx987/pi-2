@@ -23,9 +23,9 @@ When it compacts by itself, a dim line says why: "Context is filling up: summari
  Compacted 9 messages, 19k → about 7k tokens
 
  ## Goal
- Fix the failing test in math.js.
+ Fix the failing test in calc.py.
  ## Constraints & Preferences
- - Keep the public API of math.js unchanged.
+ - Keep the public API of calc.py unchanged.
  ... (18 more lines)
 ```
 

@@ -105,11 +105,11 @@ python3 pi2.py --cwd playground -e exercises/01-read/read.py
 
 | Ask | You should see |
 |---|---|
-| What does math.js export? | A green `read math.js` box, then an answer naming `add` and `average` |
-| Show me lines 5 to 7 of math.js. | `read math.js:5-7`: three lines and your note |
+| What does calc.py define? | A green `read calc.py` box, then an answer naming `add` and `average` |
+| Show me lines 8 to 10 of calc.py. | `read calc.py:8-10`: three lines and your note |
 | Read missing.txt. | A red box with your message; the agent says the file does not exist |
 
-<p align="center"><img alt="Try it for read: you ask what math.js exports and the agent calls read math.js, which turns green; you ask for lines 5 to 7 and it calls read with offset 5 and limit 3, and you see three lines and your note; you ask to read missing.txt and the call turns red with your message. Hint: with only read the agent cannot list a folder, so name the file." src="../../assets/diagrams/exercise-01-try.svg" width="900"></p>
+<p align="center"><img alt="Try it for read: you ask what calc.py defines and the agent calls read calc.py, which turns green; you ask for lines 8 to 10 and it calls read with offset 8 and limit 3, and you see three lines and your note; you ask to read missing.txt and the call turns red with your message. Hint: with only read the agent cannot list a folder, so name the file." src="../../assets/diagrams/exercise-01-try.svg" width="900"></p>
 
 With only `read`, the agent cannot list a folder: name the file in your question.
 

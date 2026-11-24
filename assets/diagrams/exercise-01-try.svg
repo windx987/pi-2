@@ -5,26 +5,26 @@
 <text x="390" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">THE AGENT CALLS</text>
 <text x="750" y="28" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">YOU SHOULD SEE</text>
 <rect x="30" y="44" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
-<text x="44" y="66" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">What does math.js export?</text>
+<text x="44" y="66" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">What does calc.py define?</text>
 <rect x="390" y="44" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="48" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
-<text x="448.6" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="448.6" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py</text>
 <text x="708" y="62" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
-<text x="750" y="62" fill="#374151" font-size="13" font-weight="400" text-anchor="start">The first lines of math.js in the box, then an</text>
+<text x="750" y="62" fill="#374151" font-size="13" font-weight="400" text-anchor="start">The first lines of calc.py in the box, then an</text>
 <text x="750" y="80" fill="#374151" font-size="13" font-weight="400" text-anchor="start">answer naming add and average.</text>
 <line x1="366" y1="60" x2="384" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="726" y1="60" x2="742" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="30" y1="97" x2="1070" y2="97" stroke="#eef0f3"/>
 <rect x="30" y="104" width="330" height="34" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
-<text x="44" y="126" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Show me lines 5 to 7 of math.js.</text>
+<text x="44" y="126" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Show me lines 8 to 10 of calc.py.</text>
 <rect x="390" y="104" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="108" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="121" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
-<text x="448.6" y="121.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js:5-7</text>
+<text x="448.6" y="121.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py:8-10</text>
 <text x="708" y="122" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
-<text x="750" y="122" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Three lines and your note: [N more lines. Use</text>
-<text x="750" y="140" fill="#374151" font-size="13" font-weight="400" text-anchor="start">offset=8 to continue.]</text>
+<text x="750" y="122" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Three lines and your note: [2 more lines. Use</text>
+<text x="750" y="140" fill="#374151" font-size="13" font-weight="400" text-anchor="start">offset=11 to continue.]</text>
 <line x1="366" y1="120" x2="384" y2="120" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="726" y1="120" x2="742" y2="120" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="30" y1="157" x2="1070" y2="157" stroke="#eef0f3"/>

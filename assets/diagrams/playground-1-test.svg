@@ -6,12 +6,12 @@
 <rect x="42.0" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
 <text x="66.0" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
 <text x="42.0" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Run the tests</text>
-<text x="42.0" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">npm test: 1 failing</text>
+<text x="42.0" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">python3 -m unittest: 1 failing</text>
 <rect x="296.5" y="42" width="240.5" height="84" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
 <rect x="308.5" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
 <text x="332.5" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
 <text x="308.5" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Read the code</text>
-<text x="308.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">math.js and math.test.js</text>
+<text x="308.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">calc.py and test_calc.py</text>
 <line x1="273.5" y1="84" x2="293.5" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 <rect x="563.0" y="42" width="240.5" height="84" rx="10" fill="#fbeeee" stroke="#b03a37" stroke-width="1.5"/>
 <rect x="575.0" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
@@ -23,17 +23,17 @@
 <rect x="841.5" y="54" width="48" height="20" rx="10" fill="#b03a37"/>
 <text x="865.5" y="68" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
 <text x="841.5" y="95" fill="#1f2328" font-size="14" font-weight="700" text-anchor="start">Run them again</text>
-<text x="841.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">npm test: all pass</text>
+<text x="841.5" y="114" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">python3 -m unittest: OK</text>
 <line x1="806.5" y1="84" x2="826.5" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="30" y="168" fill="#4b5563" font-size="12" font-weight="700" letter-spacing="0.5">THE PROJECT</text>
 <rect x="30" y="180" width="520" height="118" rx="8" fill="#f6f8fa" stroke="#d1d5db"/>
-<text x="46" y="204" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">export function average(values) {</text>
-<text x="46" y="224" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">  let total = 0;</text>
-<text x="46" y="244" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">  for (const value of values) total = add(total, value);</text>
-<text x="46" y="264" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">  return total / (values.length - 1);</text>
-<text x="46" y="284" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">}</text>
-<text x="566" y="204" fill="#374151" font-size="13" font-weight="400" text-anchor="start">math.js: two small functions</text>
-<text x="566" y="226" fill="#374151" font-size="13" font-weight="400" text-anchor="start">math.test.js: two tests, one fails</text>
+<text x="46" y="204" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">def average(values):</text>
+<text x="46" y="224" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">    total = 0</text>
+<text x="46" y="244" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">    for value in values:</text>
+<text x="46" y="264" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">        total = add(total, value)</text>
+<text x="46" y="284" fill="#1f2328" font-size="13" font-weight="400" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">    return total / (len(values) - 1)</text>
+<text x="566" y="204" fill="#374151" font-size="13" font-weight="400" text-anchor="start">calc.py: two small functions</text>
+<text x="566" y="226" fill="#374151" font-size="13" font-weight="400" text-anchor="start">test_calc.py: two tests, one fails</text>
 <text x="566" y="248" fill="#374151" font-size="13" font-weight="400" text-anchor="start">Small enough to read whole:</text>
 <text x="566" y="264" fill="#1f2328" font-size="13" font-weight="600" text-anchor="start"></text>
 <rect x="566" y="272" width="500" height="12" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>

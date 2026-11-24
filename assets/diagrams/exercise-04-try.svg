@@ -9,22 +9,22 @@
 <rect x="390" y="44" width="330" height="26" rx="7" fill="#fbeeee" stroke="#b03a37" stroke-width="1.2"/>
 <rect x="395" y="48" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
-<text x="448.6" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">npm test</text>
+<text x="448.6" y="61.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">python3 -m unittest</text>
 <text x="708" y="62" fill="#b03a37" font-size="14" font-weight="700" text-anchor="end">✗</text>
 <rect x="390" y="76" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="80" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="93" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
-<text x="448.6" y="93.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="448.6" y="93.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py</text>
 <text x="708" y="94" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
 <rect x="390" y="108" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="112" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="125" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">edit</text>
-<text x="448.6" y="125.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="448.6" y="125.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py</text>
 <text x="708" y="126" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
 <rect x="390" y="140" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="144" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="157" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">bash</text>
-<text x="448.6" y="157.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">npm test</text>
+<text x="448.6" y="157.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">python3 -m unittest</text>
 <text x="708" y="158" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
 <text x="750" y="62" fill="#374151" font-size="13" font-weight="400" text-anchor="start">All four tools in one task: the edit changes</text>
 <text x="750" y="80" fill="#374151" font-size="13" font-weight="400" text-anchor="start">one line of average(), and the tests pass.</text>
@@ -32,36 +32,36 @@
 <line x1="726" y1="60" x2="742" y2="60" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="30" y1="179" x2="1070" y2="179" stroke="#eef0f3"/>
 <rect x="30" y="186" width="330" height="52" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
-<text x="44" y="208" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Rename add to sum in math.js and update its</text>
+<text x="44" y="208" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">Rename add to plus in calc.py and update its</text>
 <text x="44" y="226" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">callers.</text>
 <rect x="390" y="186" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="190" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="203" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">edit</text>
-<text x="448.6" y="203.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js  2 edits</text>
+<text x="448.6" y="203.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py  2 edits</text>
 <text x="708" y="204" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
 <text x="750" y="204" fill="#374151" font-size="13" font-weight="400" text-anchor="start">One edit call with two replacements, and the</text>
-<text x="750" y="222" fill="#374151" font-size="13" font-weight="400" text-anchor="start">diff. grep -n sum math.js shows both.</text>
+<text x="750" y="222" fill="#374151" font-size="13" font-weight="400" text-anchor="start">diff. grep -n plus calc.py shows both.</text>
 <line x1="366" y1="202" x2="384" y2="202" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="726" y1="202" x2="742" y2="202" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow)"/>
 <line x1="30" y1="245" x2="1070" y2="245" stroke="#eef0f3"/>
 <rect x="30" y="252" width="330" height="70" rx="10" fill="#eef3fa" stroke="#2f5a96" stroke-width="1.2"/>
-<text x="44" y="274" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">In math.js, replace return a + b; with</text>
-<text x="44" y="292" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">return a - b;  (after you copied that line</text>
-<text x="44" y="310" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">once more)</text>
+<text x="44" y="274" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">In calc.py, replace return a + b with return</text>
+<text x="44" y="292" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">a - b  (after you copied that line once</text>
+<text x="44" y="310" fill="#1a2b45" font-size="13" font-weight="400" text-anchor="start">more)</text>
 <rect x="390" y="252" width="330" height="26" rx="7" fill="#fbeeee" stroke="#b03a37" stroke-width="1.2"/>
 <rect x="395" y="256" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="269" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">edit</text>
-<text x="448.6" y="269.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="448.6" y="269.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py</text>
 <text x="708" y="270" fill="#b03a37" font-size="14" font-weight="700" text-anchor="end">✗</text>
 <rect x="390" y="284" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="288" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="301" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">read</text>
-<text x="448.6" y="301.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="448.6" y="301.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py</text>
 <text x="708" y="302" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
 <rect x="390" y="316" width="330" height="26" rx="7" fill="#edf7f2" stroke="#2f7d5b" stroke-width="1.2"/>
 <rect x="395" y="320" width="45.6" height="18" rx="9" fill="#b03a37"/>
 <text x="417.8" y="333" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">edit</text>
-<text x="448.6" y="333.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">math.js</text>
+<text x="448.6" y="333.5" fill="#1f2328" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">calc.py</text>
 <text x="708" y="334" fill="#2f7d5b" font-size="14" font-weight="700" text-anchor="end">✓</text>
 <text x="750" y="270" fill="#374151" font-size="13" font-weight="400" text-anchor="start">edits[0] occurs 2 times: refused. The agent</text>
 <text x="750" y="288" fill="#374151" font-size="13" font-weight="400" text-anchor="start">reads the file and retries with more context,</text>

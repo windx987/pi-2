@@ -43,6 +43,6 @@
 <text x="30" y="240" fill="#4b5563" font-size="12" font-weight="400" text-anchor="start">⊘ blocked before it ran: the tool's execute() never runs, and the model gets the reason as an error result.</text>
 <rect x="30" y="258" width="1040" height="62" rx="10" fill="#fdf6e7" stroke="#b7791f" stroke-width="1.5"/>
 <text x="48" y="284" fill="#b7791f" font-size="12" font-weight="700" letter-spacing="0.6">HINT</text>
-<text x="96" y="284" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">The gate reads the text of the command, before it runs. It is a way to ask first, not a wall: "find incidents -delete" gets through. The container</text>
-<text x="96" y="304" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">of exercise 03 is what keeps your machine safe.</text>
+<text x="96" y="284" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">The gate reads the text of the command, before it runs. It is a way to ask first, not a wall: "find incidents -delete" gets through. Nothing else</text>
+<text x="96" y="304" fill="#4a3510" font-size="13" font-weight="400" text-anchor="start">isolates the commands: read each one the agent runs.</text>
 </svg>

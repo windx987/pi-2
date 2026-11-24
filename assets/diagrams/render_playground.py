@@ -92,19 +92,19 @@ def write(name, height, parts):
 def scenario_test():
     parts = [heading(30, 28, "What the agent does")]
     parts += flow(42, [
-        ("bash", "Run the tests", "npm test: 1 failing"),
-        ("read", "Read the code", "math.js and math.test.js"),
+        ("bash", "Run the tests", "python3 -m unittest: 1 failing"),
+        ("read", "Read the code", "calc.py and test_calc.py"),
         ("edit", "Fix the bug", "one line in average()"),
-        ("bash", "Run them again", "npm test: all pass"),
+        ("bash", "Run them again", "python3 -m unittest: OK"),
     ])
     parts.append(heading(30, 168, "The project"))
-    code = ["export function average(values) {", "  let total = 0;", "  for (const value of values) total = add(total, value);",
-            "  return total / (values.length - 1);", "}"]
+    code = ["def average(values):", "    total = 0", "    for value in values:", "        total = add(total, value)",
+            "    return total / (len(values) - 1)"]
     parts.append(f'<rect x="30" y="180" width="520" height="118" rx="8" fill="#f6f8fa" stroke="#d1d5db"/>')
     # Non-breaking spaces: SVG would collapse the indentation.
     parts += [text(46, 204 + i * 20, line.replace(" ", "\u00a0"), size=13, mono=True, color="#1f2328") for i, line in enumerate(code)]
-    parts.append(text(566, 204, "math.js: two small functions", size=13))
-    parts.append(text(566, 226, "math.test.js: two tests, one fails", size=13))
+    parts.append(text(566, 204, "calc.py: two small functions", size=13))
+    parts.append(text(566, 226, "test_calc.py: two tests, one fails", size=13))
     parts.append(text(566, 248, "Small enough to read whole:", size=13))
     parts += context_bar(566, 272, 500, "", 1500, "the whole task uses a few thousand tokens")
     h_parts, h = hint(322, [

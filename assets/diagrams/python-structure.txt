@@ -1,4 +1,4 @@
-# Source for python-structure.svg; render with: node render-tree.mjs python-structure
+# Source for python-structure.svg; render with: python3 render_tree.py python-structure
 # Format: <role> <tree path> -- <explanation>. "## <label>" starts a section, drawn as a tinted band.
 # Roles: d directory; a app, l agent loop, m talks to the model (the colors of Pi's packages);
 # w where you work; r read and run; o other.
@@ -13,7 +13,7 @@ a │   ├── model_runtime.py -- models.json, API key, stream_fn
 m │   ├── ai.py -- OpenAI-compatible streaming provider
 m │   ├── schema.py -- checks tool arguments
 a │   ├── compaction.py -- summarizes old messages when the context fills up
-a │   ├── windows.py -- Windows: stops a command's container and processes
+a │   ├── windows.py -- Windows: runs bash commands in Git Bash and stops them
 a │   └── extensions.py -- define_tool, ExtensionAPI, loads -e files
 ## your work
 w ├── exercises/ -- your extensions, each with a README and checks
@@ -22,7 +22,7 @@ w │   ├── 05-subagent/ -- a tool that runs a second agent
 w │   └── check.py -- checks your tools without a model
 w ├── playground/ -- for the agent: a failing test, 30 incident reports
 ## read and run
-r ├── docs/ -- models, a request step by step, compaction, files, Windows
+r ├── docs/ -- setup, models, a request step by step, compaction, files
 r ├── examples/ -- hello.py (a tool), permission_gate.py (a listener)
 r ├── pi2.py -- starts pi2: python3 pi2.py -e ...
 ## outside the workshop

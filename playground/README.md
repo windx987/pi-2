@@ -17,9 +17,9 @@ Reset after a scenario with `git restore playground && git clean -fd playground`
 
 ## 1. A failing test
 
-<p align="center"><img alt="Scenario 1, a failing test: the agent runs npm test with bash, reads math.js and math.test.js, edits one line of average(), and runs the tests again. The whole task uses a few thousand tokens. Hint: ask for the goal, not the steps; if the agent edits without running the tests again, ask it to check." src="../assets/diagrams/playground-1-test.svg" width="900"></p>
+<p align="center"><img alt="Scenario 1, a failing test: the agent runs python3 -m unittest with bash, reads calc.py and test_calc.py, edits one line of average(), and runs the tests again. The whole task uses a few thousand tokens. Hint: ask for the goal, not the steps; if the agent edits without running the tests again, ask it to check." src="../assets/diagrams/playground-1-test.svg" width="900"></p>
 
-`math.js` has one bug; `npm test` shows it. This is the scenario of exercises 01 to 04.
+`calc.py` has one bug; `python3 -m unittest` shows it. This is the scenario of exercises 01 to 04.
 
 Why these tools:
 
@@ -30,7 +30,7 @@ Why these tools:
 
 Ask: "Run the tests and fix what fails."
 
-The agent runs `npm test`, reads `math.js` and the test, edits the bug, and runs the tests again.
+The agent runs `python3 -m unittest`, reads `calc.py` and the test, edits the bug, and runs the tests again.
 
 ## 2. Thirty incident reports
 
@@ -83,13 +83,13 @@ Load read, and type each step in order:
 
 ## 4. A permission gate
 
-<p align="center"><img alt="Scenario 4, a permission gate: Delete the incidents folder with rm -rf gives a bash call that is blocked before it runs, with the reason Dangerous command blocked, and the folder stays; sudo ls is blocked as well; ls incidents runs. Hint: the gate matches the text of the command, so it is a way to ask first, not a wall; the container is what keeps the machine safe." src="../assets/diagrams/playground-4-gate.svg" width="900"></p>
+<p align="center"><img alt="Scenario 4, a permission gate: Delete the incidents folder with rm -rf gives a bash call that is blocked before it runs, with the reason Dangerous command blocked, and the folder stays; sudo ls is blocked as well; ls incidents runs. Hint: the gate matches the text of the command, so it is a way to ask first, not a wall; read each command the agent runs." src="../assets/diagrams/playground-4-gate.svg" width="900"></p>
 
 [examples/permission_gate.py](../examples/permission_gate.py) registers no tool. It listens to every tool call, after the arguments are checked and before the tool runs, and blocks bash commands that are hard to undo: `rm -rf`, `sudo`, `chmod 777`. A blocked call never runs; the model gets the reason as an error result.
 
 Why these tools:
 
-- **bash** is what the gate watches. It needs Docker, as in exercise 03, or `PI2_NO_DOCKER=1`: then the gate is all that stands between the command and your machine.
+- **bash** is what the gate watches. Its commands run on your machine, as you: the gate is all that stands between a command and your files.
 - **read** and **write** let the agent look for another way after a refusal.
 - **permission_gate.py** is a listener, not a tool: load it with `-e` like any extension.
 
@@ -99,7 +99,7 @@ Load read, write, bash and `examples/permission_gate.py`, and ask:
 2. "Run sudo ls." Blocked as well.
 3. "List the files in incidents/." Allowed: the gate lets every other command through.
 
-What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, reset the playground with `git restore playground && git clean -fd playground`. The real protection is the container of exercise 03, which sees only the working directory; with `PI2_NO_DOCKER=1` there is none. The gate is for asking first, not for safety.
+What it cannot see: the gate matches the text of the command, so `find incidents -delete` or a short Python script would get through. If the agent finds such a way, reset the playground with `git restore playground && git clean -fd playground`. Nothing else isolates the commands, so the gate is for asking first, not for safety: read each command, and work only in the playground.
 
 ## Making the reports again
 

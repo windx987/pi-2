@@ -3,7 +3,6 @@
 </p>
 <p align="center">
   <a href="https://discord.com/invite/3cU7Bz4UPx"><img alt="Discord" src="https://img.shields.io/badge/discord-community-5865F2?style=flat-square&logo=discord&logoColor=white" /></a>
-  <a href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent"><img alt="npm" src="https://img.shields.io/npm/v/@earendil-works/pi-coding-agent?style=flat-square" /></a>
 </p>
 
 > This is the `python` branch: only the Python version of pi/2. The TypeScript edition, with the full Pi framework it is modelled on, is on [`main`](https://github.com/windx987/pi-2).
@@ -17,9 +16,9 @@ A small coding agent in Python, made to learn how an AI agent works. It starts w
 - Python 3.10 or newer (standard library only, no packages)
 - git
 - a model served by [Ollama](https://ollama.com) or [vLLM](https://docs.vllm.ai)
-- for exercise 03: Docker (recommended) or Node.js 22+ — see [exercise 03](exercises/03-bash/README.md#try-it)
+- bash, for exercise 03: already on macOS and Linux; on Windows it comes with Git for Windows
 
-Install steps, including Docker and Node.js, are in [docs/setup.md](docs/setup.md). Model setup is in [docs/models.md](docs/models.md). On Windows, follow [docs/windows.md](docs/windows.md).
+Install steps are in [docs/setup.md](docs/setup.md). Model setup is in [docs/models.md](docs/models.md).
 
 ## Setup
 
@@ -84,7 +83,7 @@ python3 pi2.py --cwd playground -e exercises/01-read/read.py
 |---|---|---|
 | [01-read](exercises/01-read/read.py) | `read` | [README](exercises/01-read/README.md) |
 | [02-write](exercises/02-write/write.py) | `write` | [README](exercises/02-write/README.md) |
-| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); with Docker running, the checks also use a real container; `PI2_NO_DOCKER=1` runs it without Docker |
+| [03-bash](exercises/03-bash/bash.py) | `bash` | [README](exercises/03-bash/README.md); the commands run on your machine, so keep the permission gate loaded |
 | [04-edit](exercises/04-edit/edit.py) | `edit` | [README](exercises/04-edit/README.md) |
 | [05-subagent](exercises/05-subagent/subagent.py) | `subagent` | [README](exercises/05-subagent/README.md) (not in the TypeScript edition) |
 
