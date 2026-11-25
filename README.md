@@ -126,6 +126,8 @@ def extension(pi: ExtensionAPI):
 
 `define_tool` describes the tool to the model: its name, a description, and the JSON Schema of its arguments. pi2 checks the model's arguments against that schema before `execute` runs, so `params` always has the right shape. `ctx.cwd` is the directory the agent works in, and `ctx.session` is the running `AgentSession`. Return a string; raise an exception for an error result, whose message the model reads.
 
+<p align="center"><img alt="What the model receives every turn, for Run the tests and tell me what fails. with read, write and bash loaded, each line tinted by origin. pi2, blue: the model gemma-4-12B-it-qat-w4a16-ct (the workshop's Gemma 4), the system prompt around the tools, and max_tokens 8192. Your tools, yellow: the tool lines in the system prompt from prompt_snippet and the guidelines from prompt_guidelines. Your tools, red: the tools entry with name, description and parameters. You, green: the user message. Hint: the model sees only these lines, never your code." src="./assets/diagrams/model-request.svg" width="900"></p>
+
 A listener extension:
 
 ```python
@@ -142,10 +144,6 @@ def extension(pi):
 <p align="center"><img alt="One example, step by step. Left: the code of examples/hello.py and part of examples/permission_gate.py, with lines highlighted by step. Step 1: def extension(pi) with pi.register_tool(hello) in hello.py, and pi.on('tool_call', on_tool_call) in permission_gate.py. Step 3: name, description and parameters of define_tool, which the model sees. Step 5: parameters, which pi2 checks the arguments against, and on_tool_call, which returns None for a call that is not bash. Step 6: def execute(params, ctx). Step 7: its return value. Right: 1, you start pi2 and both files load; 2, you type Greet Ada.; 3, pi2 offers hello to the model; 4, the model answers hello({'name': 'Ada'}); 5, the arguments match and the listener lets the call run; 6, execute returns 'Hello, Ada!'; 7, the result goes back to the model." src="./assets/diagrams/extension-example.svg" width="900"></p>
 
 Load several with repeated `-e`; they work together. How the modules fit together is in [docs/architecture.md](docs/architecture.md).
-
-## Playground
-
-[playground/](playground/README.md) has four scenarios, from a failing test to thirty incident reports. Each one explains the tools, what to ask and what to look for.
 
 ## License
 
